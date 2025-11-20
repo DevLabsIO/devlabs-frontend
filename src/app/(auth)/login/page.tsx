@@ -12,21 +12,17 @@ export default function SignIn() {
   const router = useRouter();
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
+
   useEffect(() => {
     if (status === "loading") return;
 
     if (session?.user && !isRedirecting) {
       setIsRedirecting(true);
 
-      // Check if user needs to complete registration
       if (session.needsRegistration) {
-        setTimeout(() => {
-          router.push("/register");
-        }, 1000);
+        router.push("/register");
       } else {
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 2000);
+        router.push("/dashboard");
       }
     }
   }, [session, status, router, isRedirecting]);
@@ -41,30 +37,10 @@ export default function SignIn() {
     }
   };
 
-  // Show a nice loading screen instead of null
   if (session?.user) {
-    return (
-      <div className="relative min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black overflow-hidden flex items-center justify-center">
-        <ParticleField />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/20 to-gray-900/40" />{" "}
-        <div className="relative z-10 text-center animate-fadeInUp">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 mb-6 animate-spin">
-            <Loader2 className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-2">
-            {session.needsRegistration
-              ? "Setting up your account..."
-              : "Welcome back!"}
-          </h2>
-          <p className="text-gray-400">
-            {session.needsRegistration
-              ? "Please complete your registration to continue..."
-              : "Redirecting to your dashboard..."}
-          </p>
-        </div>
-      </div>
-    );
+    return null;
   }
+
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black overflow-hidden flex items-center justify-center">
       <ParticleField />

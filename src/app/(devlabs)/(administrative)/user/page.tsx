@@ -4,11 +4,14 @@ import { DataTable } from "@/components/data-table/data-table";
 import { getColumns } from "@/components/admin/users/user-columns";
 import { useUsers } from "@/components/admin/users/hooks/use-users";
 import { UserDialog } from "@/components/admin/users/user-dialog";
+import { KeycloakSyncDialog } from "@/components/admin/users/keycloak-sync-dialog";
 import userQueries from "@/repo/user-queries/user-queries";
 import { AssignBatchDialog } from "@/components/admin/users/assign-batch-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import batchQueries from "@/repo/batch-queries/batch-queries";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 
 function useUsersForDataTable(
   page: number,
@@ -28,6 +31,7 @@ export default function UsersPage() {
   const queryClient = useQueryClient();
   const { success, error } = useToast();
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
+  const [isSyncDialogOpen, setIsSyncDialogOpen] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState<(string | number)[]>(
     [],
   );
@@ -103,6 +107,14 @@ export default function UsersPage() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Users Management</h1>
+        <Button
+          onClick={() => setIsSyncDialogOpen(true)}
+          variant="outline"
+          className="gap-2"
+        >
+          <RefreshCw className="h-4 w-4" />
+          Sync from Keycloak
+        </Button>
       </div>
 
       <div>
@@ -111,6 +123,13 @@ export default function UsersPage() {
           onClose={() => setIsAssignDialogOpen(false)}
           onAssign={handleAssign}
           isAssigning={assignMutation.isPending}
+        />
+        <KeycloakSyncDialog
+          isOpen={isSyncDialogOpen}
+          onClose={() => setIsSyncDialogOpen(false)}
+          onSyncComplete={() =>
+            queryClient.invalidateQueries({ queryKey: ["users"] })
+          }
         />
         <UserDialog />
         <DataTable
