@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { Semester } from "@/types/types";
+import { Semester } from "@/types/entities";
 import { Checkbox } from "@/components/ui/checkbox";
 
 type SemesterAction = (semester: Semester, action: string) => void;

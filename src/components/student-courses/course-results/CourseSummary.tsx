@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Course, User } from "@/types/types";
+import { Course, User } from "@/types/entities";
 
 interface CourseSummaryProps {
   course: Course | undefined;

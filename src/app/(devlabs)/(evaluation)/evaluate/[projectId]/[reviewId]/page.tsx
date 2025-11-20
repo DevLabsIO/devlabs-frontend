@@ -10,7 +10,8 @@ import teamQueries from "@/repo/team-queries/team-queries";
 import { CourseEvaluationForm } from "@/components/evaluations/CourseEvaluationForm";
 import { FileList } from "@/components/file-upload/file-list";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { ProjectWithTeam, CourseEvaluationSummary } from "@/types/types";
+import { ProjectWithTeam } from "@/types/entities";
+import { CourseEvaluationSummary } from "@/types/features";
 import { Button } from "@/components/ui/button";
 import {
   Card,

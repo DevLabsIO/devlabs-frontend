@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { evaluationQueries } from "@/repo/evaluation-queries/evaluation-queries";
 import ReviewCard from "./ReviewCard";
-import { ProjectReviewsResponse } from "@/types/types";
+import { ProjectReviewsResponse } from "@/types/features";
 import { useState, Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -82,7 +82,7 @@ export default function ProjectReviews({
   ];
 
   const filteredReviews = allReviews.filter((review) =>
-    review.name.toLowerCase().includes(searchTerm.toLowerCase())
+    review.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (

@@ -22,8 +22,8 @@ import {
   BatchResponse,
   ProjectResponse,
   SemesterResponse,
-} from "@/repo/review-queries/review-types";
-import { Course } from "@/types/types";
+} from "@/types/features";
+import { Course } from "@/types/entities";
 import {
   Participant,
   CreateReviewSchema,

@@ -1,17 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios/axios-client";
-import { Project } from "@/types/types";
+import { Project } from "@/types/entities";
+import { DataTableResponse } from "@/types/ui";
 import { useSessionContext } from "@/lib/session-context";
-
-interface DataTableResponse {
-  data: Project[];
-  pagination: {
-    total_pages: number;
-    current_page: number;
-    per_page: number;
-    total_count: number;
-  };
-}
 
 export const useProjectsByCourse = (
   courseId: string,
@@ -34,7 +25,7 @@ export const useProjectsByCourse = (
       sortBy,
       sortOrder,
     ],
-    queryFn: async (): Promise<DataTableResponse> => {
+    queryFn: async (): Promise<DataTableResponse<Project>> => {
       if (!user?.id) throw new Error("User not authenticated");
 
       let endpoint: string;
@@ -61,7 +52,7 @@ export const useProjectsByCourse = (
       const backendResponse = response.data;
 
       if (backendResponse.pagination) {
-        return backendResponse as DataTableResponse;
+        return backendResponse as DataTableResponse<Project>;
       }
 
       const projects = Array.isArray(backendResponse)

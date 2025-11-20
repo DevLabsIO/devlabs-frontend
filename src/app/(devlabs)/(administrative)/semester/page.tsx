@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/data-table/data-table";
 import { getColumns } from "@/components/admin/semesters/semester-columns";
-import { Semester } from "@/types/types";
+import { Semester } from "@/types/entities";
 import { SemesterHeader } from "@/components/admin/semesters/semester-header";
 import { SemesterAlerts } from "@/components/admin/semesters/semester-alerts";
 import { SemesterDialogs } from "@/components/admin/semesters/semester-dialogs";

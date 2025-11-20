@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseBatchesTable } from "@/components/admin/course/batch-table";
 import { CourseStudentsTable } from "@/components/admin/course/student-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Batch, User } from "@/types/types";
+import { Batch, User } from "@/types/entities";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { courseQueries } from "@/repo/course-queries/course-queries";
 import { toast } from "sonner";
@@ -53,7 +53,7 @@ export default function CoursePage() {
     React.useState(false);
   const [batchToDelete, setBatchToDelete] = React.useState<Batch | null>(null);
   const [studentToDelete, setStudentToDelete] = React.useState<User | null>(
-    null
+    null,
   );
   const [instructorToDelete, setInstructorToDelete] =
     React.useState<User | null>(null);

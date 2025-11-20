@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { dashboardQueries } from "@/repo/dashboard-queries/dashboard-queries";
-import { AdminDashboardData } from "@/types/types";
+import { AdminDashboardData } from "@/types/features";
 import StatCard from "./StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Course, CourseType } from "@/types/types";
+import { Course, CourseType } from "@/types/entities";
 import {
   Select,
   SelectContent,

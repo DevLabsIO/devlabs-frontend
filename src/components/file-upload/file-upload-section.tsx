@@ -7,17 +7,16 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/ui/file-upload";
 import { FileList } from "./file-list";
 import { useToast } from "@/hooks/use-toast";
-import fileUploadQueries, {
-  FileUploadParams,
-} from "@/repo/file-upload-queries/file-upload-queries";
+import fileUploadQueries from "@/repo/file-upload-queries/file-upload-queries";
+import { FileUploadParams } from "@/types/features";
 import reviewQueries from "@/repo/review-queries/review-queries";
 import teamQueries from "@/repo/team-queries/team-queries";
 import { projectQueries } from "@/repo/project-queries/project-queries";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Upload, File as FileIcon, X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ProjectWithTeam } from "@/types/types";
-import { calculateReviewStatus } from "@/utils/review-status";
+import { ProjectWithTeam } from "@/types/entities";
+import { calculateReviewStatus } from "@/lib/utils/review-status";
 
 interface FileUploadSectionProps {
   reviewId: string;
@@ -30,10 +29,10 @@ export function FileUploadSection({
 }: FileUploadSectionProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>(
-    {}
+    {},
   );
   const [processingFiles, setProcessingFiles] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
   const [fileListKey, setFileListKey] = useState(0);
   const { success, error } = useToast();
@@ -90,7 +89,7 @@ export function FileUploadSection({
     onSuccess: (data, variables) => {
       success(`File "${variables.file.name}" uploaded successfully!`);
       setSelectedFiles((prev) =>
-        prev.filter((file) => file.name !== variables.file.name)
+        prev.filter((file) => file.name !== variables.file.name),
       );
       setUploadProgress((prev) => {
         const newProgress = { ...prev };
@@ -173,7 +172,7 @@ export function FileUploadSection({
 
     if (!review || !project) {
       error(
-        "Review or project information is missing. Please refresh the page and try again."
+        "Review or project information is missing. Please refresh the page and try again.",
       );
       return;
     }
@@ -183,7 +182,7 @@ export function FileUploadSection({
   const handleUpload = (file: File) => {
     if (!review || !project) {
       error(
-        "Review or project information is missing. Please refresh the page and try again."
+        "Review or project information is missing. Please refresh the page and try again.",
       );
       return;
     }

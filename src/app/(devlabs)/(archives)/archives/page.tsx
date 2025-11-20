@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataGrid } from "@/components/data-grid/data-grid";
 import { GridItem } from "@/components/data-grid/grid-item";
-import { Project } from "@/types/types";
+import { Project } from "@/types/entities";
 import { Archive, Users, BookOpen } from "lucide-react";
 import { getColumns } from "@/components/archive/archive-columns";
 import { useArchives } from "@/components/archive/hooks/use-archives";

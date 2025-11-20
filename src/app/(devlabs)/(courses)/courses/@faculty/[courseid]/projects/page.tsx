@@ -3,7 +3,7 @@ import { useProjectsByCourse } from "@/components/projects/hooks/use-projects-by
 import { ViewMode } from "@/components/data-grid/view-toggle";
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Project } from "@/types/types";
+import { Project } from "@/types/entities";
 import { getColumnsFaculty } from "@/components/projects/project-columns-faculty";
 import { GridItem } from "@/components/data-grid/grid-item";
 import { Users } from "lucide-react";

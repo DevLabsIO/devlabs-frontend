@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataGrid } from "@/components/data-grid/data-grid";
 import { GridItem } from "@/components/data-grid/grid-item";
-import { Review } from "@/types/types";
+import { Review } from "@/types/entities";
 import { Calendar, Clock, PlusCircle } from "lucide-react";
 import { getColumns } from "@/components/reviews/review-columns";
 import { useReviews } from "@/components/reviews/hooks/use-reviews-table";
@@ -16,7 +16,7 @@ import reviewQueries from "@/repo/review-queries/review-queries";
 import { useToast } from "@/hooks/use-toast";
 import { useSessionContext } from "@/lib/session-context";
 import { format } from "date-fns";
-import { calculateReviewStatus } from "@/utils/review-status";
+import { calculateReviewStatus } from "@/lib/utils/review-status";
 
 function useReviewsForDataTable(
   page: number,

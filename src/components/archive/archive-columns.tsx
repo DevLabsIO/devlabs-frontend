@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Users, Calendar, BookOpen } from "lucide-react";
-import { Project, ProjectStatus } from "@/types/types";
+import { Project, ProjectStatus } from "@/types/entities";
 // Date formatting utility
 const formatDateString = (dateString: string) => {
   try {

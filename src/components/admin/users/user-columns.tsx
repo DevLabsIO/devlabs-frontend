@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
 import { useState } from "react";
 import { UserDialog } from "./user-dialog";
 import { DeleteDialog } from "@/components/ui/delete-dialog";

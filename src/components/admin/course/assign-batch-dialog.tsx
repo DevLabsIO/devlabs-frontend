@@ -13,8 +13,8 @@ import { useDepartmentsQuery } from "@/components/admin/department/hooks/use-dep
 import { useDepartmentBatches } from "@/components/admin/department/hooks/use-department";
 import { Combobox } from "@/components/ui/combobox";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { Department } from "@/types/types";
-import { Batch } from "@/types/types";
+import { Department } from "@/types/entities";
+import { Batch } from "@/types/entities";
 
 interface AssignBatchDialogProps {
   isOpen: boolean;
@@ -37,7 +37,7 @@ export function AssignBatchDialog({
   const { data: departments, isLoading: isLoadingDepartments } =
     useDepartmentsQuery();
   const { data: batches, isLoading: isLoadingBatches } = useDepartmentBatches(
-    selectedDepartment ?? null
+    selectedDepartment ?? null,
   );
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export function AssignBatchDialog({
             disabled={isLoadingDepartments}
             filter={(value, search) => {
               const department = departmentOptions.find(
-                (option: { value: string }) => option.value === value
+                (option: { value: string }) => option.value === value,
               );
               if (department) {
                 return department.label

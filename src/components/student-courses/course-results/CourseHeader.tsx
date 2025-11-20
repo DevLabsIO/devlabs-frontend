@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Course } from "@/types/types";
+import { Course } from "@/types/entities";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";

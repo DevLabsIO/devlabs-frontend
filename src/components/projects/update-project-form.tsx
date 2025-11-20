@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ProjectWithTeam } from "@/types/types";
+import { ProjectWithTeam } from "@/types/entities";
 import { Edit3, Save, X } from "lucide-react";
 
 interface UpdateProjectFormProps {

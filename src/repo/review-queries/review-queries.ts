@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios/axios-client";
-import { CreateReviewRequest, UpdateReviewRequest } from "./review-types";
+import { CreateReviewRequest, UpdateReviewRequest } from "@/types/features";
 
 const reviewQueries = {
   createReview: async (data: CreateReviewRequest) => {

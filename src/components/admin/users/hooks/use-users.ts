@@ -1,16 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
+import { DataTableResponse } from "@/types/ui";
 import axiosInstance from "@/lib/axios/axios-client";
-
-interface DataTableResponse {
-  data: User[];
-  pagination: {
-    total_pages: number;
-    current_page: number;
-    per_page: number;
-    total_count: number;
-  };
-}
 
 export const useUsers = (
   searchQuery?: string,
@@ -18,7 +9,7 @@ export const useUsers = (
   size: number = 10,
   columnFilters?: Record<string, string[]>,
   sortBy?: string,
-  sortOrder?: string
+  sortOrder?: string,
 ) => {
   const role = columnFilters?.role?.[0];
   const query = useQuery({
@@ -32,7 +23,7 @@ export const useUsers = (
       sortBy,
       sortOrder,
     ],
-    queryFn: async (): Promise<DataTableResponse> => {
+    queryFn: async (): Promise<DataTableResponse<User>> => {
       let endpoint = "/api/user";
       const params: { [key: string]: string } = {};
       if (role && role !== "ALL") {
@@ -78,7 +69,7 @@ export const useUsers = (
           filteredData = backendResponse.filter(
             (user: User) =>
               user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              user.email?.toLowerCase().includes(searchQuery.toLowerCase())
+              user.email?.toLowerCase().includes(searchQuery.toLowerCase()),
           );
         }
 
@@ -94,7 +85,7 @@ export const useUsers = (
       }
 
       if (backendResponse.pagination) {
-        return backendResponse as DataTableResponse;
+        return backendResponse as DataTableResponse<User>;
       } else {
         const users = backendResponse.data || [];
         return {

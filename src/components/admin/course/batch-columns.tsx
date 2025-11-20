@@ -1,5 +1,5 @@
 "use client";
-import { Batch } from "@/types/types";
+import { Batch } from "@/types/entities";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";

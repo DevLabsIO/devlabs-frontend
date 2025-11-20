@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { UpcomingReview, RecentlyPublishedReview } from "@/types/types";
+import { UpcomingReview, RecentlyPublishedReview } from "@/types/entities";
 import { Calendar, Clock } from "lucide-react";
 
 interface ReviewListProps {

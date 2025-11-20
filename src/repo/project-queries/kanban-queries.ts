@@ -5,7 +5,7 @@ import {
   CreateTaskRequest,
   UpdateTaskRequest,
   MoveTaskRequest,
-} from "@/types/types";
+} from "@/types/features";
 
 export const kanbanAPI = {
   getKanbanBoard: async (projectId: string): Promise<KanbanBoard> => {
@@ -20,22 +20,22 @@ export const kanbanAPI = {
 
   updateTask: async (
     taskId: string,
-    request: UpdateTaskRequest
+    request: UpdateTaskRequest,
   ): Promise<KanbanTask> => {
     const response = await axiosInstance.put(
       `/kanban/tasks/${taskId}`,
-      request
+      request,
     );
     return response.data;
   },
 
   moveTask: async (
     taskId: string,
-    request: MoveTaskRequest
+    request: MoveTaskRequest,
   ): Promise<KanbanTask> => {
     const response = await axiosInstance.put(
       `/kanban/tasks/${taskId}/move`,
-      request
+      request,
     );
     return response.data;
   },

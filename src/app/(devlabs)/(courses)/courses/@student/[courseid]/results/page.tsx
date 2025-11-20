@@ -15,7 +15,7 @@ import {
   Folder,
 } from "lucide-react";
 import { ReviewPerformance } from "@/components/student-courses/performance-overview-chart";
-import { Course, Project } from "@/types/types";
+import { Course, Project } from "@/types/entities";
 import PerformanceAnalytics from "@/components/student-courses/course-results/PerformanceAnalytics";
 import {
   Card,

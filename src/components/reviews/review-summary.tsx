@@ -7,7 +7,7 @@ import { CreateReviewSchema, Participant } from "./create-review-schema";
 import rubricQueries from "@/repo/rubrics-queries/rubrics-queries";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Rubric } from "@/repo/rubrics-queries/rubric-types";
+import { Rubric } from "@/types/features";
 import {
   Calendar,
   Clock,

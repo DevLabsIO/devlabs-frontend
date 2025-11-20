@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Course } from "@/types/types";
+import { Course } from "@/types/entities";
 import {
   Card,
   CardContent,

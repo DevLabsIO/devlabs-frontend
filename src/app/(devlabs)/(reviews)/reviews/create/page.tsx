@@ -13,7 +13,7 @@ import { Loader2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import reviewQueries from "@/repo/review-queries/review-queries";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { CreateReviewRequest } from "@/repo/review-queries/review-types";
+import { CreateReviewRequest } from "@/types/features";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";

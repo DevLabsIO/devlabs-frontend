@@ -1,93 +1,7 @@
 import React from "react";
+import type { UseSidebarResizeProps } from "@/types/hooks";
 
-export interface UseSidebarResizeProps {
-  /**
-   * Direction of the resize handle
-   * - 'left': Handle is on left side (for right-positioned panels)
-   * - 'right': Handle is on right side (for left-positioned panels)
-   */
-  direction?: "left" | "right";
-
-  /**
-   * Current width of the panel
-   */
-  currentWidth: string;
-
-  /**
-   * Callback to update width when resizing
-   */
-  onResize: (width: string) => void;
-
-  /**
-   * Callback to toggle panel visibility
-   */
-  onToggle?: () => void;
-
-  /**
-   * Whether the panel is currently collapsed
-   */
-  isCollapsed?: boolean;
-
-  /**
-   * Minimum resize width
-   */
-  minResizeWidth?: string;
-
-  /**
-   * Maximum resize width
-   */
-  maxResizeWidth?: string;
-
-  /**
-   * Whether to enable auto-collapse when dragged below threshold
-   */
-  enableAutoCollapse?: boolean;
-
-  /**
-   * Auto-collapse threshold as percentage of minResizeWidth
-   * A value of 1.0 means the panel will collapse when dragged to minResizeWidth
-   * A value of 0.5 means the panel will collapse when dragged to 50% of minResizeWidth
-   * A value of 1.5 means the panel will collapse when dragged to 50% beyond minResizeWidth
-   * Can be any positive number, not limited to the range 0.0-1.0
-   */
-  autoCollapseThreshold?: number;
-
-  /**
-   * Threshold to expand when dragging in opposite direction (0.0-1.0)
-   * Percentage of distance needed to drag back to expand
-   */
-  expandThreshold?: number;
-
-  /**
-   * Whether to enable drag functionality
-   */
-  enableDrag?: boolean;
-
-  /**
-   * Callback to update dragging rail state
-   */
-  setIsDraggingRail?: (isDragging: boolean) => void;
-
-  /**
-   * Cookie name for persisting width
-   */
-  widthCookieName?: string;
-
-  /**
-   * Cookie max age in seconds
-   */
-  widthCookieMaxAge?: number;
-
-  /**
-   * Whether this is a nested sidebar (not at the edge of the screen)
-   */
-  isNested?: boolean;
-
-  /**
-   * Whether to enable toggle functionality
-   */
-  enableToggle?: boolean;
-}
+export type { UseSidebarResizeProps };
 
 interface WidthUnit {
   value: number;
@@ -165,11 +79,11 @@ export function useSidebarResize({
   // Memoize min/max width calculations for performance
   const minWidthPx = React.useMemo(
     () => toPx(minResizeWidth),
-    [minResizeWidth]
+    [minResizeWidth],
   );
   const maxWidthPx = React.useMemo(
     () => toPx(maxResizeWidth),
-    [maxResizeWidth]
+    [maxResizeWidth],
   );
 
   // Helper function to determine if width is increasing based on direction and mouse movement
@@ -179,7 +93,7 @@ export function useSidebarResize({
         ? currentX < referenceX // For left-positioned handle, moving left increases width
         : currentX > referenceX; // For right-positioned handle, moving right increases width
     },
-    [direction]
+    [direction],
   );
 
   // Helper function to calculate width based on mouse position and direction
@@ -188,7 +102,7 @@ export function useSidebarResize({
       e: MouseEvent,
       initialX: number,
       initialWidth: number,
-      currentRailRect: DOMRect | null
+      currentRailRect: DOMRect | null,
     ): number => {
       if (isNested && currentRailRect) {
         // For nested sidebars, use the delta from start position for precise tracking
@@ -211,7 +125,7 @@ export function useSidebarResize({
       // For right-positioned handle (left panel)
       return e.clientX;
     },
-    [direction, isNested]
+    [direction, isNested],
   );
 
   // Update auto-collapse threshold when dependencies change
@@ -228,7 +142,7 @@ export function useSidebarResize({
         document.cookie = `${widthCookieName}=${width}; path=/; max-age=${widthCookieMaxAge}`;
       }
     },
-    [widthCookieName, widthCookieMaxAge]
+    [widthCookieName, widthCookieMaxAge],
   );
 
   // Handle mouse down on resize handle
@@ -266,7 +180,7 @@ export function useSidebarResize({
 
       e.preventDefault();
     },
-    [enableDrag, isCollapsed, currentWidth, isNested]
+    [enableDrag, isCollapsed, currentWidth, isNested],
   );
 
   // Handle mouse movement and resizing
@@ -293,7 +207,7 @@ export function useSidebarResize({
         // Determine current drag direction
         const currentDragDirection = isIncreasingWidth(
           e.clientX,
-          lastTogglePoint.current
+          lastTogglePoint.current,
         )
           ? "expand"
           : "collapse";
@@ -305,7 +219,7 @@ export function useSidebarResize({
 
         // Calculate distance from last toggle point
         dragDistanceFromToggle.current = Math.abs(
-          e.clientX - lastTogglePoint.current
+          e.clientX - lastTogglePoint.current,
         );
 
         // Check for toggle cooldown (prevent rapid toggling)
@@ -323,7 +237,7 @@ export function useSidebarResize({
               e,
               startX.current,
               startWidth.current,
-              currentRailRect
+              currentRailRect,
             );
 
             // Determine if we should collapse based on threshold
@@ -371,19 +285,19 @@ export function useSidebarResize({
               e,
               startX.current,
               startWidth.current,
-              currentRailRect
+              currentRailRect,
             );
 
             // Clamp to min/max
             const clampedWidth = Math.max(
               minWidthPx,
-              Math.min(maxWidthPx, initialWidth)
+              Math.min(maxWidthPx, initialWidth),
             );
 
             // Set initial width when expanding
             const formattedWidth = formatWidth(
               unit === "rem" ? clampedWidth / 16 : clampedWidth,
-              unit
+              unit,
             );
             onResize(formattedWidth);
             persistWidth(formattedWidth);
@@ -406,13 +320,13 @@ export function useSidebarResize({
           e,
           startX.current,
           startWidth.current,
-          currentRailRect
+          currentRailRect,
         );
 
         // Clamp width between min and max
         const clampedWidthPx = Math.max(
           minWidthPx,
-          Math.min(maxWidthPx, newWidthPx)
+          Math.min(maxWidthPx, newWidthPx),
         );
 
         // Convert to the target unit

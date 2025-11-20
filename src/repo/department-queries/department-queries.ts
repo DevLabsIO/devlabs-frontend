@@ -1,37 +1,19 @@
-import { Batch, Department } from "@/types/types";
+import { Batch, Department } from "@/types/entities";
+import {
+  CreateDepartmentRequest,
+  UpdateDepartmentRequest,
+  DepartmentResponse,
+  PaginatedResponse,
+} from "@/types/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios/axios-client";
-
-interface CreateDepartmentRequest {
-  name: string;
-}
-
-interface UpdateDepartmentRequest extends CreateDepartmentRequest {
-  id: string;
-}
-
-interface DepartmentResponse {
-  id: string;
-  name: string;
-  batches?: Batch[];
-}
-
-interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    total_pages: number;
-    current_page: number;
-    per_page: number;
-    total_count: number;
-  };
-}
 
 export const useCreateDepartment = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (
-      data: CreateDepartmentRequest
+      data: CreateDepartmentRequest,
     ): Promise<DepartmentResponse> => {
       const response = await axiosInstance.post("/api/department", data);
       return response.data;
@@ -47,12 +29,12 @@ export const useUpdateDepartment = () => {
 
   return useMutation({
     mutationFn: async (
-      data: UpdateDepartmentRequest
+      data: UpdateDepartmentRequest,
     ): Promise<DepartmentResponse> => {
       const { id, ...updateData } = data;
       const response = await axiosInstance.put(
         `/api/department/${id}`,
-        updateData
+        updateData,
       );
       return response.data;
     },
@@ -94,7 +76,7 @@ export const useGetDepartmentBatches = () => {
   return useMutation({
     mutationFn: async (departmentId: string) => {
       const response = await axiosInstance.get(
-        `/api/department/${departmentId}/batches`
+        `/api/department/${departmentId}/batches`,
       );
       return response.data;
     },
@@ -108,10 +90,10 @@ export const getAllDepartments = async (): Promise<Department[]> => {
 };
 
 export const getBatchesByDepartment = async (
-  departmentId: string
+  departmentId: string,
 ): Promise<Batch[]> => {
   const response = await axiosInstance.get(
-    `/api/department/${departmentId}/batches`
+    `/api/department/${departmentId}/batches`,
   );
   return response.data;
 };

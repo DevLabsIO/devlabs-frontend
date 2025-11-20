@@ -6,7 +6,7 @@ import { useBatches } from "@/components/admin/batch/hooks/use-batch";
 import { getColumns } from "@/components/admin/batch/batch-column";
 import { BatchDialog } from "@/components/admin/batch/batch-dialog";
 import { DeleteBatchDialog } from "@/components/admin/batch/delete-batch-dialog";
-import { Batch } from "@/types/types";
+import { Batch } from "@/types/entities";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import batchQueries from "@/repo/batch-queries/batch-queries";
 import { useToast } from "@/hooks/use-toast";

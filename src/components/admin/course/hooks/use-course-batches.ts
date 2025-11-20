@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Batch } from "@/types/types";
+import { Batch } from "@/types/entities";
 import axiosInstance from "@/lib/axios/axios-client";
 
 export interface BatchesDataTableResponse {
@@ -16,7 +16,7 @@ export const useCourseBatches = (
   courseId: string,
   searchQuery?: string,
   page: number = 0,
-  size: number = 10
+  size: number = 10,
 ) => {
   return useQuery<BatchesDataTableResponse, Error>({
     queryKey: ["courseBatches", courseId, searchQuery, page, size],

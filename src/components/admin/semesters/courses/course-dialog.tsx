@@ -5,7 +5,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CourseForm } from "./course-form";
-import { Course } from "@/types/types";
+import { Course } from "@/types/entities";
 
 interface CourseDialogProps {
   isOpen: boolean;

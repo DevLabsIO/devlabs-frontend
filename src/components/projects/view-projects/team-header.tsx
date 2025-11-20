@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Users, AlertTriangle, Building2 } from "lucide-react";
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
 
 export const TeamHeaderSkeleton = () => (
   <div className="space-y-6">

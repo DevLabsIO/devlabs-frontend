@@ -1,13 +1,6 @@
 import axiosInstance from "@/lib/axios/axios-client";
-import { User } from "@/components/admin/users/types/types";
+import { VerifyUserParams, VerifyUserResult } from "@/types/auth";
 import { isNetworkError } from "./auth-helpers";
-
-interface VerifyUserParams {
-  email: string;
-  name: string;
-  keycloakId: string;
-  role: string;
-}
 
 function determineUserRole(roles: string[], groups: string[] = []): string {
   // Combine roles and groups for checking
@@ -38,13 +31,13 @@ function determineUserRole(roles: string[], groups: string[] = []): string {
 }
 
 export async function verifyAndCreateUser(
-  params: VerifyUserParams
-): Promise<{ exists: boolean; user?: User | null }> {
+  params: VerifyUserParams,
+): Promise<VerifyUserResult> {
   const { email } = params;
 
   try {
     const checkResponse = await axiosInstance.get(
-      `/api/user/check-exists?email=${encodeURIComponent(email)}`
+      `/api/user/check-exists?email=${encodeURIComponent(email)}`,
     );
     const { exists } = checkResponse.data;
 

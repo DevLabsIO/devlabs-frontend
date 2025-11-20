@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Batch, User } from "@/types/types";
+import { Batch, User } from "@/types/entities";
 import { useSessionContext } from "@/lib/session-context";
 import batchQueries from "@/repo/batch-queries/batch-queries";
 import axiosInstance from "@/lib/axios/axios-client";

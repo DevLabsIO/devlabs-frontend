@@ -1,35 +1,20 @@
 import axiosInstance from "@/lib/axios/axios-client";
-import { User } from "@/components/admin/users/types/types";
+import { User } from "@/types/entities";
 import { SyncStatsResponse, SyncRequest, SyncResponse } from "@/types/sync";
+import {
+  CreateUserRequest,
+  UpdateUserRequest,
+  CreateKeycloakUserRequest,
+} from "@/types/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface CreateUserData {
-  name: string;
-  email: string;
-  phoneNumber: string;
-  role: string;
-  password: string;
-  isActive: boolean;
-}
-
-interface UpdateUserData extends Omit<CreateUserData, "password"> {
-  id: string;
-}
-
-interface CreateKeycloakUserData {
-  email: string;
-  name: string;
-  role: string;
-  phoneNumber: string;
-}
-
 const userQueries = {
-  createUser: async (data: CreateUserData): Promise<User> => {
+  createUser: async (data: CreateUserRequest): Promise<User> => {
     const response = await axiosInstance.post("/api/user", data);
     return response.data;
   },
 
-  updateUser: async (data: UpdateUserData): Promise<User> => {
+  updateUser: async (data: UpdateUserRequest): Promise<User> => {
     const { id, ...updateData } = data;
     const response = await axiosInstance.put(`/api/user/${id}`, updateData);
     return response.data;
@@ -70,7 +55,9 @@ const userQueries = {
     }
   },
 
-  createKeycloakUser: async (data: CreateKeycloakUserData): Promise<User> => {
+  createKeycloakUser: async (
+    data: CreateKeycloakUserRequest,
+  ): Promise<User> => {
     const response = await axiosInstance.post("/api/user/keycloak-sync", {
       name: data.name,
       email: data.email,

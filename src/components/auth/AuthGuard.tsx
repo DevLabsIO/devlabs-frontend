@@ -3,7 +3,8 @@
 import { useSessionContext } from "@/lib/session-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { UserType, hasAccess } from "@/lib/utils/auth-utils";
+import { UserType } from "@/types/auth";
+import { hasAccess } from "@/lib/utils/auth-utils";
 import AccessDenied from "./access-denied";
 import { useUserExistence } from "@/hooks/useUserExistence";
 

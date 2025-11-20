@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios/axios-client";
-import { Semester } from "@/types/types";
-import { DataTableResponse } from "@/repo/semester-queries/semester-queries";
+import { Semester } from "@/types/entities";
+import { DataTableResponse } from "@/types/ui";
 
 const useGetSemesters = (
   searchQuery?: string,
@@ -9,7 +9,7 @@ const useGetSemesters = (
   size: number = 10,
   columnFilters?: Record<string, string[]>,
   sortBy?: string,
-  sortOrder?: string
+  sortOrder?: string,
 ) => {
   return useQuery({
     queryKey: [
@@ -21,7 +21,7 @@ const useGetSemesters = (
       sortBy,
       sortOrder,
     ],
-    queryFn: async (): Promise<DataTableResponse> => {
+    queryFn: async (): Promise<DataTableResponse<Semester>> => {
       const isActiveFilter = columnFilters?.isActive?.[0];
       let endpoint = "/api/semester";
       const params: { [key: string]: string | number } = {
@@ -57,7 +57,7 @@ const useGetSemesters = (
         if (isActiveFilter !== undefined) {
           const isActiveValue = isActiveFilter === "true";
           filteredData = filteredData.filter(
-            (semester: Semester) => semester.isActive === isActiveValue
+            (semester: Semester) => semester.isActive === isActiveValue,
           );
         }
 
@@ -73,7 +73,7 @@ const useGetSemesters = (
       }
 
       if (data.pagination) {
-        return data as DataTableResponse;
+        return data as DataTableResponse<Semester>;
       }
 
       if (data.data) {
@@ -108,7 +108,7 @@ export function useSemestersForDataTable(
   dateRange: { from_date: string; to_date: string },
   sortBy: string,
   sortOrder: string,
-  columnFilters?: Record<string, string[]>
+  columnFilters?: Record<string, string[]>,
 ) {
   return useGetSemesters(
     search,
@@ -116,7 +116,7 @@ export function useSemestersForDataTable(
     pageSize,
     columnFilters,
     sortBy,
-    sortOrder
+    sortOrder,
   );
 }
 

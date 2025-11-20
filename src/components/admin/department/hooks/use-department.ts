@@ -1,28 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { Department } from "@/types/types";
+import { Department } from "@/types/entities";
+import { DataTableResponse } from "@/types/ui";
+import { DepartmentResponse } from "@/types/api";
 import * as departmentQueries from "@/repo/department-queries/department-queries";
 import axiosInstance from "@/lib/axios/axios-client";
-
-interface DataTableResponse {
-  data: Department[];
-  pagination: {
-    total_pages: number;
-    current_page: number;
-    per_page: number;
-    total_count: number;
-  };
-}
-
-interface DepartmentResponse {
-  id: string;
-  name: string;
-  batches?: Array<{
-    id: string;
-    name: string;
-    graduationYear: string;
-    section: string;
-  }>;
-}
 
 export const useDepartments = (
   searchQuery?: string,
@@ -30,7 +11,7 @@ export const useDepartments = (
   size: number = 10,
   columnFilters?: Record<string, string[]>,
   sortBy?: string,
-  sortOrder?: "asc" | "desc"
+  sortOrder?: "asc" | "desc",
 ) => {
   const query = useQuery({
     queryKey: [
@@ -42,7 +23,7 @@ export const useDepartments = (
       sortBy,
       sortOrder,
     ],
-    queryFn: async (): Promise<DataTableResponse> => {
+    queryFn: async (): Promise<DataTableResponse<Department>> => {
       const endpoint = searchQuery
         ? "/api/department/search"
         : "/api/department";
@@ -73,7 +54,7 @@ export const useDepartments = (
               id: dept.id,
               name: dept.name,
               batches: dept.batches || [],
-            })
+            }),
           );
 
           return {
@@ -87,7 +68,9 @@ export const useDepartments = (
 
           if (searchQuery) {
             filteredData = filteredData.filter((department: Department) =>
-              department.name?.toLowerCase().includes(searchQuery.toLowerCase())
+              department.name
+                ?.toLowerCase()
+                .includes(searchQuery.toLowerCase()),
             );
           }
 

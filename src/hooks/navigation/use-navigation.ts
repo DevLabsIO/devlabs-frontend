@@ -2,23 +2,9 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { useCallback, useMemo, useEffect, useState } from "react";
+import type { BreadcrumbSegment, NavigationConfig } from "@/types/ui";
 
-export interface BreadcrumbSegment {
-  label: string;
-  href: string;
-  isCurrentPage?: boolean;
-  isDynamicSegment?: boolean;
-}
-
-export interface NavigationConfig {
-  [key: string]: {
-    label: string;
-    parent?: string;
-    dynamicSegments?: {
-      [key: string]: string;
-    };
-  };
-}
+export type { BreadcrumbSegment, NavigationConfig };
 
 const defaultNavigationConfig: NavigationConfig = {
   "/": { label: "Home" },

@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { projectQueries } from "@/repo/project-queries/project-queries";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useToast } from "@/hooks/use-toast";
-import { Project } from "@/types/types";
+import { Project } from "@/types/entities";
 
 interface ProjectActionsProps {
   project: Project;

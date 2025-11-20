@@ -2,7 +2,7 @@
 import { projectQueries } from "@/repo/project-queries/project-queries";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { ProjectWithTeam } from "@/types/types";
+import { ProjectWithTeam } from "@/types/entities";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import KanbanBoardPage from "@/components/projects/kanban-board/kanban";
@@ -232,10 +232,10 @@ export default function DevlabsProjectPage() {
                   project.status === "ONGOING"
                     ? "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
                     : project.status === "COMPLETED"
-                    ? "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
-                    : project.status === "REJECTED"
-                    ? "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800"
-                    : "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800"
+                      ? "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
+                      : project.status === "REJECTED"
+                        ? "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800"
+                        : "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800"
                 }
               >
                 {project.status === "ONGOING" ? "Live" : project.status}

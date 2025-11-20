@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, Terminal } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import semesterQueries from "@/repo/semester-queries/semester-queries";
-import { Course } from "@/types/types";
+import { Course } from "@/types/entities";
 import { toast } from "sonner";
 import { CourseDialog } from "@/components/admin/semesters/courses/course-dialog";
 import { DeleteDialog } from "@/components/ui/delete-dialog";

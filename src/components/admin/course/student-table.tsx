@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/data-table/data-table";
 import { getStudentColumns } from "./student-columns";
 import { useCourseStudents } from "./hooks/use-course-students";
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
 import { Button } from "@/components/ui/button";
 
 interface CourseStudentsTableProps {
@@ -19,17 +19,17 @@ export function CourseStudentsTable({
   onDelete,
 }: CourseStudentsTableProps) {
   const router = useRouter();
-  
+
   function useStudentsForDataTable(
     page: number,
     pageSize: number,
-    search: string
+    search: string,
   ) {
     return useCourseStudents(
       courseId,
       search,
       page > 0 ? page - 1 : 0,
-      pageSize
+      pageSize,
     );
   }
   useStudentsForDataTable.isQueryHook = true;

@@ -1,27 +1,20 @@
 import axiosInstance from "@/lib/axios/axios-client";
-import { Project } from "@/types/types";
+import { ArchiveResponse } from "@/types/api";
 
-export interface ArchiveResponse {
-  data: Project[];
-  pagination: {
-    current_page: number;
-    per_page: number;
-    total_pages: number;
-    total_count: number;
-  };
-}
+// Re-export for backward compatibility
+export type { ArchiveResponse } from "@/types/api";
 
 export const archiveQueries = {
   fetchArchivedProjects: async (
     userId: string,
     page: number = 0,
-    size: number = 10
+    size: number = 10,
   ): Promise<ArchiveResponse> => {
     const response = await axiosInstance.get(
       `/projects/user/${userId}/archive`,
       {
         params: { page, size },
-      }
+      },
     );
     return response.data;
   },
@@ -30,13 +23,13 @@ export const archiveQueries = {
     userId: string,
     query: string,
     page: number = 0,
-    size: number = 10
+    size: number = 10,
   ): Promise<ArchiveResponse> => {
     const response = await axiosInstance.get(
       `/projects/user/${userId}/archive/search`,
       {
         params: { query, page, size },
-      }
+      },
     );
     return response.data;
   },

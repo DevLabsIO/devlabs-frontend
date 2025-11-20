@@ -1,16 +1,5 @@
 import axiosInstance from "@/lib/axios/axios-client";
-
-interface CreateBatchRequest {
-  name: string;
-  graduationYear: number;
-  departmentId: string;
-  section: string;
-  isActive: boolean;
-}
-
-interface UpdateBatchRequest extends Partial<CreateBatchRequest> {
-  id: string;
-}
+import { CreateBatchRequest, UpdateBatchRequest } from "@/types/api";
 
 const batchQueries = {
   createBatch: async (data: CreateBatchRequest) => {
@@ -40,7 +29,7 @@ const batchQueries = {
     size: number,
     searchQuery?: string,
     sortBy?: string,
-    sortOrder?: string
+    sortOrder?: string,
   ) => {
     const params: { [key: string]: string | number } = {
       page,
@@ -69,14 +58,14 @@ const batchQueries = {
   }) => {
     await axiosInstance.put(
       `/api/batch/${data.batchId}/add-students`,
-      data.userIds
+      data.userIds,
     );
   },
 
   removeStudentFromBatch: async (batchId: string, studentId: string) => {
     const response = await axiosInstance.put(
       `/api/batch/${batchId}/delete-students`,
-      [studentId]
+      [studentId],
     );
     return response.data;
   },

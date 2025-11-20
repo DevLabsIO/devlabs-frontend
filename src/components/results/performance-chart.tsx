@@ -11,7 +11,7 @@ import {
   TooltipProps,
 } from "recharts";
 import { Card } from "@/components/ui/card";
-import type { CourseData } from "@/types/types";
+import type { CourseData } from "@/types/entities";
 
 interface PerformanceChartProps {
   data: CourseData[];
@@ -76,9 +76,9 @@ export default function PerformanceChart({ data }: PerformanceChartProps) {
   const allDates = Array.from(
     new Set(
       data.flatMap((course) =>
-        course.reviewHistory.map((review) => review.reviewDate)
-      )
-    )
+        course.reviewHistory.map((review) => review.reviewDate),
+      ),
+    ),
   ).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   // Transform data to ensure all courses have entries for all dates

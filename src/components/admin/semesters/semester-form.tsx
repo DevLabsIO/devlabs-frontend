@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Semester } from "@/types/types";
+import { Semester } from "@/types/entities";
 
 interface SemesterFormProps {
   semester?: Semester;
@@ -113,4 +113,4 @@ export function SemesterForm({ semester, onSubmit }: SemesterFormProps) {
       </form>
     </Form>
   );
-} 
+}

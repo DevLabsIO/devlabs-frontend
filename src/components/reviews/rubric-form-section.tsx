@@ -24,7 +24,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Rubric } from "@/repo/rubrics-queries/rubric-types";
+import { Rubric } from "@/types/features";
 import rubricQueries from "@/repo/rubrics-queries/rubrics-queries";
 import { CreateEditRubricModal } from "@/components/reviews/create-edit-rubric-modal";
 import { RubricCriteriaTable } from "@/components/reviews/rubric-criteria-table";

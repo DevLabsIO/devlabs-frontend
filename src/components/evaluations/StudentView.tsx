@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CourseEvaluationData } from "@/types/types";
+import { CourseEvaluationData } from "@/types/features";
 import { Button } from "@/components/ui/button";
 import {
   Card,

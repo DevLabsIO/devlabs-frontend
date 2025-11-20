@@ -4,7 +4,7 @@ import * as React from "react";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { courseQueries } from "@/repo/course-queries/course-queries";
-import { StudentCourse } from "@/types/types";
+import { StudentCourse } from "@/types/entities";
 import {
   PerformanceOverviewChart,
   CoursePerformanceData,
@@ -26,7 +26,7 @@ import { useRouter } from "next/navigation";
 type StudentCourseWithColor = StudentCourse & { color: string };
 
 const assignColorsToCourses = (
-  courses: StudentCourse[]
+  courses: StudentCourse[],
 ): StudentCourseWithColor[] => {
   return courses.map((course, index) => ({
     ...course,
@@ -55,7 +55,7 @@ export function MyCoursesPage() {
 
   const coursesWithColor = React.useMemo(
     () => (courses ? assignColorsToCourses(courses) : []),
-    [courses]
+    [courses],
   );
 
   const performanceQueries = useQueries({
@@ -94,7 +94,7 @@ export function MyCoursesPage() {
       filtered = filtered.filter(
         (c) =>
           c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          c.code.toLowerCase().includes(searchTerm.toLowerCase())
+          c.code.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 

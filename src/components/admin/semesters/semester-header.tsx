@@ -11,7 +11,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { SemesterForm } from "./semester-form";
-import { Semester } from "@/types/types";
+import { Semester } from "@/types/entities";
 
 interface SemesterHeaderProps {
   isCreateDialogOpen: boolean;
@@ -51,4 +51,4 @@ export function SemesterHeader({
       </Dialog>
     </div>
   );
-} 
+}

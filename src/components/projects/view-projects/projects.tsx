@@ -21,7 +21,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Project, ProjectStatus } from "@/types/types";
+import { Project, ProjectStatus } from "@/types/entities";
 import { projectQueries } from "@/repo/project-queries/project-queries";
 import { CreateProjectRequest } from "@/components/projects/types/types";
 import { ProjectForm } from "@/components/projects/view-projects/project-form";

@@ -1,17 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSessionContext } from "@/lib/session-context";
-import { Course } from "@/types/types";
+import { Course } from "@/types/entities";
+import { DataTableResponse } from "@/types/ui";
 import axiosInstance from "@/lib/axios/axios-client";
-
-interface DataTableResponse {
-  data: Course[];
-  pagination: {
-    total_pages: number;
-    current_page: number;
-    per_page: number;
-    total_count: number;
-  };
-}
 
 export const useMyCourses = (
   searchQuery?: string,
@@ -32,7 +23,7 @@ export const useMyCourses = (
       sortBy,
       sortOrder,
     ],
-    queryFn: async (): Promise<DataTableResponse> => {
+    queryFn: async (): Promise<DataTableResponse<Course>> => {
       if (!user) throw new Error("User not authenticated");
 
       let endpoint = "/api/course/my-courses";
@@ -54,7 +45,7 @@ export const useMyCourses = (
       const backendResponse = response.data;
 
       if (backendResponse.pagination) {
-        return backendResponse as DataTableResponse;
+        return backendResponse as DataTableResponse<Course>;
       }
 
       const courses = Array.isArray(backendResponse)

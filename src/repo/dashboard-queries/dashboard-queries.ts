@@ -3,7 +3,7 @@ import {
   AdminDashboardData,
   ManagerStaffDashboardData,
   StudentDashboardData,
-} from "@/types/types";
+} from "@/types/features";
 
 export const dashboardQueries = {
   getAdminDashboard: async (): Promise<AdminDashboardData> => {

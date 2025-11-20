@@ -5,7 +5,7 @@ import { useDepartments } from "@/components/admin/department/hooks/use-departme
 import { getColumns } from "@/components/admin/department/department-column";
 import { DepartmentDialog } from "@/components/admin/department/department-dialog";
 import { DeleteDepartmentDialog } from "@/components/admin/department/delete-department-dialog";
-import { Department } from "@/types/types";
+import { Department } from "@/types/entities";
 
 function useDepartmentsForDataTable(
   page: number,

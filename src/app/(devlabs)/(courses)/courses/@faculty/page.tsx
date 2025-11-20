@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataGrid } from "@/components/data-grid/data-grid";
 import { GridItem } from "@/components/data-grid/grid-item";
-import { Course } from "@/types/types";
+import { Course } from "@/types/entities";
 import { getColumns } from "@/components/my-courses/course-columns";
 import { useMyCourses } from "@/components/my-courses/hooks/use-mycourses";
 

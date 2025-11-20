@@ -1,17 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSessionContext } from "@/lib/session-context";
-import { Team } from "@/types/types";
+import { Team } from "@/types/entities";
+import { DataTableResponse } from "@/types/ui";
 import axiosInstance from "@/lib/axios/axios-client";
-
-interface DataTableResponse {
-  data: Team[];
-  pagination: {
-    total_pages: number;
-    current_page: number;
-    per_page: number;
-    total_count: number;
-  };
-}
 
 export const useTeams = (
   searchQuery?: string,
@@ -32,7 +23,7 @@ export const useTeams = (
       sortBy,
       sortOrder,
     ],
-    queryFn: async (): Promise<DataTableResponse> => {
+    queryFn: async (): Promise<DataTableResponse<Team>> => {
       if (!user) throw new Error("User not authenticated");
 
       let endpoint = "/teams";
@@ -74,7 +65,7 @@ export const useTeams = (
       const backendResponse = response.data;
 
       if (backendResponse.pagination) {
-        return backendResponse as DataTableResponse;
+        return backendResponse as DataTableResponse<Team>;
       }
 
       const teams = Array.isArray(backendResponse)

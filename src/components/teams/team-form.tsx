@@ -23,8 +23,8 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Team } from "@/types/types";
-import { User } from "@/types/types";
+import { Team } from "@/types/entities";
+import { User } from "@/types/entities";
 import {
   CreateTeamRequest,
   UpdateTeamRequest,

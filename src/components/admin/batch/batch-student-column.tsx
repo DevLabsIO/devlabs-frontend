@@ -1,5 +1,5 @@
 "use client";
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/column-header";
 import {

@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Users, AlertTriangle } from "lucide-react";
-import type { User } from "@/types/types";
+import type { User } from "@/types/entities";
 
 export const TeamMembersSkeleton = () => (
   <Card className="h-fit">

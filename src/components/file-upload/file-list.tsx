@@ -16,9 +16,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import fileUploadQueries, {
-  FileListParams,
-} from "@/repo/file-upload-queries/file-upload-queries";
+import fileUploadQueries from "@/repo/file-upload-queries/file-upload-queries";
+import { FileListParams } from "@/types/features";
 import { Download, File, Trash2, ExternalLink } from "lucide-react";
 
 interface FileListProps {

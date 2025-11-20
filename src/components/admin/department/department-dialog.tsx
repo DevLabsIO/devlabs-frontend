@@ -18,7 +18,7 @@ import {
   useCreateDepartment,
   useUpdateDepartment,
 } from "@/repo/department-queries/department-queries";
-import { Department } from "@/types/types";
+import { Department } from "@/types/entities";
 
 interface DepartmentFormData {
   name: string;
@@ -101,7 +101,7 @@ export function DepartmentDialog({
               "Failed to update department";
             error(errorMessage);
           },
-        }
+        },
       );
     }
   };

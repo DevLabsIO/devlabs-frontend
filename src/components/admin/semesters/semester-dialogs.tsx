@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Semester } from "@/types/types";
+import { Semester } from "@/types/entities";
 import {
   Dialog,
   DialogContent,

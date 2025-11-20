@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios/axios-client";
-import { Course, Project, ProjectWithTeam } from "@/types/types";
+import { Course, Project, ProjectWithTeam } from "@/types/entities";
 import { CreateProjectRequest } from "@/components/projects/types/types";
 
 export const projectQueries = {
@@ -9,7 +9,7 @@ export const projectQueries = {
   },
 
   fetchProjectByProjectId: async (
-    projectId: string
+    projectId: string,
   ): Promise<ProjectWithTeam> => {
     const response = await axiosInstance.get(`/projects/${projectId}`);
     return response.data.data || response.data;
@@ -33,11 +33,11 @@ export const projectQueries = {
       description?: string;
       objectives?: string;
       githubUrl?: string;
-    }
+    },
   ) => {
     const response = await axiosInstance.put(
       `/projects/${projectId}`,
-      updateData
+      updateData,
     );
     return response.data;
   },
@@ -54,23 +54,23 @@ export const projectQueries = {
 
   getActiveProjectsBySemester: async (semesterId: string) => {
     const response = await axiosInstance.get(
-      `/projects/semester/${semesterId}/active`
+      `/projects/semester/${semesterId}/active`,
     );
     return response.data;
   },
 
   getActiveProjectsByBatch: async (batchId: string) => {
     const response = await axiosInstance.get(
-      `/projects/batch/${batchId}/active`
+      `/projects/batch/${batchId}/active`,
     );
     return response.data;
   },
   getProjectByCourse: async (
     userId: string,
-    courseId: string
+    courseId: string,
   ): Promise<Course[]> => {
     const response = await axiosInstance.get(
-      `/project/user/${userId}/course/${courseId}`
+      `/project/user/${userId}/course/${courseId}`,
     );
     return response.data;
   },
@@ -80,7 +80,7 @@ export const projectQueries = {
     userId: string,
     query: string,
     page: number = 0,
-    size: number = 10
+    size: number = 10,
   ): Promise<Project[]> => {
     const response = await axiosInstance.get(
       `/projects/course/${courseId}/search/${userId}`,
@@ -90,7 +90,7 @@ export const projectQueries = {
           page,
           size,
         },
-      }
+      },
     );
     return response.data.data || response.data;
   },
@@ -106,7 +106,7 @@ export const projectQueries = {
   },
   reProposeProject: async (projectId: string) => {
     const response = await axiosInstance.put(
-      `/projects/${projectId}/re-propose`
+      `/projects/${projectId}/re-propose`,
     );
     return response.data;
   },
@@ -118,7 +118,7 @@ export const projectQueries = {
 
   revertProjectCompletion: async (projectId: string) => {
     const response = await axiosInstance.put(
-      `/projects/${projectId}/revert-completion`
+      `/projects/${projectId}/revert-completion`,
     );
     return response.data;
   },

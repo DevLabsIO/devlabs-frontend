@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { resultQueries } from "@/repo/result-queries/result-queries";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { ProjectResult } from "@/types/types";
+import { ProjectResult } from "@/types/features";
 import { BarChart3, TrendingUp, Award, Eye, EyeOff } from "lucide-react";
 
 interface ReviewResultsProps {
@@ -238,7 +238,7 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <span
                       className={`text-lg font-bold ${getScoreColor(
-                        result.percentage
+                        result.percentage,
                       )}`}
                     >
                       {result.percentage.toFixed(1)}%

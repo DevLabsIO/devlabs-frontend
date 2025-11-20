@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataGrid } from "@/components/data-grid/data-grid";
 import { GridItem } from "@/components/data-grid/grid-item";
-import { Team } from "@/types/types";
+import { Team } from "@/types/entities";
 import { Users, PlusCircle } from "lucide-react";
 import { getColumns } from "@/components/teams/team-columns";
 import { useTeams } from "@/components/teams/hooks/use-teams";

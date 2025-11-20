@@ -1,43 +1,19 @@
 import axiosInstance from "@/lib/axios/axios-client";
+import {
+  SaveDraftRequest,
+  SaveDraftResponse,
+  GetDraftResponse,
+} from "@/types/api";
 
-export interface CriterionScoreData {
-  criterionId: string;
-  score: number;
-  comment: string | null;
-}
-
-export interface ParticipantScoreData {
-  participantId: string;
-  criterionScores: CriterionScoreData[];
-}
-
-export interface EvaluationDraft {
-  reviewId: string;
-  projectId: string;
-  courseId: string;
-  evaluatorId: string;
-  scores: ParticipantScoreData[];
-  lastUpdated: string;
-  isSubmitted: boolean;
-}
-
-export interface SaveDraftRequest {
-  reviewId: string;
-  projectId: string;
-  courseId: string;
-  scores: ParticipantScoreData[];
-}
-
-export interface SaveDraftResponse {
-  success: boolean;
-  savedAt: string;
-  message: string;
-}
-
-export interface GetDraftResponse {
-  exists: boolean;
-  draft: EvaluationDraft | null;
-}
+// Re-export for backward compatibility
+export type {
+  CriterionScoreData,
+  ParticipantScoreData,
+  EvaluationDraft,
+  SaveDraftRequest,
+  SaveDraftResponse,
+  GetDraftResponse,
+} from "@/types/api";
 
 const getDraft = async (
   reviewId: string,

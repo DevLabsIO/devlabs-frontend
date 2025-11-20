@@ -11,10 +11,8 @@ import {
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
 } from "@/components/ui/breadcrumb";
-import {
-  useNavigation,
-  NavigationConfig,
-} from "@/hooks/navigation/use-navigation";
+import { useNavigation } from "@/hooks/navigation/use-navigation";
+import { NavigationConfig } from "@/types/ui";
 import { cn } from "@/lib/utils";
 
 interface DynamicBreadcrumbProps {

@@ -2,17 +2,8 @@
 
 import { createContext, useContext, ReactNode, useMemo } from "react";
 import { useSession } from "next-auth/react";
-import { Session } from "next-auth";
-import { User } from "@/types/types";
-
-interface SessionContextType {
-  session: Session | null;
-  status: "authenticated" | "loading" | "unauthenticated";
-  update: (data?: unknown) => Promise<Session | null>;
-  user: User | undefined;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-}
+import { User } from "@/types/entities";
+import { SessionContextType } from "@/types/auth";
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 

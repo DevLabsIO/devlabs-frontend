@@ -16,7 +16,7 @@ import {
   calculateReviewStatus,
   getStatusColor,
   formatStatus,
-} from "@/utils/review-status";
+} from "@/lib/utils/review-status";
 
 export default function ReviewDetailPage() {
   const params = useParams();

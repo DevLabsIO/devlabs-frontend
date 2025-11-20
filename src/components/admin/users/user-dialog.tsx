@@ -26,7 +26,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import userQueries from "@/repo/user-queries/user-queries";
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
 
 interface UserFormData {
   name: string;
@@ -182,7 +182,7 @@ export function UserDialog({
 
   const handleInputChange = (
     field: keyof UserFormData,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -300,8 +300,8 @@ export function UserDialog({
                   ? "Updating..."
                   : "Creating..."
                 : isEditMode
-                ? "Save changes"
-                : "Create user"}
+                  ? "Save changes"
+                  : "Create user"}
             </Button>
           </DialogFooter>
         </form>

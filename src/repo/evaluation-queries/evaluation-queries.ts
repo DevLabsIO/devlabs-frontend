@@ -1,18 +1,18 @@
 import axiosInstance from "@/lib/axios/axios-client";
-import { EvaluationCriteria, ProjectReviewsResponse } from "@/types/types";
+import { EvaluationCriteria, ProjectReviewsResponse } from "@/types/features";
 
 const fetchReviewsForProject = async (
-  projectId: string
+  projectId: string,
 ): Promise<ProjectReviewsResponse> => {
   const response = await axiosInstance.get(`/projects/${projectId}/reviews`);
   return response.data;
 };
 
 const fetchEvaluationCriteria = async (
-  reviewId: string
+  reviewId: string,
 ): Promise<EvaluationCriteria> => {
   const response = await axiosInstance.get(
-    `/api/review/review/${reviewId}/criteria`
+    `/api/review/review/${reviewId}/criteria`,
   );
   return response.data;
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import type { StudentCourse } from "@/types/types";
+import type { StudentCourse } from "@/types/entities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -44,7 +44,7 @@ export const StudentCourseCard = ({
             <Badge
               variant="outline"
               className={`whitespace-nowrap font-medium ${getScoreBadgeClass(
-                score
+                score,
               )}`}
             >
               {score.toFixed(1)}%

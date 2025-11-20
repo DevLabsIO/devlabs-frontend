@@ -17,7 +17,7 @@ import {
   Rubric,
   RubricCriterionData,
   UpdateRubricRequest,
-} from "@/repo/rubrics-queries/rubric-types";
+} from "@/types/features";
 import { RubricCriteriaTable } from "./rubric-criteria-table";
 import { useMutation } from "@tanstack/react-query";
 import rubricQueries from "@/repo/rubrics-queries/rubrics-queries";

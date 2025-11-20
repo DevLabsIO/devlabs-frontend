@@ -1,17 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSessionContext } from "@/lib/session-context";
-import { Review } from "@/types/types";
+import { Review } from "@/types/entities";
+import { DataTableResponse } from "@/types/ui";
 import axiosInstance from "@/lib/axios/axios-client";
-
-interface DataTableResponse {
-  data: Review[];
-  pagination: {
-    total_pages: number;
-    current_page: number;
-    per_page: number;
-    total_count: number;
-  };
-}
 
 export const useReviews = (
   searchQuery?: string,
@@ -36,7 +27,7 @@ export const useReviews = (
       status,
     ],
 
-    queryFn: async (): Promise<DataTableResponse> => {
+    queryFn: async (): Promise<DataTableResponse<Review>> => {
       if (!user) throw new Error("User not authenticated");
 
       let endpoint: string;
@@ -74,7 +65,7 @@ export const useReviews = (
 
       // The backend now always returns paginated responses
       if (backendResponse.pagination) {
-        return backendResponse as DataTableResponse;
+        return backendResponse as DataTableResponse<Review>;
       }
 
       // Fallback for any legacy responses (shouldn't happen with new backend)

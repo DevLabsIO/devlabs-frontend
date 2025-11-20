@@ -7,7 +7,7 @@ import {
   useBatchStudents,
 } from "@/components/admin/batch/hooks/use-batch";
 import { getStudentColumns } from "@/components/admin/batch/batch-student-column";
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { AssignStudentToBatchDialog } from "@/components/admin/batch/assign-student-dialog";

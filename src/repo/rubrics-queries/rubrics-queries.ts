@@ -3,7 +3,7 @@ import {
   CreateRubricRequest,
   UpdateRubricRequest,
   Rubric,
-} from "./rubric-types";
+} from "@/types/features";
 
 const rubricQueries = {
   getUserRubrics: async (userId: string): Promise<Rubric[]> => {
@@ -23,7 +23,7 @@ const rubricQueries = {
 
   updateRubric: async (
     id: string,
-    data: UpdateRubricRequest
+    data: UpdateRubricRequest,
   ): Promise<Rubric> => {
     const response = await axiosInstance.put(`/api/rubrics/${id}`, data);
     return response.data;
@@ -31,7 +31,7 @@ const rubricQueries = {
 
   deleteRubric: async (
     id: string,
-    userId: string
+    userId: string,
   ): Promise<{ success: boolean; message: string }> => {
     const response = await axiosInstance.delete(`/api/rubrics/${id}`, {
       params: { userId },

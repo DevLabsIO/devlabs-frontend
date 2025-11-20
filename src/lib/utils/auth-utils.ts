@@ -1,15 +1,9 @@
-enum UserType {
-  SUPERUSER = "superuser",
-  ADMIN = "admin",
-  MANAGER = "manager",
-  FACULTY = "faculty",
-  STUDENT = "student",
-}
+import { UserType } from "@/types/auth";
 
 // Utility function to check if user has any of the required roles
 export function hasRequiredRole(
   userRole: string | undefined,
-  requiredRoles: UserType[]
+  requiredRoles: UserType[],
 ): boolean {
   if (!userRole || requiredRoles.length === 0) return false;
   return requiredRoles.includes(userRole as UserType);
@@ -18,7 +12,7 @@ export function hasRequiredRole(
 // Utility function to check if user belongs to any of the required groups
 export function belongsToRequiredGroup(
   userGroups: string[] | undefined,
-  requiredGroups: string[]
+  requiredGroups: string[],
 ): boolean {
   if (!userGroups || requiredGroups.length === 0) return false;
   return requiredGroups.some((group) => userGroups.includes(group));
@@ -29,7 +23,7 @@ export function hasAccess(
   userRoles: string[] | undefined,
   userGroups: string[] | undefined,
   requiredRoles: UserType[] = [],
-  requiredGroups: string[] = []
+  requiredGroups: string[] = [],
 ): boolean {
   const hasRole =
     requiredRoles.length === 0 ||

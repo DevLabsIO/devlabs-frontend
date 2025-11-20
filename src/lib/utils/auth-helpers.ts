@@ -1,15 +1,12 @@
 import userQueries from "@/repo/user-queries/user-queries";
+import { UserExistenceCheckResult } from "@/types/auth";
 
-export interface UserExistenceCheckResult {
-  exists: boolean;
-  isLoading: boolean;
-  error?: Error;
-}
+export type { UserExistenceCheckResult };
 
 export async function checkUserExistenceWithRetry(
   email: string,
   maxRetries: number = 3,
-  retryDelay: number = 1000
+  retryDelay: number = 1000,
 ): Promise<{ exists: boolean }> {
   let lastError: Error | null = null;
 
@@ -23,7 +20,7 @@ export async function checkUserExistenceWithRetry(
       if (attempt < maxRetries) {
         // Wait before retrying with exponential backoff
         await new Promise((resolve) =>
-          setTimeout(resolve, retryDelay * attempt)
+          setTimeout(resolve, retryDelay * attempt),
         );
       }
     }

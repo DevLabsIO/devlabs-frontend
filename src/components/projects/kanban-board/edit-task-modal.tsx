@@ -27,7 +27,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { kanbanAPI } from "@/repo/project-queries/kanban-queries";
 import { useSessionContext } from "@/lib/session-context";
 import { useToast } from "@/hooks/use-toast";
-import { UpdateTaskRequest, User } from "@/types/types";
+import { UpdateTaskRequest } from "@/types/features";
+import { User } from "@/types/entities";
 
 const editTaskSchema = z.object({
   title: z.string().min(1, "Title is required"),

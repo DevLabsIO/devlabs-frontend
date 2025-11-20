@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { dashboardQueries } from "@/repo/dashboard-queries/dashboard-queries";
-import { StudentDashboardData } from "@/types/types";
+import { StudentDashboardData } from "@/types/features";
 import StatCard from "./StatCard";
 import ReviewList from "./ReviewList";
 import { Button } from "@/components/ui/button";

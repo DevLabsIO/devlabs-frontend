@@ -3,9 +3,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { individualScoreQueries } from "@/repo/individual-score-queries/individual-score-queries";
-import { CourseEvaluationData, IndividualScoreSubmission } from "@/types/types";
+import {
+  CourseEvaluationData,
+  IndividualScoreSubmission,
+} from "@/types/features";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { useEvaluationDraft } from "@/hooks/useEvaluationDraft";
+import { useEvaluationDraft } from "@/components/evaluations/hooks/useEvaluationDraft";
 import { ParticipantScoreData } from "@/repo/evaluation-draft-queries/evaluation-draft-queries";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";

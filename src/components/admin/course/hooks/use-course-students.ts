@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
 import axiosInstance from "@/lib/axios/axios-client";
 
 export interface StudentsDataTableResponse {
@@ -16,7 +16,7 @@ export const useCourseStudents = (
   courseId: string,
   searchQuery?: string,
   page: number = 0,
-  size: number = 10
+  size: number = 10,
 ) => {
   return useQuery<StudentsDataTableResponse, Error>({
     queryKey: ["courseStudents", courseId, searchQuery, page, size],

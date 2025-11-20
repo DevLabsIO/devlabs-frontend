@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Calendar, Award, ChevronRight } from "lucide-react";
-import type { CourseData } from "@/types/types";
+import type { CourseData } from "@/types/entities";
 
 interface CourseGridProps {
   courses: CourseData[];
@@ -66,7 +66,7 @@ export default function CourseGrid({ courses }: CourseGridProps) {
                 <div className="h-2 w-full rounded-full bg-secondary/70">
                   <div
                     className={`h-2 rounded-full ${getProgressColor(
-                      course.progressPercentage
+                      course.progressPercentage,
                     )}`}
                     style={{ width: `${course.progressPercentage}%` }}
                   />

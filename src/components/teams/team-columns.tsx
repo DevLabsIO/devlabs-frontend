@@ -1,4 +1,4 @@
-import { Team } from "@/types/types";
+import { Team } from "@/types/entities";
 import { ColumnDef } from "@tanstack/react-table";
 import React from "react";
 import { DataTableColumnHeader } from "@/components/data-table/column-header";

@@ -4,28 +4,28 @@ import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/data-table/data-table";
 import { getBatchColumns } from "./batch-columns";
 import { useCourseBatches } from "./hooks/use-course-batches";
-import { Batch } from "@/types/types";
+import { Batch } from "@/types/entities";
 import { Button } from "@/components/ui/button";
 
 type UseBatchesForDataTable = (
   page: number,
   pageSize: number,
-  search: string
+  search: string,
 ) => ReturnType<typeof useCourseBatches>;
 
 const createUseBatchesForDataTable = (
-  courseId: string
+  courseId: string,
 ): UseBatchesForDataTable & { isQueryHook: true } => {
   const useBatchesForDataTable = (
     page: number,
     pageSize: number,
-    search: string
+    search: string,
   ) => {
     return useCourseBatches(
       courseId,
       search,
       page > 0 ? page - 1 : 0,
-      pageSize
+      pageSize,
     );
   };
   (
@@ -50,7 +50,7 @@ export function CourseBatchesTable({
   const router = useRouter();
   const useBatchesForDataTable = React.useMemo(
     () => createUseBatchesForDataTable(courseId),
-    [courseId]
+    [courseId],
   );
   const columns = React.useMemo(() => getBatchColumns(onDelete), [onDelete]);
 

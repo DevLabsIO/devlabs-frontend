@@ -1,4 +1,4 @@
-import { Course } from "@/types/types";
+import { Course } from "@/types/entities";
 import { ColumnDef } from "@tanstack/react-table";
 import React from "react";
 import { DataTableColumnHeader } from "@/components/data-table/column-header";

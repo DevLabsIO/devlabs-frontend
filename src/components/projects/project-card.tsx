@@ -17,7 +17,7 @@ import {
   Folder,
   AlertTriangle,
 } from "lucide-react";
-import { Project } from "@/types/types";
+import { Project } from "@/types/entities";
 
 const getStatusColor = (status: string) => {
   switch (status) {

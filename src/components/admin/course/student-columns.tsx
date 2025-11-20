@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";

@@ -25,11 +25,11 @@ import { DevTool } from "@hookform/devtools";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import reviewQueries from "@/repo/review-queries/review-queries";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { UpdateReviewRequest } from "@/repo/review-queries/review-types";
+import { UpdateReviewRequest } from "@/types/features";
 import { useToast } from "@/hooks/use-toast";
 import { format, parseISO } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
-import { Review } from "@/types/types";
+import { Review } from "@/types/entities";
 
 const formSteps = [
   { value: "basic-info", label: "Basic Info" },
@@ -81,13 +81,13 @@ export default function EditReviewPage() {
             ({
               id: course.semesterInfo.id,
               name: course.semesterInfo.name,
-            } as SemesterOption)
+            }) as SemesterOption,
         ) || [];
 
       // Remove duplicates
       const uniqueSemesters = semesters.filter(
         (semester: SemesterOption, index: number, self: SemesterOption[]) =>
-          index === self.findIndex((s: SemesterOption) => s.id === semester.id)
+          index === self.findIndex((s: SemesterOption) => s.id === semester.id),
       );
 
       form.reset({
@@ -157,7 +157,7 @@ export default function EditReviewPage() {
     if (!isValid) return;
 
     const currentIndex = formSteps.findIndex(
-      (step) => step.value === currentTab
+      (step) => step.value === currentTab,
     );
     if (currentIndex < formSteps.length - 1) {
       setCurrentTab(formSteps[currentIndex + 1].value);
@@ -166,7 +166,7 @@ export default function EditReviewPage() {
 
   const handlePrevious = () => {
     const currentIndex = formSteps.findIndex(
-      (step) => step.value === currentTab
+      (step) => step.value === currentTab,
     );
     if (currentIndex > 0) {
       setCurrentTab(formSteps[currentIndex - 1].value);

@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Department } from "@/types/types";
+import { Department } from "@/types/entities";
 
 export const getColumns = (
   onEdit?: (department: Department) => void,

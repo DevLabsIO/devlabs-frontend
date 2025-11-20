@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
-import { Course, Project } from "@/types/types";
+import { Course, Project } from "@/types/entities";
 import { CreateProjectRequest } from "@/components/projects/types/types";
 import { MultiSelect, OptionType } from "@/components/ui/multi-select";
 import { courseQueries } from "@/repo/course-queries/course-queries";
@@ -47,7 +47,7 @@ export function ProjectForm({
     setDescription(project?.description || "");
     setObjectives(project?.objectives || "");
     setSelectedCourseIds(
-      Array.isArray(project?.courseIds) ? project?.courseIds : []
+      Array.isArray(project?.courseIds) ? project?.courseIds : [],
     );
   }, [project, isOpen]);
 

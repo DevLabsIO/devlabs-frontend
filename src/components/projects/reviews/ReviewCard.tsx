@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useToast } from "@/hooks/use-toast";
-import { Review } from "@/types/types";
+import { Review } from "@/types/entities";
 import { Calendar, Tag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -102,7 +102,7 @@ export default function ReviewCard({
   };
 
   const relevantCourses = review.courses.filter((course) =>
-    projectCourses.some((pc) => pc.id === course.id)
+    projectCourses.some((pc) => pc.id === course.id),
   );
 
   return (

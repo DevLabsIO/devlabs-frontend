@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Trash2, Plus, AlertTriangle } from "lucide-react";
-import { RubricCriterionData } from "@/repo/rubrics-queries/rubric-types";
+import { RubricCriterionData } from "@/types/features";
 import { Checkbox } from "@/components/ui/checkbox";
 
 interface RubricCriteriaTableProps {
@@ -35,7 +35,7 @@ export function RubricCriteriaTable({
   const handleFieldChange = (
     index: number,
     field: keyof RubricCriterionData,
-    value: string | number | boolean
+    value: string | number | boolean,
   ) => {
     const newCriteria = [...criteria];
     newCriteria[index] = { ...newCriteria[index], [field]: value };
@@ -102,7 +102,7 @@ export function RubricCriteriaTable({
 
   const totalScore = criteria.reduce(
     (total, criterion) => total + (criterion.maxScore || 0),
-    0
+    0,
   );
 
   return (

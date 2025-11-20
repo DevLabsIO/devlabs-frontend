@@ -1,18 +1,10 @@
 "use client";
 
-import { ReactNode } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Edit,
-  Trash2,
-  Calendar,
-  User,
-  LucideIcon,
-  MoreVertical,
-} from "lucide-react";
+import { Edit, Trash2, Calendar, User, MoreVertical } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,63 +15,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import type {
+  BaseGridItem,
+  GridItemFieldConfig,
+  GridItemAction,
+  GridItemProps,
+} from "@/types/ui";
 
-export interface BaseGridItem {
-  id: string | number;
-  name: string;
-  description?: string;
-  createdAt: string;
-  createdBy?: {
-    name: string;
-  };
-}
-
-export interface GridItemFieldConfig<T> {
-  id: keyof T;
-  title: keyof T;
-  description?: keyof T;
-  createdAt?: keyof T;
-  createdBy?: keyof T;
-
-  badge?: {
-    field: keyof T;
-    label?: string;
-    variant?: "default" | "secondary" | "destructive" | "outline";
-    format?: (value: unknown) => string;
-  };
-
-  stats?: Array<{
-    field: keyof T;
-    label: string;
-    icon: LucideIcon;
-    format?: (value: unknown) => string | number;
-  }>;
-}
-
-export interface GridItemAction<T> {
-  label: string;
-  icon?: LucideIcon;
-  variant?: "default" | "destructive";
-  onClick: (item: T, event: React.MouseEvent) => void;
-  separator?: boolean;
-}
-
-export interface GridItemProps<T extends Record<string, unknown>> {
-  item: T;
-  isSelected: boolean;
-  onToggleSelect: () => void;
-  enableSelection?: boolean;
-  onCardClick?: (item: T) => void;
-  onEdit?: (item: T) => void;
-  onDelete?: (item: T) => void;
-
-  fieldConfig: GridItemFieldConfig<T>;
-  actions?: GridItemAction<T>[];
-  customBadge?: (item: T) => ReactNode;
-  customStats?: (item: T) => ReactNode;
-  customContent?: (item: T) => ReactNode;
-  entityName?: string;
-}
+export type {
+  BaseGridItem,
+  GridItemFieldConfig,
+  GridItemAction,
+  GridItemProps,
+};
 
 export function GridItem<T extends Record<string, unknown>>({
   item,
@@ -149,7 +97,7 @@ export function GridItem<T extends Record<string, unknown>>({
     <Card
       className={cn(
         "group relative flex h-full flex-col overflow-hidden rounded-lg border bg-card text-card-foreground transition-all duration-200 hover:border-primary/40 hover:shadow-lg",
-        isSelected && "border-primary ring-2 ring-primary ring-offset-2"
+        isSelected && "border-primary ring-2 ring-primary ring-offset-2",
       )}
       onClick={handleCardClick}
     >

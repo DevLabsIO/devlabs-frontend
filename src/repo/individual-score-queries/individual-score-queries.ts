@@ -3,16 +3,16 @@ import {
   CourseEvaluationData,
   CourseEvaluationSummary,
   IndividualScoreSubmission,
-} from "@/types/types";
+} from "@/types/features";
 
 const fetchEvaluationSummary = async (
   reviewId: string,
   projectId: string,
-  userId: string
+  userId: string,
 ): Promise<CourseEvaluationSummary> => {
   const response = await axiosInstance.post(
     `/api/individualScore/review/${reviewId}/project/${projectId}/summary`,
-    { userId }
+    { userId },
   );
   return response.data;
 };
@@ -21,21 +21,21 @@ const fetchCourseEvaluationData = async (
   reviewId: string,
   projectId: string,
   courseId: string,
-  userId: string
+  userId: string,
 ): Promise<CourseEvaluationData> => {
   const response = await axiosInstance.post(
     `/api/individualScore/review/${reviewId}/project/${projectId}/course/${courseId}/data`,
-    { userId }
+    { userId },
   );
   return response.data;
 };
 
 const submitCourseScores = async (
-  submission: IndividualScoreSubmission
+  submission: IndividualScoreSubmission,
 ): Promise<IndividualScoreSubmission> => {
   const response = await axiosInstance.post(
     "/api/individualScore/course",
-    submission
+    submission,
   );
   return response.data;
 };

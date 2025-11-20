@@ -10,11 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { Batch } from "@/types/types";
+import { Batch } from "@/types/entities";
 
 export const getColumns = (
   onEdit?: (batch: Batch) => void,
-  onDelete?: (batchId: string) => void
+  onDelete?: (batchId: string) => void,
 ): ColumnDef<Batch>[] => {
   return [
     {

@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { StudentCourse } from "@/types/types";
+import { StudentCourse } from "@/types/entities";
 import {
   PerformanceChartSkeleton,
   CourseCardSkeleton,

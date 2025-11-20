@@ -7,7 +7,7 @@ import { useSessionContext } from "@/lib/session-context";
 import { toast } from "sonner";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import axiosInstance from "@/lib/axios/axios-client";
-import { ReviewPublicationStatus } from "@/utils/review-status";
+import { ReviewPublicationStatus } from "@/lib/utils/review-status";
 
 interface PublishReviewButtonProps {
   reviewId: string;

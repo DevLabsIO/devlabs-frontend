@@ -1,5 +1,5 @@
 import React from "react";
-import { Semester } from "@/types/types";
+import { Semester } from "@/types/entities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 

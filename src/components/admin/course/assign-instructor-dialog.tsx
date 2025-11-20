@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { useFaculty } from "./hooks/use-faculty";
-import { User } from "@/types/types";
+import { User } from "@/types/entities";
 
 interface AssignInstructorDialogProps {
   isOpen: boolean;

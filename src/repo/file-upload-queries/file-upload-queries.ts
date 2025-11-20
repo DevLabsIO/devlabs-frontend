@@ -1,47 +1,24 @@
 import axiosInstance from "@/lib/axios/axios-client";
+import type {
+  FileUploadResponse,
+  FileListItem,
+  FileListResponse,
+  FileUploadParams,
+  FileListParams,
+} from "@/types/features";
 
-export interface FileUploadResponse {
-  objectName: string;
-  url: string;
-  directoryPath: string;
-}
-
-export interface FileListItem {
-  objectName: string;
-  fileName: string;
-  fileSize: number;
-  lastModified: string;
-  downloadUrl: string;
-}
-
-export interface FileListResponse {
-  files: FileListItem[];
-}
-
-export interface FileUploadParams {
-  file: File;
-  customName?: string;
-  teamId?: string;
-  teamName?: string;
-  projectId?: string;
-  projectName?: string;
-  reviewId?: string;
-  reviewName?: string;
-}
-
-export interface FileListParams {
-  projectId?: string;
-  projectName?: string;
-  reviewId?: string;
-  reviewName?: string;
-  teamId?: string;
-  teamName?: string;
-}
+export type {
+  FileUploadResponse,
+  FileListItem,
+  FileListResponse,
+  FileUploadParams,
+  FileListParams,
+};
 
 const fileUploadQueries = {
   uploadFile: async (
     params: FileUploadParams,
-    onProgress?: (progress: number) => void
+    onProgress?: (progress: number) => void,
   ): Promise<FileUploadResponse> => {
     const formData = new FormData();
     formData.append("file", params.file);
@@ -98,7 +75,7 @@ const fileUploadQueries = {
   },
 
   getDownloadUrl: async (
-    objectName: string
+    objectName: string,
   ): Promise<{ downloadUrl: string }> => {
     const response = await axiosInstance.get("/blob/file-info", {
       params: { objectName },

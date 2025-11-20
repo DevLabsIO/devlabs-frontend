@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Review } from "@/types/types";
+import { Review } from "@/types/entities";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,7 +14,7 @@ import {
   calculateReviewStatus,
   getStatusColor,
   formatStatus,
-} from "@/utils/review-status";
+} from "@/lib/utils/review-status";
 
 export const getColumns = (
   onView: (review: Review) => void,

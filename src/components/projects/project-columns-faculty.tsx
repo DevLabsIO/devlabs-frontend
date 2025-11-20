@@ -1,4 +1,4 @@
-import { Project } from "@/types/types";
+import { Project } from "@/types/entities";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/column-header";
 import { ProjectActions } from "@/components/projects/project-actions";
