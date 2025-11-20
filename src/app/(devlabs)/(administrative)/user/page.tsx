@@ -104,73 +104,74 @@ export default function UsersPage() {
   };
 
   return (
-    <div>
-      <div className="flex justify-between items-center pb-3 mb-4">
+    <div className="container mx-auto py-10">
+      <div className="flex justify-between items-center pb-3">
         <div>
           <h1 className="text-2xl font-bold">Users Management</h1>
           <p className="text-sm text-muted-foreground">
             Manage system users and sync with Keycloak
           </p>
         </div>
-        <Button
-          onClick={() => setIsSyncDialogOpen(true)}
-          variant="outline"
-          className="gap-2"
-        >
-          <RefreshCw className="h-4 w-4" />
-          Sync from Keycloak
-        </Button>
+        <div className="flex gap-2">
+          <UserDialog />
+          <Button
+            onClick={() => setIsSyncDialogOpen(true)}
+            variant="outline"
+            className="gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Sync from Keycloak
+          </Button>
+        </div>
       </div>
 
-      <div>
-        <AssignBatchDialog
-          isOpen={isAssignDialogOpen}
-          onClose={() => setIsAssignDialogOpen(false)}
-          onAssign={handleAssign}
-          isAssigning={assignMutation.isPending}
-        />
-        <KeycloakSyncDialog
-          isOpen={isSyncDialogOpen}
-          onClose={() => setIsSyncDialogOpen(false)}
-          onSyncComplete={() =>
-            queryClient.invalidateQueries({ queryKey: ["users"] })
-          }
-        />
-        <UserDialog />
-        <DataTable
-          config={{
-            enableUrlState: false,
-            enableDateFilter: false,
-            enableColumnFilters: true,
-            enableAssign: true,
-            enableDelete: false,
-          }}
-          exportConfig={{
-            entityName: "users",
-            columnMapping: {
-              name: "Name",
-              email: "Email",
-              phoneNumber: "Phone Number",
-              role: "Role",
-              isActive: "Status",
-            },
-            columnWidths: [
-              { wch: 25 }, // name
-              { wch: 30 }, // email
-              { wch: 15 }, // phoneNumber
-              { wch: 15 }, // role
-              { wch: 15 }, // isActive
-            ],
-            headers: ["name", "email", "phoneNumber", "role", "isActive"],
-          }}
-          getColumns={columsWrapper}
-          fetchDataFn={useUsersForDataTable}
-          idField="id"
-          columnFilterOptions={columnFilterOptions}
-          deleteFn={handleDelete}
-          assignFn={handleAssignClick}
-        />
-      </div>
+      <AssignBatchDialog
+        isOpen={isAssignDialogOpen}
+        onClose={() => setIsAssignDialogOpen(false)}
+        onAssign={handleAssign}
+        isAssigning={assignMutation.isPending}
+      />
+      <KeycloakSyncDialog
+        isOpen={isSyncDialogOpen}
+        onClose={() => setIsSyncDialogOpen(false)}
+        onSyncComplete={() =>
+          queryClient.invalidateQueries({ queryKey: ["users"] })
+        }
+      />
+
+      <DataTable
+        config={{
+          enableUrlState: false,
+          enableDateFilter: false,
+          enableColumnFilters: true,
+          enableAssign: true,
+          enableDelete: false,
+        }}
+        exportConfig={{
+          entityName: "users",
+          columnMapping: {
+            name: "Name",
+            email: "Email",
+            phoneNumber: "Phone Number",
+            role: "Role",
+            isActive: "Status",
+          },
+          columnWidths: [
+            { wch: 25 }, // name
+            { wch: 30 }, // email
+            { wch: 15 }, // phoneNumber
+            { wch: 15 }, // role
+            { wch: 15 }, // isActive
+          ],
+          headers: ["name", "email", "phoneNumber", "role", "isActive"],
+        }}
+        getColumns={columsWrapper}
+        fetchDataFn={useUsersForDataTable}
+        idField="id"
+        columnFilterOptions={columnFilterOptions}
+        deleteFn={handleDelete}
+        assignFn={handleAssignClick}
+      />
     </div>
   );
 }

@@ -27,6 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import userQueries from "@/repo/user-queries/user-queries";
 import { User } from "@/types/entities";
+import { Plus } from "lucide-react";
 
 interface UserFormData {
   name: string;
@@ -198,7 +199,8 @@ export function UserDialog({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {!isEditMode && (
         <DialogTrigger asChild>
-          <Button className="mb-4" variant={"outline"}>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
             Add User
           </Button>
         </DialogTrigger>
