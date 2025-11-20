@@ -12,14 +12,14 @@ import { ParticipantsForm } from "@/components/reviews/participants-form";
 import { Loader2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import reviewQueries from "@/repo/review-queries/review-queries";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { CreateReviewRequest } from "@/types/features";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
   const { success, error } = useToast();
   const queryClient = useQueryClient();
   const router = useRouter();

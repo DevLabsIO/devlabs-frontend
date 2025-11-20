@@ -24,7 +24,7 @@ import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { DevTool } from "@hookform/devtools";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import reviewQueries from "@/repo/review-queries/review-queries";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { UpdateReviewRequest } from "@/types/features";
 import { useToast } from "@/hooks/use-toast";
 import { format, parseISO } from "date-fns";
@@ -42,7 +42,7 @@ export default function EditReviewPage() {
   const params = useParams();
   const router = useRouter();
   const reviewId = params.id as string;
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
   const { success, error } = useToast();
   const queryClient = useQueryClient();
 

@@ -7,7 +7,7 @@ import {
   CourseEvaluationData,
   IndividualScoreSubmission,
 } from "@/types/features";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { useEvaluationDraft } from "@/components/evaluations/hooks/useEvaluationDraft";
 import { ParticipantScoreData } from "@/repo/evaluation-draft-queries/evaluation-draft-queries";
 import { Button } from "@/components/ui/button";
@@ -64,7 +64,7 @@ export function CourseEvaluationForm({
   projectId,
   reviewId,
 }: CourseEvaluationFormProps) {
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [viewMode, setViewMode] = useViewMode();

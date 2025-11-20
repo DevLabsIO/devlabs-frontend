@@ -28,7 +28,7 @@ import { Rubric } from "@/types/features";
 import rubricQueries from "@/repo/rubrics-queries/rubrics-queries";
 import { CreateEditRubricModal } from "@/components/reviews/create-edit-rubric-modal";
 import { RubricCriteriaTable } from "@/components/reviews/rubric-criteria-table";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import {
   PlusCircle,
   Pencil,
@@ -49,7 +49,7 @@ export function RubricFormSection({
   selectedRubricId,
   onRubricChange,
 }: RubricFormSectionProps) {
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
   const queryClient = useQueryClient();
 
   const [isModalOpen, setIsModalOpen] = useState(false);

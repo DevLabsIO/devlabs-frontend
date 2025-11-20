@@ -2,16 +2,16 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { archiveQueries } from "@/repo/project-queries/archive-queries";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 
 export function useArchives(
   search: string = "",
   page: number = 0,
   pageSize: number = 10,
   sortBy: string = "updatedAt",
-  sortOrder: "asc" | "desc" = "desc"
+  sortOrder: "asc" | "desc" = "desc",
 ) {
-  const currentUser = useCurrentUser();
+  const { user: currentUser } = useSessionContext();
 
   return useQuery({
     queryKey: [
@@ -33,13 +33,13 @@ export function useArchives(
           currentUser.id,
           search.trim(),
           page,
-          pageSize
+          pageSize,
         );
       } else {
         return archiveQueries.fetchArchivedProjects(
           currentUser.id,
           page,
-          pageSize
+          pageSize,
         );
       }
     },

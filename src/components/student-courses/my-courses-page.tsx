@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useQuery, useQueries } from "@tanstack/react-query";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { courseQueries } from "@/repo/course-queries/course-queries";
 import { StudentCourse } from "@/types/entities";
 import {
@@ -35,7 +35,7 @@ const assignColorsToCourses = (
 };
 
 export function MyCoursesPage() {
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
   const studentId = user?.id;
   const router = useRouter();
 

@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getInitials } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { RefreshCw, Edit3, CheckCircle, RotateCcw } from "lucide-react";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { useToast } from "@/hooks/use-toast";
 import { UpdateProjectForm } from "@/components/projects/update-project-form";
 import { useState } from "react";
@@ -27,7 +27,7 @@ import { useState } from "react";
 export default function DevlabsProjectPage() {
   const params = useParams();
   const queryClient = useQueryClient();
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
   const { success, error: toastError } = useToast();
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
 

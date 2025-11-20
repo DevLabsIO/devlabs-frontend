@@ -12,7 +12,7 @@ import { FileUploadParams } from "@/types/features";
 import reviewQueries from "@/repo/review-queries/review-queries";
 import teamQueries from "@/repo/team-queries/team-queries";
 import { projectQueries } from "@/repo/project-queries/project-queries";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { Upload, File as FileIcon, X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ProjectWithTeam } from "@/types/entities";
@@ -36,7 +36,7 @@ export function FileUploadSection({
   );
   const [fileListKey, setFileListKey] = useState(0);
   const { success, error } = useToast();
-  const currentUser = useCurrentUser();
+  const { user: currentUser } = useSessionContext();
 
   const { data: review } = useQuery({
     queryKey: ["review", reviewId],

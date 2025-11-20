@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { useToast } from "@/hooks/use-toast";
 import { Review } from "@/types/entities";
 import { Calendar, Tag } from "lucide-react";
@@ -30,7 +30,7 @@ export default function ReviewCard({
   projectId,
   projectCourses,
 }: ReviewCardProps) {
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
   const { error: showError } = useToast();
   const router = useRouter();
   const canEvaluate = !!(

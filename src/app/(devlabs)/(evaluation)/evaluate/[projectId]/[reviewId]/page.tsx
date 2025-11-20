@@ -9,7 +9,7 @@ import reviewQueries from "@/repo/review-queries/review-queries";
 import teamQueries from "@/repo/team-queries/team-queries";
 import { CourseEvaluationForm } from "@/components/evaluations/CourseEvaluationForm";
 import { FileList } from "@/components/file-upload/file-list";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { ProjectWithTeam } from "@/types/entities";
 import { CourseEvaluationSummary } from "@/types/features";
 import { Button } from "@/components/ui/button";
@@ -42,7 +42,7 @@ function CourseSelector({
   project: ProjectWithTeam;
   reviewId: string;
 }) {
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
 
   const canEvaluateCourse = (course: { instructors: { id: string }[] }) => {
     if (!user) return false;
@@ -197,7 +197,7 @@ export default function EvaluationPage() {
   const reviewId = params.reviewId as string;
   const courseId = searchParams.get("courseId");
 
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
 
   const { data: project, isLoading: isLoadingProject } =
     useQuery<ProjectWithTeam>({

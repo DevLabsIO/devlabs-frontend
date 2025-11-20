@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { BadgeCheck, X, RefreshCw } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { projectQueries } from "@/repo/project-queries/project-queries";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { useToast } from "@/hooks/use-toast";
 import { Project } from "@/types/entities";
 
@@ -13,7 +13,7 @@ interface ProjectActionsProps {
 }
 
 export function ProjectActions({ project }: ProjectActionsProps) {
-  const user = useCurrentUser();
+  const { user } = useSessionContext();
   const { success, error } = useToast();
   const queryClient = useQueryClient();
 

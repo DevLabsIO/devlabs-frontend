@@ -1,6 +1,6 @@
 import axiosInstance from "@/lib/axios/axios-client";
 import { User } from "@/types/entities";
-import { SyncStatsResponse, SyncRequest, SyncResponse } from "@/types/sync";
+import { SyncStatsResponse, SyncRequest, SyncResponse } from "@/types/api";
 import {
   CreateUserRequest,
   UpdateUserRequest,

@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { resultQueries } from "@/repo/result-queries/result-queries";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSessionContext } from "@/lib/session-context";
 import { ProjectResult } from "@/types/features";
 import { BarChart3, TrendingUp, Award, Eye, EyeOff } from "lucide-react";
 
@@ -16,7 +16,7 @@ interface ReviewResultsProps {
 
 export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
   const [showDetails, setShowDetails] = useState(false);
-  const currentUser = useCurrentUser();
+  const { user: currentUser } = useSessionContext();
 
   const {
     data: results,
