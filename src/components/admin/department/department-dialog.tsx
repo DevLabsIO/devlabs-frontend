@@ -19,6 +19,7 @@ import {
   useUpdateDepartment,
 } from "@/repo/department-queries/department-queries";
 import { Department } from "@/types/entities";
+import { Plus } from "lucide-react";
 
 interface DepartmentFormData {
   name: string;
@@ -110,7 +111,8 @@ export function DepartmentDialog({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {controlledIsOpen === undefined && (
         <DialogTrigger asChild>
-          <Button variant="outline" className="mb-4">
+          <Button variant={mode === "create" ? "default" : "outline"}>
+            {mode === "create" && <Plus className="mr-2 h-4 w-4" />}
             {mode === "create" ? "Add Department" : "Edit Department"}
           </Button>
         </DialogTrigger>

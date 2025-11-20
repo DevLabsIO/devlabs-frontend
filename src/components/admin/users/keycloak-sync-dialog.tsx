@@ -6,7 +6,7 @@ import {
   useSyncFromKeycloak,
 } from "@/repo/user-queries/user-queries";
 import { useToast } from "@/hooks/use-toast";
-import { KEYCLOAK_GROUPS } from "@/constants/roles";
+import { KEYCLOAK_GROUPS } from "@/types/auth/roles";
 import {
   Dialog,
   DialogContent,

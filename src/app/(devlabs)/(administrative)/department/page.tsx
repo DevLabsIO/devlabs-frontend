@@ -54,8 +54,13 @@ export default function DepartmentsPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Departments Management</h1>
+      <div className="flex justify-between items-center pb-3 mb-4">
+        <div>
+          <h1 className="text-2xl font-bold">Departments Management</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage academic departments and their configurations
+          </p>
+        </div>
         <DepartmentDialog mode="create" />
       </div>
 

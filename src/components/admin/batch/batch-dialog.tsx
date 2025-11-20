@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { useAllDepartments } from "@/components/admin/department/hooks/use-department";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Plus } from "lucide-react";
 
 interface BatchFormData {
   name: string;
@@ -173,7 +174,8 @@ export function BatchDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="mb-4">
+        <Button variant={mode === "create" ? "default" : "outline"}>
+          {mode === "create" && <Plus className="mr-2 h-4 w-4" />}
           {mode === "create" ? "Add Batch" : "Edit Batch"}
         </Button>
       </DialogTrigger>

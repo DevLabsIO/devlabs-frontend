@@ -90,8 +90,13 @@ export default function BatchesPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Batches Management</h1>
+      <div className="flex justify-between items-center pb-3 mb-4">
+        <div>
+          <h1 className="text-2xl font-bold">Batches Management</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage student batches, graduation years, and sections
+          </p>
+        </div>
         <BatchDialog mode="create" />
       </div>
 

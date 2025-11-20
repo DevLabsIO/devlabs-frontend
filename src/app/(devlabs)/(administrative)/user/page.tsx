@@ -105,8 +105,13 @@ export default function UsersPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Users Management</h1>
+      <div className="flex justify-between items-center pb-3 mb-4">
+        <div>
+          <h1 className="text-2xl font-bold">Users Management</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage system users and sync with Keycloak
+          </p>
+        </div>
         <Button
           onClick={() => setIsSyncDialogOpen(true)}
           variant="outline"

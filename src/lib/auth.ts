@@ -242,15 +242,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string; // Ensure id is correctly assigned
+        session.user.id = token.id as string;
         session.user.roles = token.roles as string[];
         session.user.groups = token.groups as string[];
         session.access_token = token.access_token as string;
         if (token.error) {
           session.error = token.error as string;
-        }
-        if (token.needsRegistration !== undefined) {
-          session.needsRegistration = token.needsRegistration as boolean;
         }
       }
       return session;

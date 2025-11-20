@@ -7,7 +7,7 @@ import CourseList from "@/components/admin/semesters/courses/course-list";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Terminal } from "lucide-react";
+import { Terminal, Plus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import semesterQueries from "@/repo/semester-queries/semester-queries";
 import { Course } from "@/types/entities";
@@ -120,11 +120,16 @@ export default function SemesterCoursesPage() {
   return (
     <div className="container mx-auto py-10">
       {semester && <SemesterDetailsHeader semester={semester} />}
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Courses</h1>
+      <div className="flex justify-between items-center pb-3 mb-4">
+        <div>
+          <h1 className="text-2xl font-semibold">Courses</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage courses for this semester
+          </p>
+        </div>
         <Button onClick={handleCreate}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Create Course
+          <Plus className="mr-2 h-4 w-4" />
+          Add Course
         </Button>
       </div>
       <CourseList courses={courses || []} onDelete={handleDelete} />

@@ -1,17 +1,20 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+/**
+ * Main utilities barrel file
+ *
+ * This file re-exports commonly used utilities for backwards compatibility.
+ * Direct imports from @/lib/utils will work, and specific imports from
+ * @/lib/utils/[module] are also available for more granular control.
+ */
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+export { cn, getInitials } from "./utils/cn";
 
-export function getInitials(name: string): string {
-  const words = name.split(" ");
-  if (words.length === 0) {
-    return "";
-  }
-  if (words.length === 1) {
-    return words[0].substring(0, 2).toUpperCase();
-  }
-  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-}
+// Re-export other commonly used utilities
+export { COURSE_COLORS } from "./utils/colors";
+export {
+  calculateReviewStatus,
+  formatStatus,
+  getStatusColor,
+  getStatusDescription,
+  type ReviewStatus,
+  type ReviewPublicationStatus,
+} from "./utils/review-status";
