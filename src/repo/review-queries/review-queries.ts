@@ -28,6 +28,24 @@ const reviewQueries = {
     });
     return response.data;
   },
+
+  getReviewProjects: async (
+    reviewId: string,
+    teamId?: string,
+    batchId?: string,
+    courseId?: string,
+  ) => {
+    const params = new URLSearchParams();
+    if (teamId) params.append("teamId", teamId);
+    if (batchId) params.append("batchId", batchId);
+    if (courseId) params.append("courseId", courseId);
+
+    const queryString = params.toString();
+    const url = `/api/review/${reviewId}/projects${queryString ? `?${queryString}` : ""}`;
+
+    const response = await axiosInstance.get(url);
+    return response.data;
+  },
 };
 
 export default reviewQueries;

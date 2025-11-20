@@ -2,28 +2,41 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import reviewQueries from "@/repo/review-queries/review-queries";
 import { useReview } from "@/components/reviews/hooks/use-review";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Calendar, Users } from "lucide-react";
-import { format } from "date-fns";
-import { RubricDisplay } from "@/components/reviews/rubric-display";
-import { PublishReviewButton } from "@/components/reviews/publish-review-button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Folder, Info } from "lucide-react";
 import { useSessionContext } from "@/lib/session-context";
-import {
-  calculateReviewStatus,
-  getStatusColor,
-  formatStatus,
-} from "@/lib/utils/review-status";
+import { calculateReviewStatus } from "@/lib/utils/review-status";
+import type { ReviewProjectsResponse } from "@/types/api";
+import { ReviewHeader } from "@/components/reviews/review-detail/review-header";
+import { ReviewProjectsTab } from "@/components/reviews/review-detail/review-projects-tab";
+import { ReviewDetailsTab } from "@/components/reviews/review-detail/review-details-tab";
+import { ReviewDetailSkeleton } from "@/components/reviews/review-detail/review-detail-skeleton";
+import { ReviewErrorState } from "@/components/reviews/review-detail/review-error-state";
 
 export default function ReviewDetailPage() {
   const params = useParams();
   const router = useRouter();
   const reviewId = params.id as string;
   const { session } = useSessionContext();
-  const { data: review, isLoading, error } = useReview(reviewId);
+
+  const {
+    data: review,
+    isLoading: reviewLoading,
+    error: reviewError,
+  } = useReview(reviewId);
+
+  const {
+    data: reviewProjects,
+    isLoading: projectsLoading,
+    error: projectsError,
+  } = useQuery<ReviewProjectsResponse>({
+    queryKey: ["reviewProjects", reviewId],
+    queryFn: () => reviewQueries.getReviewProjects(reviewId),
+    enabled: !!reviewId,
+  });
 
   const reviewStatus = useMemo(() => {
     if (!review) return null;
@@ -32,177 +45,55 @@ export default function ReviewDetailPage() {
 
   const canPublish = useMemo(() => {
     if (!session?.user || !review || !reviewStatus) return false;
-
     if (reviewStatus !== "COMPLETED") return false;
-
     const userGroups = (session.user.groups ?? []) as string[];
     const ALLOWED_PUBLISH_GROUPS = ["admin", "manager", "faculty"] as const;
     return ALLOWED_PUBLISH_GROUPS.some((g) => userGroups.includes(g));
   }, [session?.user, review, reviewStatus]);
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-8 w-8" />
-          <Skeleton className="h-8 w-48" />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <Skeleton className="h-6 w-32" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-20 w-full" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
+  if (reviewLoading || projectsLoading) {
+    return <ReviewDetailSkeleton />;
   }
 
-  if (error || !review) {
+  if (reviewError || !review || projectsError || !reviewProjects) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-        <h2 className="text-2xl font-bold text-destructive">
-          Review Not Found
-        </h2>
-        <p className="text-muted-foreground">
-          The review you are looking for does not exist or has been removed.
-        </p>
-        <Button onClick={() => router.back()}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Go Back
-        </Button>
-      </div>
+      <ReviewErrorState error={reviewError} onBack={() => router.back()} />
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold">{review.name}</h1>
-          </div>
-        </div>{" "}
-        <div className="flex items-center gap-2">
-          {session?.user && review && reviewStatus && (
-            <>
-              {canPublish ? (
-                <PublishReviewButton
-                  reviewId={review.id}
-                  isPublished={review.isPublished}
-                  canPublish={canPublish}
-                  variant="default"
-                  size="default"
-                />
-              ) : reviewStatus !== "COMPLETED" ? (
-                <Button disabled variant="outline" size="default">
-                  Publish (Available after completion)
-                </Button>
-              ) : null}
-            </>
-          )}
-        </div>
-      </div>
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <ReviewHeader
+        review={review}
+        projectCount={reviewProjects.projects.length}
+        reviewStatus={reviewStatus}
+        canPublish={canPublish}
+        onBack={() => router.back()}
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              Schedule Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <h4 className="font-medium mb-2">Start Date</h4>
-                <p className="text-muted-foreground">
-                  {review.startDate
-                    ? format(new Date(review.startDate), "PPP")
-                    : "Not set"}
-                </p>
-              </div>
-              <div>
-                <h4 className="font-medium mb-2">End Date</h4>
-                <p className="text-muted-foreground">
-                  {review.endDate
-                    ? format(new Date(review.endDate), "PPP")
-                    : "Not set"}
-                </p>
-              </div>
-              {review.publishedAt && (
-                <div>
-                  <h4 className="font-medium mb-2">Published At</h4>
-                  <p className="text-muted-foreground">
-                    {format(new Date(review.publishedAt), "PPP 'at' pp")}
-                  </p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="projects" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+          <TabsTrigger value="projects" className="flex items-center gap-2">
+            <Folder className="h-4 w-4" />
+            Projects
+          </TabsTrigger>
+          <TabsTrigger value="details" className="flex items-center gap-2">
+            <Info className="h-4 w-4" />
+            Details
+          </TabsTrigger>
+        </TabsList>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Created By
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {review.createdBy ? (
-              <div className="space-y-2">
-                <p className="font-medium">{review.createdBy.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {review.createdBy.email}
-                </p>
-                <Badge variant="outline">{review.createdBy.role}</Badge>
-              </div>
-            ) : (
-              <p className="text-muted-foreground">Unknown creator</p>
-            )}
-          </CardContent>
-        </Card>
+        <TabsContent value="projects">
+          <ReviewProjectsTab
+            reviewId={reviewId}
+            reviewProjects={reviewProjects}
+          />
+        </TabsContent>
 
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Review Metadata</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-medium mb-2">Publication Status</h4>
-                <Badge variant={review.isPublished ? "default" : "secondary"}>
-                  {review.isPublished ? "Published" : "Not Published"}
-                </Badge>
-              </div>{" "}
-              <div>
-                <h4 className="font-medium mb-2">Review Status</h4>
-                {reviewStatus && (
-                  <Badge
-                    variant="outline"
-                    className={getStatusColor(reviewStatus)}
-                  >
-                    {formatStatus(reviewStatus)}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="space-y-6">
-        <RubricDisplay rubric={review.rubricsInfo} />
-      </div>
+        <TabsContent value="details">
+          <ReviewDetailsTab review={review} reviewStatus={reviewStatus} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

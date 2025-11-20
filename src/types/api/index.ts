@@ -22,3 +22,6 @@ export * from "./archive.api.types";
 
 // Sync API
 export * from "./sync.api.types";
+
+// Review API
+export * from "./review.api.types";

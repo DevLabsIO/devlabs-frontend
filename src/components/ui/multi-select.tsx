@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -35,12 +36,29 @@ function MultiSelect({
   placeholder = "Select...",
 }: MultiSelectProps) {
   const [inputValue, setInputValue] = React.useState("");
+  const parentRef = React.useRef<HTMLDivElement | null>(null);
+
+  const filteredOptions = React.useMemo(
+    () =>
+      options.filter((option) =>
+        option.label.toLowerCase().includes(inputValue.toLowerCase()),
+      ),
+    [options, inputValue],
+  );
+
+  const rowVirtualizer = useVirtualizer({
+    count: filteredOptions.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 32,
+    overscan: 5,
+    getItemKey: (index) => filteredOptions[index].value,
+  });
 
   const handleSelect = (value: string) => {
     onChange(
       selected.includes(value)
         ? selected.filter((v) => v !== value)
-        : [...selected, value]
+        : [...selected, value],
     );
   };
 
@@ -95,27 +113,51 @@ function MultiSelect({
           onValueChange={setInputValue}
         />
         <CommandList>
-          <ScrollArea className="h-40">
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  onSelect={() => handleSelect(option.value)}
-                  className="cursor-pointer"
+          <ScrollArea ref={parentRef} className="h-40">
+            {filteredOptions.length === 0 ? (
+              <CommandEmpty>No results found.</CommandEmpty>
+            ) : (
+              <CommandGroup>
+                <div
+                  style={{
+                    height: rowVirtualizer.getTotalSize(),
+                    width: "100%",
+                    position: "relative",
+                  }}
                 >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selected.includes(option.value)
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
-                  {option.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
+                  {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                    const option = filteredOptions[virtualRow.index];
+                    return (
+                      <CommandItem
+                        key={option.value}
+                        ref={(el) => {
+                          if (el) rowVirtualizer.measureElement(el);
+                        }}
+                        onSelect={() => handleSelect(option.value)}
+                        className="cursor-pointer"
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          width: "100%",
+                          transform: `translateY(${virtualRow.start}px)`,
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selected.includes(option.value)
+                              ? "opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                        {option.label}
+                      </CommandItem>
+                    );
+                  })}
+                </div>
+              </CommandGroup>
+            )}
           </ScrollArea>
         </CommandList>
       </Command>
