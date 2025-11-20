@@ -14,13 +14,14 @@ import { AssignStudentToBatchDialog } from "@/components/admin/batch/assign-stud
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import batchQueries from "@/repo/batch-queries/batch-queries";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 export default function BatchDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const batchId = params.batchId as string;
   const queryClient = useQueryClient();
+  const { success, error } = useToast();
 
   const [isAssignStudentDialogOpen, setIsAssignStudentDialogOpen] =
     useState(false);
@@ -33,12 +34,12 @@ export default function BatchDetailsPage() {
       return batchQueries.removeStudentFromBatch(batchId, studentId);
     },
     onSuccess: () => {
-      toast.success("Student removed successfully");
+      success("Student removed successfully");
       queryClient.invalidateQueries({ queryKey: ["batchStudents", batchId] });
       setStudentToDelete(null);
     },
-    onError: (error) => {
-      toast.error(error.message || "Failed to remove student");
+    onError: (err) => {
+      error(err.message || "Failed to remove student");
     },
   });
 

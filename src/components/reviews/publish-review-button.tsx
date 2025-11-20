@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSessionContext } from "@/lib/session-context";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import axiosInstance from "@/lib/axios/axios-client";
 import { ReviewPublicationStatus } from "@/lib/utils/review-status";
@@ -31,6 +31,7 @@ export function PublishReviewButton({
   const { session } = useSessionContext();
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
+  const { success, error } = useToast();
 
   const publishMutation = useMutation({
     mutationFn: async (action: "publish" | "unpublish") => {
@@ -48,7 +49,7 @@ export function PublishReviewButton({
       setIsLoading(true);
     },
     onSuccess: (data: ReviewPublicationStatus, action) => {
-      toast.success(
+      success(
         action === "publish"
           ? "Review published successfully"
           : "Review unpublished successfully",
@@ -58,17 +59,17 @@ export function PublishReviewButton({
       queryClient.invalidateQueries({ queryKey: ["review", reviewId] });
       onStatusChange?.(data);
     },
-    onError: (error: unknown) => {
+    onError: (err: unknown) => {
       const errorMessage =
         (
-          error as {
+          err as {
             response?: { data?: { error?: string } };
             message?: string;
           }
         )?.response?.data?.error ||
-        (error as { message?: string })?.message ||
+        (err as { message?: string })?.message ||
         "An error occurred";
-      toast.error(
+      error(
         `Failed to ${
           isPublished ? "unpublish" : "publish"
         } review: ${errorMessage}`,

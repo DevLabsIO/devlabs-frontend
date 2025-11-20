@@ -11,7 +11,7 @@ import { PlusCircle, Terminal } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import semesterQueries from "@/repo/semester-queries/semester-queries";
 import { Course } from "@/types/entities";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { CourseDialog } from "@/components/admin/semesters/courses/course-dialog";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import SemesterDetailsHeader from "@/components/admin/semesters/semester-details-header";
@@ -27,6 +27,7 @@ export default function SemesterCoursesPage() {
   } = useSemesterCourses(semesterId);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState<Course | null>(null);
+  const { success, error } = useToast();
 
   const queryClient = useQueryClient();
 
@@ -42,14 +43,14 @@ export default function SemesterCoursesPage() {
   });
 
   const handleMutationSuccess = (action: "created" | "deleted") => {
-    toast.success(`Course ${action} successfully`);
+    success(`Course ${action} successfully`);
     queryClient.invalidateQueries({ queryKey: ["courses", semesterId] });
     if (action === "created") setIsFormOpen(false);
     if (action === "deleted") setCourseToDelete(null);
   };
 
-  const handleMutationError = (error: Error, action: "create" | "delete") => {
-    toast.error(`Failed to ${action} course: ${error.message}`);
+  const handleMutationError = (err: Error, action: "create" | "delete") => {
+    error(`Failed to ${action} course: ${err.message}`);
   };
 
   const createMutation = useMutation({
@@ -66,7 +67,7 @@ export default function SemesterCoursesPage() {
       return semesterQueries.createCourseForSemester(semesterId, newCourse);
     },
     onSuccess: () => handleMutationSuccess("created"),
-    onError: (error) => handleMutationError(error, "create"),
+    onError: (err: Error) => handleMutationError(err, "create"),
   });
 
   const deleteMutation = useMutation({
@@ -74,7 +75,7 @@ export default function SemesterCoursesPage() {
       return semesterQueries.deleteCourseFromSemester(semesterId, courseId);
     },
     onSuccess: () => handleMutationSuccess("deleted"),
-    onError: (error) => handleMutationError(error, "delete"),
+    onError: (err: Error) => handleMutationError(err, "delete"),
   });
 
   const handleCreate = () => {

@@ -21,7 +21,7 @@ import {
 import { RubricCriteriaTable } from "./rubric-criteria-table";
 import { useMutation } from "@tanstack/react-query";
 import rubricQueries from "@/repo/rubrics-queries/rubrics-queries";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { useSessionContext } from "@/lib/session-context";
 import { cn } from "@/lib/utils";
 import { Check, X } from "lucide-react";
@@ -40,6 +40,7 @@ export function CreateEditRubricModal({
   existingRubric,
 }: CreateEditRubricModalProps) {
   const { user, session } = useSessionContext();
+  const { success, error } = useToast();
   const [name, setName] = useState("");
   const [isShared, setIsShared] = useState(false);
   const [criteria, setCriteria] = useState<RubricCriterionData[]>([]);
@@ -68,12 +69,12 @@ export function CreateEditRubricModal({
   const { mutate: createRubric, isPending: isCreating } = useMutation({
     mutationFn: rubricQueries.createRubric,
     onSuccess: (data) => {
-      toast.success("Rubric created successfully");
+      success("Rubric created successfully");
       onSave(data);
       onClose();
     },
-    onError: (error) => {
-      toast.error("Failed to create rubric", { description: error.message });
+    onError: (err) => {
+      error("Failed to create rubric", { description: err.message });
     },
   });
 
@@ -81,30 +82,30 @@ export function CreateEditRubricModal({
     mutationFn: (data: { id: string; payload: UpdateRubricRequest }) =>
       rubricQueries.updateRubric(data.id, data.payload),
     onSuccess: (data) => {
-      toast.success("Rubric updated successfully");
+      success("Rubric updated successfully");
       onSave(data);
       onClose();
     },
-    onError: (error) => {
-      toast.error("Failed to update rubric", { description: error.message });
+    onError: (err) => {
+      error("Failed to update rubric", { description: err.message });
     },
   });
 
   const handleSave = () => {
     if (!user) {
-      toast.error("You must be logged in to save a rubric.");
+      error("You must be logged in to save a rubric.");
       return;
     }
     if (!name.trim()) {
-      toast.error("Rubric name is required.");
+      error("Rubric name is required.");
       return;
     }
     if (criteria.some((c) => !c.name.trim())) {
-      toast.error("All criteria must have a name.");
+      error("All criteria must have a name.");
       return;
     }
     if (criteria.length === 0) {
-      toast.error("A rubric must have at least one criterion.");
+      error("A rubric must have at least one criterion.");
       return;
     }
 

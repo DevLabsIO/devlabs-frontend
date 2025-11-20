@@ -8,13 +8,13 @@ interface ToastOptions extends ExternalToast {
   action?: {
     label: string;
     onClick: (
-      event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+      event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
     ) => void;
   };
   cancel?: {
     label: string;
     onClick: (
-      event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+      event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
     ) => void;
   };
 }
@@ -40,13 +40,17 @@ export function useToast() {
     return toast.warning(message, options);
   };
 
+  const showLoading = (message: string, options?: ToastOptions) => {
+    return toast.loading(message, options);
+  };
+
   const showPromise = <T>(
     promise: Promise<T>,
     options: {
       loading: string;
       success: string | ((data: T) => string);
       error: string | ((error: Error) => string);
-    } & ExternalToast
+    } & ExternalToast,
   ) => {
     return toast.promise(promise, options);
   };
@@ -61,6 +65,7 @@ export function useToast() {
     error: showError,
     info: showInfo,
     warning: showWarning,
+    loading: showLoading,
     promise: showPromise,
     dismiss,
   };

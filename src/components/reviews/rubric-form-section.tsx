@@ -36,7 +36,7 @@ import {
   Check,
   ChevronsUpDown,
 } from "lucide-react";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
@@ -51,6 +51,7 @@ export function RubricFormSection({
 }: RubricFormSectionProps) {
   const { user } = useSessionContext();
   const queryClient = useQueryClient();
+  const { info } = useToast();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false);
@@ -78,7 +79,7 @@ export function RubricFormSection({
 
   const handleEdit = () => {
     if (!selectedRubricId) {
-      toast.info("Please select a rubric to edit.");
+      info("Please select a rubric to edit.");
       return;
     }
     const rubricToEdit = rubrics?.find((r) => r.id === selectedRubricId);
@@ -94,7 +95,7 @@ export function RubricFormSection({
           name: `Copy of ${rubricToEdit.name}`,
           isShared: false,
         });
-        toast.info("A new rubric is being created based on the shared rubric.");
+        info("A new rubric is being created based on the shared rubric.");
       } else {
         setEditingRubric(rubricToEdit);
       }

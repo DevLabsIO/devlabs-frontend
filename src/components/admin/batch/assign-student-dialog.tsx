@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAssignStudentsToBatch } from "./hooks/use-batch";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 interface AssignStudentToBatchDialogProps {
   isOpen: boolean;
@@ -35,6 +35,7 @@ export function AssignStudentToBatchDialog({
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const { success, error } = useToast();
 
   const { data, isLoading } = useUsers(debouncedSearchQuery, 0, 1000);
   const students = data?.data || [];
@@ -61,7 +62,7 @@ export function AssignStudentToBatchDialog({
     setSelectedStudents((prev) =>
       prev.includes(studentId)
         ? prev.filter((id) => id !== studentId)
-        : [...prev, studentId]
+        : [...prev, studentId],
     );
   };
 
@@ -70,14 +71,14 @@ export function AssignStudentToBatchDialog({
       { batchId, userIds: selectedStudents },
       {
         onSuccess: () => {
-          toast.success("Students assigned successfully");
+          success("Students assigned successfully");
           onSuccess();
           onClose();
         },
-        onError: (error) => {
-          toast.error(error.message || "Failed to assign students");
+        onError: (err) => {
+          error(err.message || "Failed to assign students");
         },
-      }
+      },
     );
   };
 

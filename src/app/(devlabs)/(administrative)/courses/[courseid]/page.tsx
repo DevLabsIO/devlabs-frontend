@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Batch, User } from "@/types/entities";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { courseQueries } from "@/repo/course-queries/course-queries";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import { AssignBatchDialog } from "@/components/admin/course/assign-batch-dialog";
 import { AssignStudentDialog } from "@/components/admin/course/assign-student-dialog";
@@ -57,13 +57,14 @@ export default function CoursePage() {
   );
   const [instructorToDelete, setInstructorToDelete] =
     React.useState<User | null>(null);
+  const { success, error } = useToast();
 
   const handleTabChange = (value: string) => {
     router.push(`${pathname}?tab=${value}`);
   };
 
   const handleMutationSuccess = (message: string) => {
-    toast.success(message);
+    success(message);
     queryClient.invalidateQueries({ queryKey: ["courseBatches", courseId] });
     queryClient.invalidateQueries({ queryKey: ["courseStudents", courseId] });
     queryClient.invalidateQueries({
@@ -85,8 +86,8 @@ export default function CoursePage() {
       handleMutationSuccess("Batches assigned successfully");
       setIsAssignBatchOpen(false);
     },
-    onError: (error: Error) => {
-      toast.error(error.message);
+    onError: (err: Error) => {
+      error(err.message);
     },
   });
 
@@ -98,8 +99,8 @@ export default function CoursePage() {
       handleMutationSuccess("Batch removed successfully");
       setBatchToDelete(null);
     },
-    onError: (error: Error) => {
-      toast.error(error.message);
+    onError: (err: Error) => {
+      error(err.message);
     },
   });
 
@@ -111,8 +112,8 @@ export default function CoursePage() {
       handleMutationSuccess("Students assigned successfully");
       setIsAssignStudentOpen(false);
     },
-    onError: (error: Error) => {
-      toast.error(error.message);
+    onError: (err: Error) => {
+      error(err.message);
     },
   });
 
@@ -124,8 +125,8 @@ export default function CoursePage() {
       handleMutationSuccess("Student removed successfully");
       setStudentToDelete(null);
     },
-    onError: (error: Error) => {
-      toast.error(error.message);
+    onError: (err: Error) => {
+      error(err.message);
     },
   });
 
@@ -137,8 +138,8 @@ export default function CoursePage() {
       handleMutationSuccess("Instructors assigned successfully");
       setIsAssignInstructorOpen(false);
     },
-    onError: (error: Error) => {
-      toast.error(error.message);
+    onError: (err: Error) => {
+      error(err.message);
     },
   });
 
@@ -150,8 +151,8 @@ export default function CoursePage() {
       handleMutationSuccess("Instructor removed successfully");
       setInstructorToDelete(null);
     },
-    onError: (error: Error) => {
-      toast.error(error.message);
+    onError: (err: Error) => {
+      error(err.message);
     },
   });
 

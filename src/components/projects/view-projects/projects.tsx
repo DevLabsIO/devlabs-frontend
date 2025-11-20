@@ -20,7 +20,7 @@ import {
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { Project, ProjectStatus } from "@/types/entities";
 import { projectQueries } from "@/repo/project-queries/project-queries";
 import { CreateProjectRequest } from "@/components/projects/types/types";
@@ -81,6 +81,7 @@ export function Projects({ teamId }: ProjectsProps) {
   const searchParams = useSearchParams();
   const currentTab = searchParams.get("tab") || "live";
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const { success, error } = useToast();
 
   const queryClient = useQueryClient();
 
@@ -96,12 +97,12 @@ export function Projects({ teamId }: ProjectsProps) {
       return projectQueries.createProject(project);
     },
     onSuccess: () => {
-      toast.success("Project created successfully");
+      success("Project created successfully");
       queryClient.invalidateQueries({ queryKey: ["projects", teamId] });
       setIsFormOpen(false);
     },
-    onError: (error: Error) => {
-      toast.error(`Failed to create project: ${error.message}`);
+    onError: (err: Error) => {
+      error(`Failed to create project: ${err.message}`);
     },
   });
 

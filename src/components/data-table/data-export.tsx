@@ -16,7 +16,7 @@ import {
   ExportableData,
 } from "@/components/data-table/utils/export-utils";
 import { JSX, useState } from "react";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 interface DataTableExportProps<TData extends ExportableData> {
   table: Table<TData>;
@@ -43,6 +43,7 @@ export function DataTableExport<TData extends ExportableData>({
   size = "default",
 }: DataTableExportProps<TData>): JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
+  const { loading, success: showSuccess, error: showError } = useToast();
 
   const handleExport = async (type: "csv" | "excel") => {
     if (isLoading) return; // Prevent multiple export requests
@@ -54,7 +55,7 @@ export function DataTableExport<TData extends ExportableData>({
         // Check if data is on current page or needs to be fetched
         if (selectedData.some((item) => Object.keys(item).length === 0)) {
           // We have placeholder data, need to fetch complete data
-          toast.loading("Preparing export...", {
+          loading("Preparing export...", {
             description: `Fetching complete data for selected ${entityName}.`,
             id: "export-data-toast",
           });
@@ -65,7 +66,7 @@ export function DataTableExport<TData extends ExportableData>({
 
         if (selectedItems.length === 0) {
           throw new Error(
-            `Failed to retrieve complete data for selected ${entityName}`
+            `Failed to retrieve complete data for selected ${entityName}`,
           );
         }
 
@@ -99,15 +100,15 @@ export function DataTableExport<TData extends ExportableData>({
                 ? 1
                 : -1
               : valueA > valueB
-              ? 1
-              : -1;
+                ? 1
+                : -1;
           });
         }
 
         return sortedItems;
       } else if (getAllItems && !selectedData?.length) {
         // If we're exporting all data and have a method to get it with proper ordering
-        toast.loading("Preparing export...", {
+        loading("Preparing export...", {
           description: `Fetching all ${entityName} with current sorting...`,
           id: "export-data-toast",
         });
@@ -170,7 +171,7 @@ export function DataTableExport<TData extends ExportableData>({
                 .split(/(?=[A-Z])|_/)
                 .map(
                   (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
                 )
                 .join(" ");
             }
@@ -182,7 +183,7 @@ export function DataTableExport<TData extends ExportableData>({
       const exportColumnWidths = columnWidths
         ? orderedVisibleColumns.map((column) => {
             const originalIndex = visibleColumns.findIndex(
-              (vc) => vc.id === column.id
+              (vc) => vc.id === column.id,
             );
             return columnWidths[originalIndex] || { wch: 15 };
           })
@@ -199,11 +200,11 @@ export function DataTableExport<TData extends ExportableData>({
           headers: exportHeaders,
           columnMapping: exportColumnMapping,
           columnWidths: exportColumnWidths,
-        }
+        },
       );
-    } catch (error) {
-      console.error("Error exporting data:", error);
-      toast.error("Export failed", {
+    } catch (err) {
+      console.error("Error exporting data:", err);
+      showError("Export failed", {
         description: "There was a problem exporting. Please try again.",
         id: "export-data-toast",
       });
@@ -217,7 +218,7 @@ export function DataTableExport<TData extends ExportableData>({
 
     try {
       // Show toast for long operations
-      toast.loading("Preparing export...", {
+      loading("Preparing export...", {
         description: `Fetching all ${entityName}...`,
         id: "export-data-toast",
       });
@@ -226,7 +227,7 @@ export function DataTableExport<TData extends ExportableData>({
       const allData = await getAllItems();
 
       if (allData.length === 0) {
-        toast.error("Export failed", {
+        showError("Export failed", {
           description: "No data available to export.",
           id: "export-data-toast",
         });
@@ -254,7 +255,7 @@ export function DataTableExport<TData extends ExportableData>({
                 .split(/(?=[A-Z])|_/)
                 .map(
                   (word) =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
                 )
                 .join(" ");
             }
@@ -267,7 +268,7 @@ export function DataTableExport<TData extends ExportableData>({
         : visibleColumns.map(() => ({ wch: 15 }));
 
       // Update toast for processing
-      toast.loading("Processing data...", {
+      loading("Processing data...", {
         description: "Generating export file...",
         id: "export-data-toast",
       });
@@ -286,21 +287,21 @@ export function DataTableExport<TData extends ExportableData>({
           filename,
           exportColumnMapping,
           exportColumnWidths,
-          exportHeaders
+          exportHeaders,
         );
       }
 
       if (success) {
-        toast.success("Export successful", {
+        showSuccess("Export successful", {
           description: `Exported all ${
             allData.length
           } ${entityName} to ${type.toUpperCase()}.`,
           id: "export-data-toast",
         });
       }
-    } catch (error) {
-      console.error("Error exporting all pages:", error);
-      toast.error("Export failed", {
+    } catch (err) {
+      console.error("Error exporting all pages:", err);
+      showError("Export failed", {
         description:
           "There was a problem exporting all pages. Please try again.",
         id: "export-data-toast",

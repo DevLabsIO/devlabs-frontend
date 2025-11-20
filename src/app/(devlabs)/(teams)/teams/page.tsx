@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import teamQueries from "@/repo/team-queries/team-queries";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { TeamForm } from "@/components/teams/team-form";
 import {
   CreateTeamRequest,
@@ -46,16 +46,17 @@ export default function TeamsPage() {
   const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { success, error } = useToast();
 
   const handleMutationSuccess = (action: "created" | "updated") => {
-    toast.success(`Team ${action} successfully`);
+    success(`Team ${action} successfully`);
     queryClient.invalidateQueries({ queryKey: ["teams"] });
     setIsFormOpen(false);
     setTeamToEdit(null);
   };
 
-  const handleMutationError = (error: Error, action: "create" | "update") => {
-    toast.error(`Failed to ${action} team: ${error.message}`);
+  const handleMutationError = (err: Error, action: "create" | "update") => {
+    error(`Failed to ${action} team: ${err.message}`);
   };
 
   const createMutation = useMutation({
@@ -63,7 +64,7 @@ export default function TeamsPage() {
       return teamQueries.createTeam(team);
     },
     onSuccess: () => handleMutationSuccess("created"),
-    onError: (error) => handleMutationError(error, "create"),
+    onError: (err: Error) => handleMutationError(err, "create"),
   });
 
   const updateMutation = useMutation({
@@ -71,7 +72,7 @@ export default function TeamsPage() {
       return teamQueries.updateTeam(data.teamId, data.team);
     },
     onSuccess: () => handleMutationSuccess("updated"),
-    onError: (error) => handleMutationError(error, "update"),
+    onError: (err: Error) => handleMutationError(err, "update"),
   });
 
   const deleteMutation = useMutation({
@@ -79,12 +80,12 @@ export default function TeamsPage() {
       return teamQueries.deleteTeam(teamId);
     },
     onSuccess: () => {
-      toast.success("Team deleted successfully");
+      success("Team deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["teams"] });
       setTeamToDelete(null);
     },
-    onError: (error) => {
-      toast.error(`Failed to delete team: ${error.message}`);
+    onError: (err: Error) => {
+      error(`Failed to delete team: ${err.message}`);
       setTeamToDelete(null);
     },
   });
