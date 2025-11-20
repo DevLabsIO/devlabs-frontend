@@ -47,10 +47,10 @@ export default function DashboardSkeleton({ variant }: DashboardSkeletonProps) {
             <ReviewListSkeleton />
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="h-32 bg-muted animate-pulse rounded-lg" />
-            <div className="h-32 bg-muted animate-pulse rounded-lg" />
-            <div className="h-32 bg-muted animate-pulse rounded-lg" />
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="h-32 sm:h-40 bg-muted animate-pulse rounded-lg" />
+            <div className="h-32 sm:h-40 bg-muted animate-pulse rounded-lg" />
+            <div className="h-32 sm:h-40 bg-muted animate-pulse rounded-lg" />
           </div>
         </>
       )}

@@ -31,13 +31,17 @@ export default function ReviewList({ title, reviews, type }: ReviewListProps) {
   };
 
   return (
-    <Card>
+    <Card className="flex flex-col h-full">
       <CardHeader>
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 min-h-[300px] max-h-[500px] overflow-y-auto">
         {reviews.length === 0 ? (
-          <p className="text-muted-foreground text-sm">No reviews to display</p>
+          <div className="flex items-center justify-center h-full">
+            <p className="text-muted-foreground text-sm">
+              No reviews to display
+            </p>
+          </div>
         ) : (
           <div className="space-y-3">
             {reviews.map((review) => (
@@ -56,9 +60,11 @@ export default function ReviewList({ title, reviews, type }: ReviewListProps) {
                     {type === "upcoming" ? "Upcoming" : "Published"}
                   </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {review.courseName}
-                </p>
+                {type === "upcoming" && (
+                  <p className="text-sm text-muted-foreground">
+                    {(review as UpcomingReview).courseName}
+                  </p>
+                )}
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
                   {type === "upcoming" ? (
                     <>
@@ -76,19 +82,14 @@ export default function ReviewList({ title, reviews, type }: ReviewListProps) {
                       </div>
                     </>
                   ) : (
-                    <>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        <span>
-                          {formatDateTime(
-                            (review as RecentlyPublishedReview).publishedAt,
-                          )}
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
                       <span>
-                        by {(review as RecentlyPublishedReview).publishedBy}
+                        {formatDateTime(
+                          (review as RecentlyPublishedReview).publishedAt,
+                        )}
                       </span>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>

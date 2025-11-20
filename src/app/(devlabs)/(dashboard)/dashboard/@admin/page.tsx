@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { dashboardQueries } from "@/repo/dashboard-queries/dashboard-queries";
 import StatCard from "@/components/dashboard/StatCard";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
@@ -20,10 +21,11 @@ import {
 import Link from "next/link";
 
 export default function AdminDashboardPage() {
+  const { data: session } = useSession();
   const { data, isLoading, error } = useQuery({
     queryKey: ["dashboard", "admin"],
     queryFn: dashboardQueries.getAdminDashboard,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
   if (isLoading)
@@ -37,39 +39,43 @@ export default function AdminDashboardPage() {
 
   const quickActions = [
     {
-      href: "users",
+      href: "/user",
       icon: UserPlus,
-      title: "Create User",
-      description: "Add new student, faculty, or manager",
+      title: "Manage Users",
+      description: "View and manage all users",
     },
     {
-      href: "semesters",
+      href: "/semester",
       icon: Calendar,
       title: "Manage Semesters",
       description: "Create and configure semesters",
     },
     {
-      href: "courses",
+      href: "/department",
       icon: BookOpen,
-      title: "Manage Courses",
-      description: "Create and configure courses",
+      title: "Manage Departments",
+      description: "Create and configure departments",
     },
     {
-      href: "batches",
+      href: "/batch",
       icon: GraduationCap,
       title: "Manage Batches",
       description: "Create and configure student batches",
     },
   ];
 
+  const welcomeMessage = session?.user?.name
+    ? `Welcome back, ${session.user.name}`
+    : "Welcome back";
+
   return (
     <div className="space-y-6">
       <DashboardHeader
-        title="Admin Dashboard"
+        title={welcomeMessage}
         actions={
           <>
             <Button asChild variant="outline" size="sm">
-              <Link href="/users">
+              <Link href="/user">
                 <UserPlus className="h-4 w-4 mr-2" />
                 Manage Users
               </Link>

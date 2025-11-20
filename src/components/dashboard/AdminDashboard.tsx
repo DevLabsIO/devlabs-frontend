@@ -63,17 +63,17 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
+        <div className="flex gap-2 flex-wrap">
           <Button asChild variant="outline" size="sm">
-            <Link href="/admin/users">
+            <Link href="/user" className="whitespace-nowrap">
               <UserPlus className="h-4 w-4 mr-2" />
               Manage Users
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">
-            <Link href="/admin/settings">
+            <Link href="/settings" className="whitespace-nowrap">
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Link>
@@ -155,14 +155,14 @@ export default function AdminDashboard() {
               <Button
                 asChild
                 variant="outline"
-                className="justify-start h-auto p-4"
+                className="justify-start h-auto p-3 sm:p-4 w-full"
               >
-                <Link href="/admin/users/create">
-                  <UserPlus className="h-4 w-4 mr-3" />
-                  <div className="text-left">
-                    <p className="font-medium">Create User</p>
-                    <p className="text-xs text-muted-foreground">
-                      Add new student, faculty, or manager
+                <Link href="/user" className="w-full overflow-hidden">
+                  <UserPlus className="h-4 w-4 mr-2 sm:mr-3 flex-shrink-0" />
+                  <div className="text-left min-w-0 flex-1 overflow-hidden">
+                    <p className="font-medium text-sm truncate">Manage Users</p>
+                    <p className="text-xs text-muted-foreground line-clamp-1 sm:line-clamp-2">
+                      View and manage all users
                     </p>
                   </div>
                 </Link>
@@ -170,13 +170,15 @@ export default function AdminDashboard() {
               <Button
                 asChild
                 variant="outline"
-                className="justify-start h-auto p-4"
+                className="justify-start h-auto p-3 sm:p-4 w-full"
               >
-                <Link href="/admin/semesters">
-                  <Calendar className="h-4 w-4 mr-3" />
-                  <div className="text-left">
-                    <p className="font-medium">Manage Semesters</p>
-                    <p className="text-xs text-muted-foreground">
+                <Link href="/semester" className="w-full overflow-hidden">
+                  <Calendar className="h-4 w-4 mr-2 sm:mr-3 flex-shrink-0" />
+                  <div className="text-left min-w-0 flex-1 overflow-hidden">
+                    <p className="font-medium text-sm truncate">
+                      Manage Semesters
+                    </p>
+                    <p className="text-xs text-muted-foreground line-clamp-1 sm:line-clamp-2">
                       Create and configure semesters
                     </p>
                   </div>
@@ -185,14 +187,16 @@ export default function AdminDashboard() {
               <Button
                 asChild
                 variant="outline"
-                className="justify-start h-auto p-4"
+                className="justify-start h-auto p-3 sm:p-4 w-full"
               >
-                <Link href="/admin/courses">
-                  <BookOpen className="h-4 w-4 mr-3" />
-                  <div className="text-left">
-                    <p className="font-medium">Manage Courses</p>
-                    <p className="text-xs text-muted-foreground">
-                      Create and configure courses
+                <Link href="/department" className="w-full overflow-hidden">
+                  <BookOpen className="h-4 w-4 mr-2 sm:mr-3 flex-shrink-0" />
+                  <div className="text-left min-w-0 flex-1 overflow-hidden">
+                    <p className="font-medium text-sm truncate">
+                      Manage Departments
+                    </p>
+                    <p className="text-xs text-muted-foreground line-clamp-1 sm:line-clamp-2">
+                      Create and configure departments
                     </p>
                   </div>
                 </Link>
@@ -200,13 +204,15 @@ export default function AdminDashboard() {
               <Button
                 asChild
                 variant="outline"
-                className="justify-start h-auto p-4"
+                className="justify-start h-auto p-3 sm:p-4 w-full"
               >
-                <Link href="/admin/batches">
-                  <GraduationCap className="h-4 w-4 mr-3" />
-                  <div className="text-left">
-                    <p className="font-medium">Manage Batches</p>
-                    <p className="text-xs text-muted-foreground">
+                <Link href="/batch" className="w-full overflow-hidden">
+                  <GraduationCap className="h-4 w-4 mr-2 sm:mr-3 flex-shrink-0" />
+                  <div className="text-left min-w-0 flex-1 overflow-hidden">
+                    <p className="font-medium text-sm truncate">
+                      Manage Batches
+                    </p>
+                    <p className="text-xs text-muted-foreground line-clamp-1 sm:line-clamp-2">
                       Create and configure student batches
                     </p>
                   </div>

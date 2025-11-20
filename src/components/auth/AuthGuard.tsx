@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -33,11 +33,13 @@ export default function AuthGuard({
 
   if (status === "loading") {
     return (
-      <div className="flex h-screen w-full items-center justify-center p-8">
-        <div className="w-full max-w-4xl space-y-4">
-          <Skeleton className="h-12 w-full" />
-          <Skeleton className="h-64 w-full" />
-          <Skeleton className="h-32 w-full" />
+      <div className="flex h-screen w-full items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 opacity-20 blur-xl animate-pulse" />
+            <Loader2 className="relative h-12 w-12 animate-spin text-blue-400" />
+          </div>
+          <p className="text-gray-400 font-medium animate-pulse">Loading...</p>
         </div>
       </div>
     );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { dashboardQueries } from "@/repo/dashboard-queries/dashboard-queries";
 import StatCard from "@/components/dashboard/StatCard";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
@@ -9,14 +10,15 @@ import ErrorState from "@/components/dashboard/ErrorState";
 import ReviewList from "@/components/dashboard/ReviewList";
 import QuickActions from "@/components/dashboard/QuickActions";
 import { Button } from "@/components/ui/button";
-import { FileText, FolderOpen, Plus, Eye, Upload } from "lucide-react";
+import { FileText, FolderOpen, Plus, Eye, Archive } from "lucide-react";
 import Link from "next/link";
 
 export default function ManagerDashboardPage() {
+  const { data: session } = useSession();
   const { data, isLoading, error } = useQuery({
     queryKey: ["dashboard", "manager-staff"],
     queryFn: dashboardQueries.getManagerStaffDashboard,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
   if (isLoading)
@@ -32,23 +34,27 @@ export default function ManagerDashboardPage() {
       description: "Set up a new project review",
     },
     {
-      href: "/reviews/publish",
-      icon: Upload,
-      title: "Publish Results",
-      description: "Publish completed review results",
+      href: "/teams",
+      icon: FolderOpen,
+      title: "Manage Teams",
+      description: "View and manage project teams",
     },
     {
-      href: "/projects",
-      icon: FolderOpen,
-      title: "View Projects",
-      description: "Manage and track project progress",
+      href: "/archives",
+      icon: Archive,
+      title: "View Archives",
+      description: "Browse completed projects and results",
     },
   ];
+
+  const welcomeMessage = session?.user?.name
+    ? `Welcome back, ${session.user.name}`
+    : "Welcome back";
 
   return (
     <div className="space-y-6">
       <DashboardHeader
-        title="Manager Dashboard"
+        title={welcomeMessage}
         actions={
           <>
             <Button asChild variant="outline" size="sm">

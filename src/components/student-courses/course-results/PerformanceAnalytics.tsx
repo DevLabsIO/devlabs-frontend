@@ -167,32 +167,62 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                 data={processedPieData}
                 dataKey="count"
                 labelLine={false}
-                label={({ payload, ...props }) => {
-                  const percentage = (
-                    (payload.count / totalCount) *
-                    100
-                  ).toFixed(1);
-                  const performance = getPerformanceLevel(payload.category);
+                label={({
+                  cx,
+                  cy,
+                  midAngle,
+                  innerRadius,
+                  outerRadius,
+                  percent,
+                }) => {
+                  const percentage = (percent * 100).toFixed(1);
+
+                  const RADIAN = Math.PI / 180;
+                  const radius =
+                    innerRadius + (outerRadius - innerRadius) * 0.5;
+                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+                  // Only show label if percentage is significant enough
+                  if (percent < 0.05) return null;
+
                   return (
-                    <text
-                      cx={props.cx}
-                      cy={props.cy}
-                      x={props.x}
-                      y={props.y}
-                      textAnchor={props.textAnchor}
-                      dominantBaseline={props.dominantBaseline}
-                      fill={performance.color}
-                      fontSize={12}
-                      fontWeight="600"
-                      className="drop-shadow-sm"
-                    >
-                      {`${percentage}%`}
-                    </text>
+                    <g>
+                      {/* Background pill shape for better readability */}
+                      <rect
+                        x={x - 28}
+                        y={y - 12}
+                        width={56}
+                        height={24}
+                        rx={6}
+                        ry={6}
+                        fill="rgba(0, 0, 0, 0.75)"
+                        stroke="rgba(255, 255, 255, 0.2)"
+                        strokeWidth={1}
+                      />
+                      {/* Percentage text */}
+                      <text
+                        x={x}
+                        y={y + 1}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        fill="white"
+                        fontSize={13}
+                        fontWeight="600"
+                        style={{
+                          fontFamily:
+                            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                          letterSpacing: "0.025em",
+                        }}
+                      >
+                        {`${percentage}%`}
+                      </text>
+                    </g>
                   );
                 }}
                 nameKey="category"
                 stroke="hsl(var(--background))"
-                strokeWidth={2}
+                strokeWidth={3}
               />
             </PieChart>
           </ChartContainer>
@@ -260,12 +290,16 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                   tickFormatter={(value) => `${value}%`}
                 />
                 <ChartTooltip
-                  cursor={{
-                    fill: "hsl(var(--muted) / 0.1)",
-                    stroke: "hsl(var(--border))",
-                    strokeWidth: 1,
-                    radius: 4,
-                  }}
+                  cursor={
+                    barChartData.length > 0
+                      ? {
+                          fill: "hsl(var(--muted) / 0.1)",
+                          stroke: "hsl(var(--border))",
+                          strokeWidth: 1,
+                          radius: 4,
+                        }
+                      : false
+                  }
                   content={
                     <ChartTooltipContent
                       hideLabel
@@ -308,7 +342,7 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                       const { x, y, value, index, width } = props;
                       if (typeof index === "number" && barChartData[index]) {
                         const performance = getPerformanceLevel(
-                          barChartData[index].score
+                          barChartData[index].score,
                         );
                         return (
                           <text

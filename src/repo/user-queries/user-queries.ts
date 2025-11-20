@@ -40,6 +40,17 @@ const userQueries = {
     return response.data;
   },
 
+  checkUserExists: async (email: string): Promise<{ exists: boolean }> => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/user/check-exists?email=${encodeURIComponent(email)}`,
+      );
+      return response.data;
+    } catch {
+      return { exists: false };
+    }
+  },
+
   getSyncStats: async (): Promise<SyncStatsResponse> => {
     const response = await axiosInstance.get("/api/user/sync-stats");
     return response.data;

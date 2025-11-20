@@ -69,7 +69,5 @@ export interface UpcomingReview {
 export interface RecentlyPublishedReview {
   reviewId: string;
   reviewName: string;
-  courseName: string;
   publishedAt: string;
-  publishedBy: string;
 }

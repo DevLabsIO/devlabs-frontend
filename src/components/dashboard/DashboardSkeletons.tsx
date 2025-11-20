@@ -56,12 +56,12 @@ export function QuickActionsSkeleton() {
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="flex items-center h-16 p-4 border rounded-lg animate-pulse"
+              className="flex items-center h-auto min-h-[4rem] p-3 sm:p-4 border rounded-lg animate-pulse overflow-hidden"
             >
-              <div className="h-4 w-4 bg-muted rounded mr-3" />
-              <div className="flex-1">
-                <div className="h-4 w-32 bg-muted rounded mb-1" />
-                <div className="h-3 w-48 bg-muted rounded" />
+              <div className="h-4 w-4 bg-muted rounded mr-2 sm:mr-3 flex-shrink-0" />
+              <div className="flex-1 min-w-0 overflow-hidden">
+                <div className="h-4 w-24 sm:w-32 bg-muted rounded mb-1" />
+                <div className="h-3 w-32 sm:w-48 bg-muted rounded" />
               </div>
             </div>
           ))}
@@ -127,11 +127,11 @@ export function RecentUsersSkeleton() {
 
 export function DashboardHeaderSkeleton() {
   return (
-    <div className="flex items-center justify-between animate-pulse">
-      <div className="h-9 w-48 bg-muted rounded" />
-      <div className="flex gap-2">
-        <div className="h-8 w-24 bg-muted rounded" />
-        <div className="h-8 w-20 bg-muted rounded" />
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-pulse">
+      <div className="h-8 sm:h-9 w-48 sm:w-56 bg-muted rounded" />
+      <div className="flex gap-2 flex-wrap">
+        <div className="h-8 w-24 sm:w-28 bg-muted rounded" />
+        <div className="h-8 w-20 sm:w-24 bg-muted rounded" />
       </div>
     </div>
   );

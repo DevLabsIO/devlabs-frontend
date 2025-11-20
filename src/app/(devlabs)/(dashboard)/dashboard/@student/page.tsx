@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { dashboardQueries } from "@/repo/dashboard-queries/dashboard-queries";
 import StatCard from "@/components/dashboard/StatCard";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
@@ -8,16 +9,14 @@ import LoadingState from "@/components/dashboard/LoadingState";
 import ErrorState from "@/components/dashboard/ErrorState";
 import ReviewList from "@/components/dashboard/ReviewList";
 import QuickActions from "@/components/dashboard/QuickActions";
-import PerformanceChart from "@/components/dashboard/PerformanceChart";
-import { Button } from "@/components/ui/button";
-import { FileText, FolderOpen, TrendingUp, Eye, BookOpen } from "lucide-react";
-import Link from "next/link";
+import { FileText, FolderOpen, TrendingUp, BookOpen, Eye } from "lucide-react";
 
 export default function StudentDashboardPage() {
+  const { data: session } = useSession();
   const { data, isLoading, error } = useQuery({
     queryKey: ["dashboard", "student"],
     queryFn: dashboardQueries.getStudentDashboard,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
   if (isLoading)
@@ -29,82 +28,37 @@ export default function StudentDashboardPage() {
     data.totalReviews > 0
       ? (data.completedReviews / data.totalReviews) * 100
       : 0;
-  const projectCompletionRate =
-    data.totalProjects > 0
-      ? (data.completedProjects / data.totalProjects) * 100
-      : 0;
 
-  const performanceMetrics = [
-    {
-      label: "Review Completion",
-      value: Math.round(completionRate),
-      color: "bg-blue-600",
-    },
-    {
-      label: "Project Completion",
-      value: Math.round(projectCompletionRate),
-      color: "bg-green-600",
-    },
-  ];
-
-  if (data.averageProjectScore > 0) {
-    performanceMetrics.push({
-      label: "Average Score",
-      value: Math.round(data.averageProjectScore),
-      color: "bg-orange-600",
-    });
-  }
+  const welcomeMessage = session?.user?.name
+    ? `Welcome back, ${session.user.name}`
+    : "Welcome back";
 
   const quickActions = [
-    {
-      href: "/reviews",
-      icon: FileText,
-      title: "View Active Reviews",
-      description: "Participate in ongoing evaluations",
-    },
-    {
-      href: "/reviews",
-      icon: FolderOpen,
-      title: "My Reviews",
-      description: "Check review status and submissions",
-    },
-    {
-      href: "/reviews",
-      icon: TrendingUp,
-      title: "View Results",
-      description: "Check published review results",
-    },
     {
       href: "/courses",
       icon: BookOpen,
       title: "My Courses",
-      description: "View enrolled courses and progress",
+      description: "View enrolled courses and materials",
+    },
+    {
+      href: "/reviews",
+      icon: Eye,
+      title: "View Reviews",
+      description: "Check active and completed reviews",
+    },
+    {
+      href: "/teams",
+      icon: FolderOpen,
+      title: "View Teams",
+      description: "Check your project teams",
     },
   ];
 
   return (
     <div className="space-y-6">
-      <DashboardHeader
-        title="Student Dashboard"
-        actions={
-          <>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/reviews">
-                <Eye className="h-4 w-4 mr-2" />
-                Active Reviews
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/courses">
-                <BookOpen className="h-4 w-4 mr-2" />
-                My Courses
-              </Link>
-            </Button>
-          </>
-        }
-      />
+      <DashboardHeader title={welcomeMessage} />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Active Reviews"
           value={data.activeReviews}
@@ -133,13 +87,13 @@ export default function StudentDashboardPage() {
               ? `${data.averageProjectScore.toFixed(1)}%`
               : "N/A"
           }
-          subtitle="Overall performance"
+          subtitle="Active semester only"
           icon={TrendingUp}
           colorClass="text-orange-600"
         />
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 min-h-[400px]">
         <ReviewList
           title="Upcoming Reviews"
           reviews={data.upcomingReviews}
@@ -152,10 +106,7 @@ export default function StudentDashboardPage() {
         />
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <PerformanceChart metrics={performanceMetrics} />
-        <QuickActions actions={quickActions} />
-      </div>
+      <QuickActions actions={quickActions} layout="grid" />
     </div>
   );
 }

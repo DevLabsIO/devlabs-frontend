@@ -6,7 +6,7 @@ import { ManagerStaffDashboardData } from "@/types/features";
 import StatCard from "./StatCard";
 import ReviewList from "./ReviewList";
 import { Button } from "@/components/ui/button";
-import { FileText, FolderOpen, Plus, Eye, Upload } from "lucide-react";
+import { FileText, FolderOpen, Plus, Eye, Archive } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
@@ -52,17 +52,19 @@ export default function ManagerStaffDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Manager/Staff Dashboard</h1>
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">
+          Manager/Staff Dashboard
+        </h1>
+        <div className="flex gap-2 flex-wrap">
           <Button asChild variant="outline" size="sm">
-            <Link href="/reviews/create">
+            <Link href="/reviews/create" className="whitespace-nowrap">
               <Plus className="h-4 w-4 mr-2" />
               Create Review
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">
-            <Link href="/reviews">
+            <Link href="/reviews" className="whitespace-nowrap">
               <Eye className="h-4 w-4 mr-2" />
               View Reviews
             </Link>
@@ -116,36 +118,54 @@ export default function ManagerStaffDashboard() {
         />
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <Button asChild variant="outline" className="h-auto p-6 flex-col gap-3">
-          <Link href="/reviews/create">
-            <Plus className="h-8 w-8" />
-            <div className="text-center">
-              <p className="font-medium">Create New Review</p>
-              <p className="text-xs text-muted-foreground">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <Button
+          asChild
+          variant="outline"
+          className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 overflow-hidden"
+        >
+          <Link href="/reviews/create" className="w-full overflow-hidden">
+            <Plus className="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0" />
+            <div className="text-center w-full min-w-0 overflow-hidden px-2">
+              <p className="font-medium text-sm sm:text-base truncate">
+                Create New Review
+              </p>
+              <p className="text-xs text-muted-foreground line-clamp-2 break-words">
                 Set up a new project review
               </p>
             </div>
           </Link>
         </Button>
-        <Button asChild variant="outline" className="h-auto p-6 flex-col gap-3">
-          <Link href="/reviews">
-            <Upload className="h-8 w-8" />
-            <div className="text-center">
-              <p className="font-medium">Publish Results</p>
-              <p className="text-xs text-muted-foreground">
-                Publish completed review results
+        <Button
+          asChild
+          variant="outline"
+          className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 overflow-hidden"
+        >
+          <Link href="/teams" className="w-full overflow-hidden">
+            <FolderOpen className="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0" />
+            <div className="text-center w-full min-w-0 overflow-hidden px-2">
+              <p className="font-medium text-sm sm:text-base truncate">
+                Manage Teams
+              </p>
+              <p className="text-xs text-muted-foreground line-clamp-2 break-words">
+                View and manage project teams
               </p>
             </div>
           </Link>
         </Button>
-        <Button asChild variant="outline" className="h-auto p-6 flex-col gap-3">
-          <Link href="/reviews">
-            <FolderOpen className="h-8 w-8" />
-            <div className="text-center">
-              <p className="font-medium">View Reviews</p>
-              <p className="text-xs text-muted-foreground">
-                Manage and track review progress
+        <Button
+          asChild
+          variant="outline"
+          className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 overflow-hidden"
+        >
+          <Link href="/archives" className="w-full overflow-hidden">
+            <Archive className="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0" />
+            <div className="text-center w-full min-w-0 overflow-hidden px-2">
+              <p className="font-medium text-sm sm:text-base truncate">
+                View Archives
+              </p>
+              <p className="text-xs text-muted-foreground line-clamp-2 break-words">
+                Browse completed projects and results
               </p>
             </div>
           </Link>
