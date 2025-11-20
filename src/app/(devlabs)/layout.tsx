@@ -4,6 +4,7 @@ import { AppSidebar } from "@/components/nav/side-nav";
 import { AppSidebarInset } from "@/components/nav/side-nav-inset";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AuthGuard from "@/components/auth/AuthGuard";
+import { GROUPS } from "@/types/auth/roles";
 import { useEffect, useState } from "react";
 
 export default function DevlabsLayout({
@@ -24,7 +25,14 @@ export default function DevlabsLayout({
     }
   }, []);
   return (
-    <AuthGuard requiredGroups={["admin", "faculty", "student", "manager"]}>
+    <AuthGuard
+      requiredGroups={[
+        GROUPS.ADMIN,
+        GROUPS.FACULTY,
+        GROUPS.STUDENT,
+        GROUPS.MANAGER,
+      ]}
+    >
       <SidebarProvider defaultOpen={defaultOpen}>
         <AppSidebar>
           <AppSidebarInset>{children}</AppSidebarInset>

@@ -1,30 +1,43 @@
 import NextAuth from "next-auth";
 import Keycloak from "next-auth/providers/keycloak";
-import { decode, JwtPayload } from "jsonwebtoken";
-import {
-  verifyAndCreateUser,
-  determineUserRole,
-} from "./utils/user-verification";
-import { KeycloakToken, DecodedJWT } from "@/types/auth";
+import { decodeJwt } from "jose";
 
-function processDecodedToken(decoded: string | JwtPayload | null): {
+interface KeycloakToken {
+  access_token: string;
+  refresh_token?: string;
+  expires_at: number;
+  session_expires_at?: number;
+  groups: string[];
+  roles?: string[];
+  id_token?: string;
+  error?: string;
+  id?: string;
+  sub?: string;
+  [key: string]: unknown;
+}
+
+interface DecodedJWT {
+  realm_access?: {
+    roles?: string[];
+  };
+  groups?: string[];
+  [key: string]: unknown;
+}
+
+function processDecodedToken(decoded: DecodedJWT | null): {
   roles: string[];
   groups: string[];
-  userId?: string;
 } {
   let roles: string[] = [];
   let groups: string[] = [];
-  let userId: string | undefined;
-
   if (decoded && typeof decoded === "object" && !Array.isArray(decoded)) {
     const decodedJWT = decoded as DecodedJWT;
     roles = decodedJWT.realm_access?.roles || [];
     groups = (decodedJWT.groups || []).map((group: string) =>
       group.replace(/^\//, ""),
     );
-    userId = decodedJWT.sub; // Extract user ID from token's 'sub' claim
   }
-  return { roles, groups, userId };
+  return { roles, groups };
 }
 
 async function refreshKeycloakAccessToken(
@@ -71,8 +84,8 @@ async function refreshKeycloakAccessToken(
         }`,
       );
     }
-    const decoded = decode(refreshedTokens.access_token);
-    const { roles, groups, userId } = processDecodedToken(decoded);
+    const decoded = decodeJwt(refreshedTokens.access_token);
+    const { roles, groups } = processDecodedToken(decoded);
 
     console.log("Successfully refreshed access token");
     return {
@@ -82,7 +95,6 @@ async function refreshKeycloakAccessToken(
       expires_at: Math.floor(Date.now() / 1000) + refreshedTokens.expires_in,
       roles: roles,
       groups: groups,
-      id: userId || token.id, // Use decoded userId or fallback to existing id
       id_token: refreshedTokens.id_token ?? token.id_token,
       error: undefined,
     };
@@ -124,21 +136,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, account, user, trigger, session }) {
-      // Handle session update trigger (e.g., from update() call)
-      if (trigger === "update" && session) {
-        // If the session update explicitly sets needsRegistration to false, override it
-        if (session.needsRegistration === false) {
-          return {
-            ...token,
-            needsRegistration: false,
-          };
-        }
-      } // Initial sign-in
+    async jwt({ token, account, user }) {
+      // Initial sign-in
       if (account && user) {
-        const decoded = decode(account.access_token!);
-        const { roles, groups, userId } = processDecodedToken(decoded);
-
+        const decoded = decodeJwt(account.access_token!);
+        const { roles, groups } = processDecodedToken(decoded);
         // Calculate session expiry based on Keycloak's refresh token expiry
         const refreshExpiresIn =
           typeof account.refresh_expires_in === "number"
@@ -146,56 +148,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             : 600;
         const sessionExpiresAt =
           Math.floor(Date.now() / 1000) + refreshExpiresIn;
-        // Verify/create user in backend database
-        if (user.email && user.name && userId) {
-          try {
-            const primaryRole = determineUserRole(roles, groups);
-            const { exists } = await verifyAndCreateUser({
-              email: user.email,
-              name: user.name,
-              keycloakId: userId, // Use decoded token's user ID
-              role: primaryRole,
-            });
-
-            // If user doesn't exist, mark for registration
-            if (!exists) {
-              return {
-                ...token,
-                access_token: account.access_token,
-                refresh_token: account.refresh_token,
-                id_token: account.id_token,
-                expires_at: account.expires_at,
-                session_expires_at: sessionExpiresAt,
-                roles: roles,
-                groups: groups,
-                id: userId, // Use decoded token's user ID
-                needsRegistration: true,
-              };
-            }
-          } catch (error) {
-            console.error("Failed to verify user in backend:", error);
-
-            // If backend is unavailable, allow session creation without registration check
-            // This prevents infinite loops when backend comes back online
-            if (
-              error instanceof Error &&
-              error.message === "BACKEND_UNAVAILABLE"
-            ) {
-              console.warn(
-                "Backend unavailable during user verification. Creating session without registration check.",
-              );
-              // Continue to create session without needsRegistration flag
-            } else {
-              // For other errors, prevent session creation
-              console.error(
-                "Unexpected error during user verification:",
-                error,
-              );
-              return null;
-            }
-          }
-        }
-
         return {
           ...token,
           access_token: account.access_token,
@@ -205,7 +157,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           session_expires_at: sessionExpiresAt,
           roles: roles,
           groups: groups,
-          id: userId, // Use decoded token's user ID
+          id: account.providerAccountId,
         };
       }
       if (
@@ -242,7 +194,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string;
+        session.user.id = token.id as string; // Ensure id is correctly assigned
         session.user.roles = token.roles as string[];
         session.user.groups = token.groups as string[];
         session.access_token = token.access_token as string;
@@ -269,7 +221,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             "client_id",
             process.env.AUTH_KEYCLOAK_ID!,
           );
-          await fetch(logoutUrl, { method: "GET" });
+
+          const response = await fetch(logoutUrl, { method: "GET" });
+          if (response.ok) {
+            console.log("Keycloak session terminated successfully");
+          } else {
+            console.error(
+              "Keycloak logout failed:",
+              response.status,
+              response.statusText,
+            );
+          }
+          console.log("Keycloak session terminated successfully");
         } catch (error) {
           console.error("Error terminating Keycloak session:", error);
         }

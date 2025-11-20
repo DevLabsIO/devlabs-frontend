@@ -18,12 +18,7 @@ export default function SignIn() {
 
     if (session?.user && !isRedirecting) {
       setIsRedirecting(true);
-
-      if (session.needsRegistration) {
-        router.push("/register");
-      } else {
-        router.push("/dashboard");
-      }
+      router.push("/dashboard");
     }
   }, [session, status, router, isRedirecting]);
 

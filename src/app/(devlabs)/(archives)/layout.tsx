@@ -1,6 +1,7 @@
 "use client";
 
 import AuthGuard from "@/components/auth/AuthGuard";
+import { GROUPS } from "@/types/auth/roles";
 
 export default function ArchivesLayout({
   children,
@@ -8,6 +9,8 @@ export default function ArchivesLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthGuard requiredGroups={["faculty", "student"]}>{children}</AuthGuard>
+    <AuthGuard requiredGroups={[GROUPS.FACULTY, GROUPS.STUDENT]}>
+      {children}
+    </AuthGuard>
   );
 }

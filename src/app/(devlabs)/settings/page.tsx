@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSessionContext } from "@/lib/session-context";
 import { useTheme } from "next-themes";
 import AuthGuard from "@/components/auth/AuthGuard";
+import { GROUPS } from "@/types/auth/roles";
 import {
   Card,
   CardContent,
@@ -57,7 +58,14 @@ export default function SettingsPage() {
   };
 
   return (
-    <AuthGuard requiredGroups={["admin", "faculty", "student", "manager"]}>
+    <AuthGuard
+      requiredGroups={[
+        GROUPS.ADMIN,
+        GROUPS.FACULTY,
+        GROUPS.STUDENT,
+        GROUPS.MANAGER,
+      ]}
+    >
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">

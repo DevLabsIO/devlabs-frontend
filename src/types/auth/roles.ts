@@ -9,6 +9,13 @@ export const KEYCLOAK_GROUPS = {
   STUDENT: "/student",
 } as const;
 
+export const GROUPS = {
+  ADMIN: "admin",
+  MANAGER: "manager",
+  FACULTY: "faculty",
+  STUDENT: "student",
+} as const;
+
 export const ROLES = {
   ADMIN: "ADMIN",
   MANAGER: "MANAGER",

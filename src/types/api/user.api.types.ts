@@ -15,10 +15,3 @@ export interface CreateUserRequest {
 export interface UpdateUserRequest extends Omit<CreateUserRequest, "password"> {
   id: string;
 }
-
-export interface CreateKeycloakUserRequest {
-  email: string;
-  name: string;
-  role: string;
-  phoneNumber: string;
-}

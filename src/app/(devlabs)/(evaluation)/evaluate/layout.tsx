@@ -1,6 +1,7 @@
 "use client";
 
 import AuthGuard from "@/components/auth/AuthGuard";
+import { GROUPS } from "@/types/auth/roles";
 
 export default function EvaluateLayout({
   children,
@@ -8,7 +9,7 @@ export default function EvaluateLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthGuard requiredGroups={["admin", "faculty", "manager"]}>
+    <AuthGuard requiredGroups={[GROUPS.ADMIN, GROUPS.FACULTY, GROUPS.MANAGER]}>
       {children}
     </AuthGuard>
   );

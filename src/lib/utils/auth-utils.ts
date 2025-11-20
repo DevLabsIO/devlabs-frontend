@@ -1,6 +1,5 @@
-import { UserType } from "@/types/auth";
+import { UserType } from "@/types/auth/auth-helpers.types";
 
-// Utility function to check if user has any of the required roles
 export function hasRequiredRole(
   userRole: string | undefined,
   requiredRoles: UserType[],
@@ -9,7 +8,6 @@ export function hasRequiredRole(
   return requiredRoles.includes(userRole as UserType);
 }
 
-// Utility function to check if user belongs to any of the required groups
 export function belongsToRequiredGroup(
   userGroups: string[] | undefined,
   requiredGroups: string[],
@@ -18,7 +16,6 @@ export function belongsToRequiredGroup(
   return requiredGroups.some((group) => userGroups.includes(group));
 }
 
-// Combined utility function to check both roles and groups
 export function hasAccess(
   userRoles: string[] | undefined,
   userGroups: string[] | undefined,
@@ -32,7 +29,6 @@ export function hasAccess(
     requiredGroups.length === 0 ||
     belongsToRequiredGroup(userGroups, requiredGroups);
 
-  // User needs to satisfy both role and group requirements if both are specified
   return hasRole && hasGroup;
 }
 
