@@ -121,12 +121,12 @@ export default function ManagerStaffDashboard() {
                     className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 overflow-hidden"
                 >
                     <Link href="/reviews/create" className="w-full overflow-hidden">
-                        <Plus className="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0" />
+                        <Plus className="h-6 w-6 sm:h-8 sm:w-8 shrink-0" />
                         <div className="text-center w-full min-w-0 overflow-hidden px-2">
                             <p className="font-medium text-sm sm:text-base truncate">
                                 Create New Review
                             </p>
-                            <p className="text-xs text-muted-foreground line-clamp-2 break-words">
+                            <p className="text-xs text-muted-foreground line-clamp-2 warp-break-words">
                                 Set up a new project review
                             </p>
                         </div>
@@ -138,12 +138,12 @@ export default function ManagerStaffDashboard() {
                     className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 overflow-hidden"
                 >
                     <Link href="/teams" className="w-full overflow-hidden">
-                        <FolderOpen className="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0" />
+                        <FolderOpen className="h-6 w-6 sm:h-8 sm:w-8 shrink-0" />
                         <div className="text-center w-full min-w-0 overflow-hidden px-2">
                             <p className="font-medium text-sm sm:text-base truncate">
                                 Manage Teams
                             </p>
-                            <p className="text-xs text-muted-foreground line-clamp-2 break-words">
+                            <p className="text-xs text-muted-foreground line-clamp-2 warp-break-words">
                                 View and manage project teams
                             </p>
                         </div>
@@ -155,12 +155,12 @@ export default function ManagerStaffDashboard() {
                     className="h-auto p-4 sm:p-6 flex-col gap-2 sm:gap-3 overflow-hidden"
                 >
                     <Link href="/archives" className="w-full overflow-hidden">
-                        <Archive className="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0" />
+                        <Archive className="h-6 w-6 sm:h-8 sm:w-8 shrink-0" />
                         <div className="text-center w-full min-w-0 overflow-hidden px-2">
                             <p className="font-medium text-sm sm:text-base truncate">
                                 View Archives
                             </p>
-                            <p className="text-xs text-muted-foreground line-clamp-2 break-words">
+                            <p className="text-xs text-muted-foreground line-clamp-2 warp-break-words">
                                 Browse completed projects and results
                             </p>
                         </div>

@@ -1,0 +1,39 @@
+services:
+    frontend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: devlabs-frontend
+        restart: unless-stopped
+        env_file:
+            - .env
+        environment:
+            NODE_ENV: ${NODE_ENV:-production}
+            AUTH_SECRET: ${AUTH_SECRET}
+            NEXT_REDIRECT: ${NEXT_REDIRECT}
+            LOG_LEVEL: ${LOG_LEVEL:-info}
+            AUTH_KEYCLOAK_ID: ${AUTH_KEYCLOAK_ID}
+            AUTH_KEYCLOAK_SECRET: ${AUTH_KEYCLOAK_SECRET}
+            AUTH_KEYCLOAK_ISSUER: ${AUTH_KEYCLOAK_ISSUER}
+            BACKEND_API_URL: ${BACKEND_API_URL}
+            NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        ports:
+            - "${FRONTEND_PORT:-3000}:3000"
+        networks:
+            - devlabs-frontend
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "node",
+                    "-e",
+                    "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+
+networks:
+    devlabs-frontend:
+        driver: bridge
