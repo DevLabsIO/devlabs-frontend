@@ -53,7 +53,7 @@ export function DataTableViewOptions<TData>({
 
     return [...columns].sort((a, b) => {
       const aIndex = columnOrder.indexOf(a.id);
-      const bIndex = columnOrder.indexOf(b.id); // If column isn't in the order array, put it at the end
+      const bIndex = columnOrder.indexOf(b.id);
       if (aIndex === -1) return 1;
       if (bIndex === -1) return -1;
 

@@ -46,7 +46,7 @@ export function DataTableExport<TData extends ExportableData>({
   const { loading, success: showSuccess, error: showError } = useToast();
 
   const handleExport = async (type: "csv" | "excel") => {
-    if (isLoading) return; // Prevent multiple export requests
+    if (isLoading) return;
 
     const fetchExportData = async (): Promise<TData[]> => {
       if (getSelectedItems && selectedData && selectedData.length > 0) {

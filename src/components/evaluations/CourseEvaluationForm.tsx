@@ -276,7 +276,7 @@ export function CourseEvaluationForm({
 
       setTimeout(() => {
         router.back();
-      }, 500); // Small delay to ensure toast is visible
+      }, 500);
     },
     onError: () => {
       toast("Failed to submit evaluation. Please try again.");
@@ -386,7 +386,6 @@ export function CourseEvaluationForm({
         </CardHeader>
       </Card>
 
-      {}
       {evaluationData.isPublished && (
         <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900">
           <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-500" />

@@ -33,12 +33,12 @@ export function useSidebarResize({
   maxResizeWidth = "24rem",
   enableToggle = true,
   enableAutoCollapse = true,
-  autoCollapseThreshold = 1.5, // Default to collapsing at minWidth + 50%
+  autoCollapseThreshold = 1.5,
   expandThreshold = 0.2,
   enableDrag = true,
   setIsDraggingRail = () => {},
   widthCookieName,
-  widthCookieMaxAge = 60 * 60 * 24 * 7, // 1 week default
+  widthCookieMaxAge = 60 * 60 * 24 * 7,
   isNested = false,
 }: UseSidebarResizeProps) {
   const dragRef = React.useRef<HTMLButtonElement>(null);
@@ -72,8 +72,8 @@ export function useSidebarResize({
   const isIncreasingWidth = React.useCallback(
     (currentX: number, referenceX: number): boolean => {
       return direction === "left"
-        ? currentX < referenceX // For left-positioned handle, moving left increases width
-        : currentX > referenceX; // For right-positioned handle, moving right increases width
+        ? currentX < referenceX
+        : currentX > referenceX;
     },
     [direction],
   );
@@ -217,9 +217,9 @@ export function useSidebarResize({
             }
 
             if (currentDragDirection === "collapse" && shouldCollapse) {
-              onToggle(); // Collapse
+              onToggle();
               lastTogglePoint.current = e.clientX;
-              lastToggleWidth.current = 0; // Width is 0 when collapsed
+              lastToggleWidth.current = 0;
               toggleCooldown.current = true;
               lastToggleTime.current = now;
               return;
@@ -232,7 +232,7 @@ export function useSidebarResize({
             currentDragDirection === "expand" &&
             dragDistanceFromToggle.current > minWidthPx * expandThreshold
           ) {
-            onToggle(); // Expand
+            onToggle();
 
             const initialWidth = calculateWidth(
               e,

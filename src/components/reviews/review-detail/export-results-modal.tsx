@@ -85,7 +85,7 @@ export interface ExportConfig {
   selectedColumns: string[];
   columnNames: Record<string, string>;
   columnDefaultValues: Record<string, string>;
-  columnOrder: string[]; // Order of columns in the export
+  columnOrder: string[];
   showMarkBreakdown: boolean;
   breakdownCriteria: string[];
   batchIds: string[];

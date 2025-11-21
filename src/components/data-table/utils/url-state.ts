@@ -159,7 +159,7 @@ export function useUrlState<T>(
     ) {
       pendingUpdates.delete(key);
     }
-  }, [searchParams, getValueFromUrl, key, areEqual]); // No dependency on value
+  }, [searchParams, getValueFromUrl, key, areEqual]);
 
   const updateUrlNow = useCallback(
     (params: URLSearchParams) => {
@@ -208,7 +208,7 @@ export function useUrlState<T>(
           "page",
         ) as PendingUpdateEntry<number>) || {
           value: 1,
-          defaultValue: 1, // Assuming default page is 1
+          defaultValue: 1,
           serialize: (v: number) => String(v),
           areEqual: (a: number, b: number) => a === b,
         };
@@ -233,7 +233,7 @@ export function useUrlState<T>(
           let sortOrderInBatch = false;
 
           const sortByInURL = params.has("sortBy");
-          const defaultSortOrder = "desc"; // Match the default from the component          // First pass: identify which sort parameters are being updated
+          const defaultSortOrder = "desc";
           for (const [updateKey] of pendingUpdates.entries()) {
             if (updateKey === "sortBy") sortByInBatch = true;
             if (updateKey === "sortOrder") sortOrderInBatch = true;

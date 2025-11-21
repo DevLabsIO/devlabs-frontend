@@ -224,7 +224,7 @@ export function DataTableToolbar<TData>({
       setDates(initialDates);
       setDatesModified(true);
     }
-  }, [getInitialDates]); // Include memoized function as dependency
+  }, [getInitialDates]);
 
   const isFiltered = tableFiltered || !!localSearch || datesModified;
 
@@ -316,7 +316,7 @@ export function DataTableToolbar<TData>({
     mutationFn: deleteFn,
     onSuccess: () => {
       table.resetRowSelection();
-      queryClient.invalidateQueries(); // Invalidate relevant queries
+      queryClient.invalidateQueries();
     },
     onError: (error: Error) => {
       console.error("Failed to delete items:", error);
@@ -327,7 +327,7 @@ export function DataTableToolbar<TData>({
     mutationFn: assignFn,
     onSuccess: () => {
       table.resetRowSelection();
-      queryClient.invalidateQueries(); // Invalidate relevant queries
+      queryClient.invalidateQueries();
     },
     onError: (error: Error) => {
       console.error("Failed to assign items:", error);
@@ -363,7 +363,7 @@ export function DataTableToolbar<TData>({
             )} h-8 w-[150px] lg:w-[250px]`}
           />
         )}
-        {}
+
         {config.enableColumnFilters &&
           columnFilterOptions &&
           columnFilterOptions.map((filter) => {

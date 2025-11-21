@@ -42,19 +42,19 @@ const performanceChartConfig = {
   },
   excellent: {
     label: "Excellent (85-100%)",
-    color: "#10b981", // Emerald green - success
+    color: "#10b981",
   },
   good: {
     label: "Good (70-84%)",
-    color: "#22c55e", // Green - good performance
+    color: "#22c55e",
   },
   average: {
     label: "Average (55-69%)",
-    color: "#f59e0b", // Amber - needs attention
+    color: "#f59e0b",
   },
   poor: {
     label: "Poor (0-54%)",
-    color: "#ef4444", // Red - needs improvement
+    color: "#ef4444",
   },
 } satisfies ChartConfig;
 
@@ -128,7 +128,6 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-      {}
       <div className="flex flex-col">
         <div className="items-center pb-4">
           <h3 className="text-lg font-semibold text-center text-foreground mb-1">
@@ -183,7 +182,6 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
 
                   return (
                     <g>
-                      {}
                       <rect
                         x={x - 28}
                         y={y - 12}
@@ -195,7 +193,7 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                         stroke="rgba(255, 255, 255, 0.2)"
                         strokeWidth={1}
                       />
-                      {}
+
                       <text
                         x={x}
                         y={y + 1}
@@ -232,7 +230,6 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
         </div>
       </div>
 
-      {}
       <div className="flex flex-col">
         <div className="items-center pb-4">
           <h3 className="text-lg font-semibold text-center text-foreground mb-1">

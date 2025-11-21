@@ -67,7 +67,6 @@ export default function SettingsPage() {
       ]}
     >
       <div className="container mx-auto px-4 py-8">
-        {}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Settings</h1>
           <p className="text-muted-foreground">
@@ -76,7 +75,6 @@ export default function SettingsPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {}
           <div className="lg:col-span-1">
             <Card className="sticky top-6">
               <CardContent className="p-6">
@@ -106,14 +104,12 @@ export default function SettingsPage() {
             </Card>
           </div>
 
-          {}
           <div className="lg:col-span-3">
             <Tabs
               value={activeTab}
               onValueChange={setActiveTab}
               className="space-y-6"
             >
-              {}
               <div className="rounded-xl border p-2">
                 <TabsList className="grid w-full grid-cols-3 bg-transparent gap-2">
                   <TabsTrigger value="account">
@@ -130,7 +126,6 @@ export default function SettingsPage() {
                   </TabsTrigger>
                 </TabsList>
               </div>
-              {}
               <TabsContent value="account" className="space-y-6">
                 <Card>
                   <CardHeader className="pb-4">
@@ -181,7 +176,6 @@ export default function SettingsPage() {
                   </CardContent>
                 </Card>
               </TabsContent>{" "}
-              {}
               <TabsContent value="appearance" className="space-y-6">
                 <Card>
                   <CardHeader>
@@ -255,7 +249,6 @@ export default function SettingsPage() {
                   </CardContent>
                 </Card>
               </TabsContent>
-              {}
               <TabsContent value="notifications" className="space-y-6">
                 <Card>
                   <CardHeader>

@@ -130,7 +130,7 @@ export function UpdateProjectForm({
                 type="url"
                 value={formData.githubUrl}
                 onChange={(e) => handleChange("githubUrl", e.target.value)}
-                placeholder="https://github.com/username/repository"
+                placeholder="https://github.com/your-repo"
               />
             </div>
           </div>

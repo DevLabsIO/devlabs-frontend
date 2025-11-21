@@ -106,7 +106,6 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-8 pb-8">
-      {}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-background border">
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="relative px-8 py-10 md:py-12">
@@ -152,7 +151,6 @@ export default function StudentDashboard() {
         </div>
       </div>
 
-      {}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card className="group relative overflow-hidden border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
           <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all" />
@@ -258,9 +256,7 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      {}
       <div className="grid gap-6 lg:grid-cols-2">
-        {}
         <Card className="border-2 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-50 to-background dark:from-blue-950/20 dark:to-background px-6 py-5 border-b">
             <div className="flex items-center justify-between">
@@ -328,7 +324,6 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
-        {}
         <Card className="border-2 overflow-hidden">
           <div className="bg-gradient-to-r from-green-50 to-background dark:from-green-950/20 dark:to-background px-6 py-5 border-b">
             <div className="flex items-center justify-between">
@@ -392,9 +387,7 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      {}
       <div className="grid gap-6 lg:grid-cols-2">
-        {}
         <Card className="border-2">
           <div className="px-6 py-5 border-b bg-gradient-to-r from-purple-50 to-background dark:from-purple-950/20 dark:to-background">
             <div className="flex items-center gap-3">
@@ -410,7 +403,6 @@ export default function StudentDashboard() {
             </div>
           </div>
           <CardContent className="p-6 space-y-6">
-            {}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -438,7 +430,6 @@ export default function StudentDashboard() {
 
             <Separator />
 
-            {}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -470,7 +461,7 @@ export default function StudentDashboard() {
             {data.averageProjectScore > 0 && (
               <>
                 <Separator />
-                {}
+
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -502,7 +493,6 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
-        {}
         <Card className="border-2">
           <div className="px-6 py-5 border-b bg-gradient-to-r from-orange-50 to-background dark:from-orange-950/20 dark:to-background">
             <div className="flex items-center gap-3">

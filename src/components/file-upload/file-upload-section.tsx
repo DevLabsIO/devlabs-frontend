@@ -42,24 +42,24 @@ export function FileUploadSection({
     queryKey: ["review", reviewId],
     queryFn: () => reviewQueries.getReviewById(reviewId),
     enabled: !!reviewId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const { data: project } = useQuery<ProjectWithTeam>({
     queryKey: ["project", projectId],
     queryFn: () => projectQueries.fetchProjectByProjectId(projectId),
     enabled: !!projectId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const { data: team } = useQuery({
     queryKey: ["team", project?.teamId],
     queryFn: () => teamQueries.getTeamById(project!.teamId),
     enabled: !!project?.teamId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const reviewStatus = review
@@ -314,7 +314,6 @@ export function FileUploadSection({
                   );
                 })}
 
-                {}
                 <div className="flex justify-end">
                   <Button
                     onClick={handleUploadAll}

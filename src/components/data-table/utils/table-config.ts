@@ -29,20 +29,20 @@ export interface TableConfig {
 }
 
 const defaultConfig: TableConfig = {
-  enableRowSelection: true, // Row selection enabled by default
-  enableClickRowSelect: false, // Clicking row to select disabled by default
-  enablePagination: true, // Pagination enabled by default
-  enableSearch: true, // Search enabled by default
-  enableColumnFilters: true, // Column filters enabled by default
-  enableDateFilter: false, // Date filter disabled by default
-  enableColumnVisibility: true, // Column visibility options enabled by default
-  enableExport: true, // Data export enabled by default
-  enableUrlState: true, // URL state persistence enabled by default
-  enableColumnResizing: true, // Column resizing enabled by default
-  enableToolbar: true, // Toolbar enabled by default
-  enableAssign: false, // Assign action disabled by default
-  enableDelete: false, // Delete action disabled by default
-  size: "default", // Default size for buttons and inputs
+  enableRowSelection: true,
+  enableClickRowSelect: false,
+  enablePagination: true,
+  enableSearch: true,
+  enableColumnFilters: true,
+  enableDateFilter: false,
+  enableColumnVisibility: true,
+  enableExport: true,
+  enableUrlState: true,
+  enableColumnResizing: true,
+  enableToolbar: true,
+  enableAssign: false,
+  enableDelete: false,
+  size: "default",
 };
 
 export function useTableConfig(

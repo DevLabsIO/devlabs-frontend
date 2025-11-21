@@ -84,7 +84,6 @@ export function ReviewSummary() {
 
   return (
     <div className="space-y-6">
-      {}
       <div
         className={`p-4 rounded-xl border-2 flex items-center gap-3 ${
           isComplete
@@ -119,7 +118,6 @@ export function ReviewSummary() {
         )}
       </div>
 
-      {}
       <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden">
         <div className="p-6 space-y-6">
           <div className="flex items-center gap-2 mb-4">
@@ -193,7 +191,6 @@ export function ReviewSummary() {
         </div>
       </div>
 
-      {}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-2 border-blue-200 dark:border-blue-800 rounded-2xl overflow-hidden">
         <div className="p-6 space-y-6">
           <div className="flex items-center gap-2 mb-4">

@@ -217,12 +217,12 @@ export default function TeamsPage() {
                 updatedAt: "Last Updated",
               },
               columnWidths: [
-                { wch: 25 }, // name
-                { wch: 40 }, // description
-                { wch: 15 }, // memberCount
-                { wch: 15 }, // projectCount
-                { wch: 15 }, // createdAt
-                { wch: 15 }, // updatedAt
+                { wch: 25 },
+                { wch: 40 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
               ],
               headers: [
                 "name",
@@ -254,12 +254,12 @@ export default function TeamsPage() {
                 updatedAt: "Last Updated",
               },
               columnWidths: [
-                { wch: 25 }, // name
-                { wch: 40 }, // description
-                { wch: 15 }, // memberCount
-                { wch: 15 }, // projectCount
-                { wch: 15 }, // createdAt
-                { wch: 15 }, // updatedAt
+                { wch: 25 },
+                { wch: 40 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
               ],
               headers: [
                 "name",

@@ -13,7 +13,7 @@ export function calculateReviewStatus(
   endDate: string | Date,
 ): ReviewStatus {
   const now = new Date();
-  const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+  const istOffset = 5.5 * 60 * 60 * 1000;
   const istNow = new Date(now.getTime() + istOffset);
 
   const start = new Date(

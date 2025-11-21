@@ -43,7 +43,7 @@ export const useTeams = (
         params.size = size.toString();
       } else {
         params.page = page.toString();
-        params.size = size.toString(); // Role-based team fetching based on user groups
+        params.size = size.toString();
         const userGroups = user.groups || [];
         if ((userGroups as string[]).includes("student")) {
           endpoint = `/teams/user/${user.id}`;

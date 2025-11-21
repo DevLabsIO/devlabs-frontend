@@ -16,7 +16,7 @@ export interface DecodedJWT {
     roles?: string[];
   };
   groups?: string[];
-  sub?: string; // Subject - typically the user ID
+  sub?: string;
   preferred_username?: string;
   [key: string]: unknown;
 }

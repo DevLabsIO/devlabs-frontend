@@ -34,7 +34,7 @@ export const createReviewSchema = z
     {
       message:
         "At least one participant must be selected (semester, batch, course, or project).",
-      path: ["semesters"], // This will show the error near the participants section
+      path: ["semesters"],
     },
   );
 

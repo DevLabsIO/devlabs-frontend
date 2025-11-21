@@ -126,12 +126,12 @@ export default function CourseProjects() {
                 updatedAt: "Last Updated",
               },
               columnWidths: [
-                { wch: 30 }, // title
-                { wch: 50 }, // description
-                { wch: 15 }, // status
-                { wch: 15 }, // teamMemberCount
-                { wch: 15 }, // createdAt
-                { wch: 15 }, // updatedAt
+                { wch: 30 },
+                { wch: 50 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
               ],
               headers: [
                 "title",
@@ -163,12 +163,12 @@ export default function CourseProjects() {
                 updatedAt: "Last Updated",
               },
               columnWidths: [
-                { wch: 30 }, // title
-                { wch: 50 }, // description
-                { wch: 15 }, // status
-                { wch: 15 }, // teamMemberCount
-                { wch: 15 }, // createdAt
-                { wch: 15 }, // updatedAt
+                { wch: 30 },
+                { wch: 50 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
               ],
               headers: [
                 "title",

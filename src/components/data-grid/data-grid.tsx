@@ -171,7 +171,7 @@ export function DataGrid<TData, TValue>({
   );
 
   const [page, setPage] = useConditionalUrlState("page", 1);
-  const [pageSize, setPageSize] = useConditionalUrlState("pageSize", 12); // Default to 12 for grid
+  const [pageSize, setPageSize] = useConditionalUrlState("pageSize", 12);
   const [search, setSearch] = useConditionalUrlState("search", "");
   const [dateRange, setDateRange] = useConditionalUrlState<{
     from_date: string;
@@ -203,7 +203,7 @@ export function DataGrid<TData, TValue>({
       total_pages: number;
       total_items: number;
     };
-  } | null>(null); // PERFORMANCE FIX: Use only one selection state as the source of truth
+  } | null>(null);
   const [selectedItemIds, setSelectedItemIds] = useState<
     Record<string | number, boolean>
   >({});

@@ -77,10 +77,7 @@ export default function DepartmentsPage() {
               name: "Department Name",
               batchCount: "Number of Batches",
             },
-            columnWidths: [
-              { wch: 35 }, // name
-              { wch: 20 }, // batchCount
-            ],
+            columnWidths: [{ wch: 35 }, { wch: 20 }],
             headers: ["name", "batchCount"],
           }}
           getColumns={columnsWrapper}

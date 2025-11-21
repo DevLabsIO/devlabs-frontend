@@ -30,16 +30,16 @@ const getButtonSizeClass = (size: "sm" | "default" | "lg") => {
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
-  pageSizeOptions?: number[]; // Custom page size options
-  size?: "sm" | "default" | "lg"; // Size prop for components
-  paginationLabel?: string; // Custom label for pagination (e.g., "Rows per page" or "Grids per page")
+  pageSizeOptions?: number[];
+  size?: "sm" | "default" | "lg";
+  paginationLabel?: string;
 }
 
 export function DataTablePagination<TData>({
   table,
-  pageSizeOptions = [10, 20, 30, 40, 50], // Default options if none provided
+  pageSizeOptions = [10, 20, 30, 40, 50],
   size = "default",
-  paginationLabel = "Rows per page", // Default label
+  paginationLabel = "Rows per page",
 }: DataTablePaginationProps<TData>) {
   const [, setPageSize] = useUrlState(
       "pageSize",
@@ -65,7 +65,7 @@ export function DataTablePagination<TData>({
               setPageSize(Number(value));
               setPage(1);
               table.setPagination({
-                pageIndex: 0, // Reset to first page
+                pageIndex: 0,
                 pageSize: Number(value),
               });
             }}

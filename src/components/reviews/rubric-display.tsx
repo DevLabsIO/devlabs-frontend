@@ -41,7 +41,7 @@ export function RubricDisplay({ rubric }: RubricDisplayProps) {
 
   const totalScore = rubric.criteria.reduce(
     (total, criterion) => total + (criterion.maxScore || 0),
-    0
+    0,
   );
 
   return (
@@ -67,7 +67,7 @@ export function RubricDisplay({ rubric }: RubricDisplayProps) {
           {rubric.criteria.length > 0 ? (
             <RubricCriteriaTable
               criteria={rubric.criteria}
-              onCriteriaChange={() => {}} // Not editable in display mode
+              onCriteriaChange={() => {}}
               isReadOnly={true}
             />
           ) : (

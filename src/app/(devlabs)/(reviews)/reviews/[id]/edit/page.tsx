@@ -148,7 +148,7 @@ export default function EditReviewPage() {
     if (currentTab === "basic-info") {
       fieldsToValidate = ["name", "startDate", "endDate", "rubricId"];
     } else if (currentTab === "participants") {
-      fieldsToValidate = ["semesters"]; // Only validate required fields
+      fieldsToValidate = ["semesters"];
     }
 
     const isValid = await form.trigger(fieldsToValidate);

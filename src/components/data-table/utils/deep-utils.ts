@@ -34,8 +34,8 @@ export function isDeepEqual(a: Comparable, b: Comparable): boolean {
 
     const typeA = typeof a;
     const typeB = typeof b;
-    if (typeA !== typeB) return false; // Fast non-recursive paths for common types
-    if (typeA !== "object") return false; // We already checked a === b for primitives
+    if (typeA !== typeB) return false;
+    if (typeA !== "object") return false;
 
     if (a instanceof Date) {
       return b instanceof Date && a.getTime() === b.getTime();
@@ -53,7 +53,7 @@ export function isDeepEqual(a: Comparable, b: Comparable): boolean {
       }
 
       return true;
-    } // Special handling for Set - order doesn't matter for Sets
+    }
     if (a instanceof Set) {
       if (!(b instanceof Set) || a.size !== b.size) return false;
 
@@ -82,7 +82,7 @@ export function isDeepEqual(a: Comparable, b: Comparable): boolean {
       }
 
       return true;
-    } // Handle typed arrays
+    }
     if (ArrayBuffer.isView(a)) {
       if (
         !ArrayBuffer.isView(b) ||
@@ -98,7 +98,7 @@ export function isDeepEqual(a: Comparable, b: Comparable): boolean {
         if (typedA[i] !== typedB[i]) return false;
       }
       return true;
-    } // Handle plain objects with circular reference detection
+    }
     if (a.constructor === Object && b.constructor === Object) {
       const objA = a as Record<string, unknown>;
       const objB = b as Record<string, unknown>;

@@ -17,7 +17,7 @@ export function createConditionalStateHook(enableUrlState: boolean) {
     const setRegularStateWrapper = useCallback(
       (valueOrUpdater: T | ((prevValue: T) => T)) => {
         setRegularState(valueOrUpdater);
-        return undefined; // Return undefined instead of void to match the type
+        return undefined;
       },
       [],
     );

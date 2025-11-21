@@ -62,12 +62,12 @@ const CustomTooltip = ({
 
 export default function PerformanceChart({ data }: PerformanceChartProps) {
   const courseColors = [
-    "#3b82f6", // blue
-    "#ef4444", // red
-    "#10b981", // green
-    "#f59e0b", // amber
-    "#8b5cf6", // violet
-    "#ec4899", // pink
+    "#3b82f6",
+    "#ef4444",
+    "#10b981",
+    "#f59e0b",
+    "#8b5cf6",
+    "#ec4899",
   ];
 
   const allDates = Array.from(
@@ -109,7 +109,7 @@ export default function PerformanceChart({ data }: PerformanceChartProps) {
               fontSize={12}
               tickLine={false}
               axisLine={true}
-              tick={false} // Hide the tick labels as requested
+              tick={false}
               padding={{ left: 10, right: 10 }}
             />
             <YAxis
@@ -147,7 +147,7 @@ export default function PerformanceChart({ data }: PerformanceChartProps) {
                   fill: courseColors[index % courseColors.length],
                 }}
                 animationDuration={1500}
-                connectNulls={false} // Don't connect lines across missing data points
+                connectNulls={false}
               />
             ))}
           </LineChart>

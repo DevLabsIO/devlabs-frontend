@@ -10,32 +10,32 @@ export interface ProjectReviewsResponse {
 
 export interface CreateReviewRequest {
   name: string;
-  startDate: string; // YYYY-MM-DD format (LocalDate)
-  endDate: string; // YYYY-MM-DD format (LocalDate)
-  rubricsId: string; // UUID
-  userId: string; // UUID
+  startDate: string;
+  endDate: string;
+  rubricsId: string;
+  userId: string;
 
-  courseIds?: string[] | null; // Optional array of UUIDs
-  semesterIds?: string[] | null; // Optional array of UUIDs
-  batchIds?: string[] | null; // Optional array of UUIDs
-  projectIds?: string[] | null; // Optional array of UUIDs
+  courseIds?: string[] | null;
+  semesterIds?: string[] | null;
+  batchIds?: string[] | null;
+  projectIds?: string[] | null;
 
-  sections?: string[] | null; // Optional array of strings
+  sections?: string[] | null;
 }
 
 export interface UpdateReviewRequest {
   name: string;
-  startDate: string; // YYYY-MM-DD format (LocalDate)
-  endDate: string; // YYYY-MM-DD format (LocalDate)
-  rubricsId: string; // UUID
-  userId: string; // UUID
+  startDate: string;
+  endDate: string;
+  rubricsId: string;
+  userId: string;
 
-  courseIds?: string[] | null; // Optional array of UUIDs
-  semesterIds?: string[] | null; // Optional array of UUIDs
-  batchIds?: string[] | null; // Optional array of UUIDs
-  projectIds?: string[] | null; // Optional array of UUIDs
+  courseIds?: string[] | null;
+  semesterIds?: string[] | null;
+  batchIds?: string[] | null;
+  projectIds?: string[] | null;
 
-  sections?: string[] | null; // Optional array of strings
+  sections?: string[] | null;
 }
 
 interface DepartmentResponse {

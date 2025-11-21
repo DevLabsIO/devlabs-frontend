@@ -109,7 +109,7 @@ interface DataTableProps<TData, TValue> {
     allSelectedIds: (string | number)[];
     totalSelectedCount: number;
     resetSelection: () => void;
-  }) => React.ReactNode; // Column filters configuration
+  }) => React.ReactNode;
   columnFilterOptions?: Array<{
     columnId: string;
     title: string;
@@ -179,7 +179,7 @@ export function DataTable<TData, TValue>({
     };
   } | null>(null);
 
-  const [columnOrder, setColumnOrder] = useState<string[]>([]); // PERFORMANCE FIX: Use only one selection state as the source of truth
+  const [columnOrder, setColumnOrder] = useState<string[]>([]);
   const [selectedItemIds, setSelectedItemIds] = useState<
     Record<string | number, boolean>
   >({});

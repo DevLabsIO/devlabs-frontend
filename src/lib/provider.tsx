@@ -51,7 +51,6 @@ export function Providers({ children }: ProvidersProps) {
         <SessionContextProvider>
           <QueryClientProvider client={queryClient}>
             {children}
-            {}
           </QueryClientProvider>
         </SessionContextProvider>
       </SessionProvider>

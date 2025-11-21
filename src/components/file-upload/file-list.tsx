@@ -63,8 +63,8 @@ export function FileList({
     queryKey: ["fileList", queryParams],
     queryFn: () => fileUploadQueries.listFiles(queryParams),
     enabled: !!(projectId || reviewId || teamId),
-    staleTime: 2 * 60 * 1000, // 2 minutes - files may be uploaded during evaluation
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 2 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const handleDownloadAll = async () => {

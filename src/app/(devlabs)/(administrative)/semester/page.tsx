@@ -162,11 +162,7 @@ export default function SemesterPage() {
             year: "Year",
             isActive: "Status",
           },
-          columnWidths: [
-            { wch: 30 }, // name
-            { wch: 15 }, // year
-            { wch: 15 }, // isActive
-          ],
+          columnWidths: [{ wch: 30 }, { wch: 15 }, { wch: 15 }],
           headers: ["name", "year", "isActive"],
         }}
         columnFilterOptions={[

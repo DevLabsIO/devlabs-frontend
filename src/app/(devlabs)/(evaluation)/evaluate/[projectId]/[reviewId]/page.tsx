@@ -67,7 +67,6 @@ function CourseSelector({
 
   return (
     <div className="space-y-6">
-      {}
       <Card className="border-2">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
@@ -106,7 +105,6 @@ function CourseSelector({
         </CardContent>
       </Card>
 
-      {}
       <div className="grid gap-4 md:grid-cols-2">
         {summary.courseEvaluations.map((course) => {
           const canEvaluate = canEvaluateCourse(course);
@@ -204,24 +202,24 @@ export default function EvaluationPage() {
       queryKey: ["project", projectId],
       queryFn: () => projectQueries.fetchProjectByProjectId(projectId),
       enabled: !!projectId,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
     });
 
   const { data: review } = useQuery({
     queryKey: ["review", reviewId],
     queryFn: () => reviewQueries.getReviewById(reviewId),
     enabled: !!reviewId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const { data: team } = useQuery({
     queryKey: ["team", project?.teamId],
     queryFn: () => teamQueries.getTeamById(project!.teamId),
     enabled: !!project?.teamId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const { data: summary, isLoading: isLoadingSummary } = useQuery({
@@ -233,8 +231,8 @@ export default function EvaluationPage() {
         user!.id,
       ),
     enabled: !courseId && !!reviewId && !!projectId && !!user,
-    staleTime: 2 * 60 * 1000, // 2 minutes - may change as evaluations complete
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 2 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const { data: evaluationData, isLoading: isLoadingEvaluationData } = useQuery(
@@ -248,8 +246,8 @@ export default function EvaluationPage() {
           user!.id,
         ),
       enabled: !!courseId && !!reviewId && !!projectId && !!user,
-      staleTime: 1 * 60 * 1000, // 1 minute - active evaluation data
-      gcTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 1 * 60 * 1000,
+      gcTime: 5 * 60 * 1000,
     },
   );
 

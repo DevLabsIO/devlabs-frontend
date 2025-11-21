@@ -95,7 +95,6 @@ export function ScoreSlider({
 
   return (
     <div className={cn("space-y-3", className)}>
-      {}
       <div className="flex items-center justify-between gap-4 mb-2">
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-muted-foreground">
@@ -130,7 +129,6 @@ export function ScoreSlider({
         </Button>
       </div>
 
-      {}
       <div className="flex flex-wrap gap-2">
         {scores.map((value) => {
           const isSelected = score === value;

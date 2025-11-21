@@ -110,11 +110,7 @@ export default function BatchDetailsPage() {
               email: "Email",
               phoneNumber: "Phone Number",
             },
-            columnWidths: [
-              { wch: 30 }, // name
-              { wch: 35 }, // email
-              { wch: 20 }, // phoneNumber
-            ],
+            columnWidths: [{ wch: 30 }, { wch: 35 }, { wch: 20 }],
             headers: ["name", "email", "phoneNumber"],
           }}
           getColumns={columnsWrapper}

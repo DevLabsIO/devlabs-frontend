@@ -35,7 +35,7 @@ export function AssignStudentDialog({
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  const { data, isLoading } = useUsers(debouncedSearchQuery, 0, 1000); // Fetch a large number of users
+  const { data, isLoading } = useUsers(debouncedSearchQuery, 0, 1000);
   const students = data?.data || [];
 
   const parentRef = useRef<HTMLDivElement>(null);
@@ -58,7 +58,7 @@ export function AssignStudentDialog({
     setSelectedStudents((prev) =>
       prev.includes(studentId)
         ? prev.filter((id) => id !== studentId)
-        : [...prev, studentId]
+        : [...prev, studentId],
     );
   };
 

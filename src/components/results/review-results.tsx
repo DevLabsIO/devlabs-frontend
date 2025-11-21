@@ -27,8 +27,8 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
     queryFn: () =>
       resultQueries.getResults(reviewId, projectId, currentUser?.id || ""),
     enabled: !!(reviewId && projectId && currentUser?.id),
-    staleTime: 2 * 60 * 1000, // 2 minutes - results may update during evaluation
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 2 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const teamAverage = results?.results.length
@@ -145,7 +145,6 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
         <Badge variant="secondary">Published</Badge>
       </div>
 
-      {}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border border-blue-200 dark:border-blue-800 rounded-lg">
           <div className="flex items-center justify-between">
@@ -190,7 +189,6 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
         </div>
       </div>
 
-      {}
       <div className="flex justify-center">
         <Button
           variant="outline"
@@ -211,7 +209,6 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
         </Button>
       </div>
 
-      {}
       {showDetails && (
         <div className="space-y-4">
           <h4 className="text-base font-semibold">Individual Results</h4>
@@ -244,7 +241,6 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
                   </div>
                 </div>
 
-                {}
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-muted-foreground">
                     Criteria Breakdown:

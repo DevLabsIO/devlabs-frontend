@@ -37,7 +37,6 @@ export function DataTableResizer<TData, TValue>({
           )}
         />
 
-        {}
         <GripVertical
           className={cn(
             "absolute h-4 w-4 text-muted-foreground/70",

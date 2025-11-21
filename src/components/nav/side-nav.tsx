@@ -369,7 +369,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                       </DropdownMenu>
                     </div>
                   </div>
-                  {}
+
                   <div className="absolute left-full ml-2 px-3 py-2 bg-popover text-popover-foreground rounded-md shadow-lg border opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap z-50 group-data-[collapsible=expanded]:hidden">
                     <div className="font-semibold text-sm">
                       {capitalizeWord(session.user.name || "")}

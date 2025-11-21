@@ -68,8 +68,8 @@ export function RubricFormSection({
       return rubricQueries.getUserRubrics(user.id);
     },
     enabled: !!user?.id,
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 15 * 60 * 1000, // 15 minutes
+    staleTime: 10 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
   });
 
   const handleCreateNew = () => {

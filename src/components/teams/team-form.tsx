@@ -91,8 +91,8 @@ export function TeamForm({
         return userQueries.searchStudents(debouncedSearchQuery);
       },
       enabled: !!debouncedSearchQuery,
-      staleTime: 2 * 60 * 1000, // 2 minutes - search results don't change frequently
-      gcTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 2 * 60 * 1000,
+      gcTime: 5 * 60 * 1000,
     });
 
   const memberIds = form.watch("memberIds");
@@ -108,7 +108,7 @@ export function TeamForm({
             email: m.email,
             role: m.role,
             image: m.profileImage,
-            profileId: m.id, // Use member id as profileId
+            profileId: m.id,
             phoneNumber: "",
             isActive: true,
           }) as User,

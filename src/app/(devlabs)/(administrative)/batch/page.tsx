@@ -118,11 +118,11 @@ export default function BatchesPage() {
               isActive: "Status",
             },
             columnWidths: [
-              { wch: 30 }, // name
-              { wch: 20 }, // graduationYear
-              { wch: 25 }, // department
-              { wch: 15 }, // section
-              { wch: 15 }, // isActive
+              { wch: 30 },
+              { wch: 20 },
+              { wch: 25 },
+              { wch: 15 },
+              { wch: 15 },
             ],
             headers: [
               "name",

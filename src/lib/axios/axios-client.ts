@@ -2,7 +2,7 @@ import axios from "axios";
 import { getSession, signOut } from "next-auth/react";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:8090";
+  process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "http://localhost:8090/api";
 
 let sessionCache: {
   data: { access_token?: string; error?: string | null } | null;

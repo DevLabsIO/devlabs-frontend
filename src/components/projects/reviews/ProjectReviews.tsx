@@ -52,8 +52,8 @@ export default function ProjectReviews({
   } = useQuery<ProjectReviewsResponse>({
     queryKey: ["projectReviews", projectId],
     queryFn: () => evaluationQueries.fetchReviewsForProject(projectId),
-    staleTime: 3 * 60 * 1000, // 3 minutes - review schedule doesn't change frequently
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 3 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   if (isLoading) {

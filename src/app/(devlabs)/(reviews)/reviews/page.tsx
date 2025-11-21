@@ -110,8 +110,8 @@ export default function ReviewsPage() {
       dateRange,
       sortBy,
       sortOrder,
-      undefined, // courseId - could be added later
-      undefined, // statusFilter removed
+      undefined,
+      undefined,
     );
   };
 
@@ -209,12 +209,12 @@ export default function ReviewsPage() {
                 "createdBy.name": "Created By Name",
               },
               columnWidths: [
-                { wch: 30 }, // name
-                { wch: 15 }, // status
-                { wch: 15 }, // startDate
-                { wch: 15 }, // endDate
-                { wch: 20 }, // isPublished
-                { wch: 20 }, // createdBy.name
+                { wch: 30 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 20 },
+                { wch: 20 },
               ],
               headers: [
                 "name",
@@ -250,12 +250,12 @@ export default function ReviewsPage() {
                 "createdBy.name": "Created By Name",
               },
               columnWidths: [
-                { wch: 30 }, // name
-                { wch: 15 }, // status
-                { wch: 15 }, // startDate
-                { wch: 15 }, // endDate
-                { wch: 20 }, // isPublished
-                { wch: 20 }, // createdBy.name
+                { wch: 30 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 15 },
+                { wch: 20 },
+                { wch: 20 },
               ],
               headers: [
                 "name",

@@ -57,8 +57,8 @@ function ParticipantSelector<T>({
   const { data, isLoading } = useQuery<T[]>({
     queryKey,
     queryFn,
-    staleTime: 10 * 60 * 1000, // 10 minutes - form data doesn't change frequently
-    gcTime: 15 * 60 * 1000, // 15 minutes
+    staleTime: 10 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
   });
 
   const handleSelect = (item: Participant) => {
@@ -179,9 +179,8 @@ export function ParticipantsForm() {
           {semesterError}
         </div>
       )}
-      {}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {}
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Semesters</h3>
           <div className="border rounded-lg overflow-hidden">
@@ -197,7 +196,6 @@ export function ParticipantsForm() {
           </div>
         </div>
 
-        {}
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Batches</h3>
           <div className="border rounded-lg overflow-hidden">
@@ -216,7 +214,6 @@ export function ParticipantsForm() {
           </div>
         </div>
 
-        {}
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Courses</h3>
           <div className="border rounded-lg overflow-hidden">
@@ -232,7 +229,6 @@ export function ParticipantsForm() {
           </div>
         </div>
 
-        {}
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Projects</h3>
           <div className="border rounded-lg overflow-hidden">
@@ -249,7 +245,6 @@ export function ParticipantsForm() {
         </div>
       </div>
 
-      {}
       <SelectedItemsDisplay />
     </div>
   );

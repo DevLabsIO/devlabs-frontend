@@ -143,7 +143,7 @@ export function exportToCSV<T extends ExportableData>(
   data: T[],
   filename: string,
   headers: string[] = Object.keys(data[0] || {}),
-  columnMapping?: Record<string, string>, // Add columnMapping parameter
+  columnMapping?: Record<string, string>,
 ): boolean {
   if (data.length === 0) {
     console.error("No data to export");
@@ -177,9 +177,9 @@ export function exportToCSV<T extends ExportableData>(
 export function exportToExcel<T extends ExportableData>(
   data: T[],
   filename: string,
-  columnMapping?: Record<string, string>, // Optional mapping of data keys to display names
+  columnMapping?: Record<string, string>,
   columnWidths?: Array<{ wch: number }>,
-  headers?: string[], // Add headers parameter to specify which columns to export
+  headers?: string[],
 ): boolean {
   if (data.length === 0) {
     console.error("No data to export");

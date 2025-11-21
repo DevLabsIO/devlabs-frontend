@@ -344,7 +344,7 @@ export const KanbanProvider = <
     setIsDragging(false);
 
     if (!over) {
-      setDraggedData(data); // Reset to original data
+      setDraggedData(data);
       onDragEnd?.(event);
       return;
     }
@@ -416,14 +416,14 @@ export const KanbanProvider = <
       onDataChange?.(newData);
     }
 
-    setDraggedData(data); // Reset dragged data
+    setDraggedData(data);
     onDragEnd?.(event);
   };
 
   const handleDragCancel = () => {
     setActiveCardId(null);
     setIsDragging(false);
-    setDraggedData(data); // Reset to original data
+    setDraggedData(data);
   };
 
   const announcements: Announcements = {

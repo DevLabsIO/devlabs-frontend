@@ -105,11 +105,7 @@ export default function MyCoursesPage() {
                 code: "Course Code",
                 description: "Description",
               },
-              columnWidths: [
-                { wch: 30 }, // name
-                { wch: 15 }, // code
-                { wch: 50 }, // description
-              ],
+              columnWidths: [{ wch: 30 }, { wch: 15 }, { wch: 50 }],
               headers: ["name", "code", "description"],
             }}
             getColumns={columnsWrapper}
@@ -136,11 +132,7 @@ export default function MyCoursesPage() {
                 code: "Course Code",
                 description: "Description",
               },
-              columnWidths: [
-                { wch: 30 }, // name
-                { wch: 15 }, // code
-                { wch: 50 }, // description
-              ],
+              columnWidths: [{ wch: 30 }, { wch: 15 }, { wch: 50 }],
               headers: ["name", "code", "description"],
             }}
             getColumns={columnsWrapper}

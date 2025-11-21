@@ -113,10 +113,10 @@ export default function ResultsPage() {
         session?.user?.id as string,
       ),
     enabled: !!reviewid && !!projectid && !!session?.user?.id,
-    staleTime: 0, // Always fetch fresh data
-    gcTime: 5 * 60 * 1000, // 5 minutes
-    refetchOnMount: true, // Refetch when component mounts
-    refetchOnWindowFocus: true, // Refetch when window gains focus
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   if (status === "loading" || isLoading) {
@@ -188,7 +188,6 @@ export default function ResultsPage() {
       </div>
 
       <div className="space-y-6">
-        {}
         <div className="space-y-2">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 space-y-2">
@@ -226,14 +225,12 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {}
         <div className="space-y-6">
           {results.results.map((student, index) => (
             <div
               key={`${student.studentId}-${index}`}
               className="border rounded-lg overflow-hidden"
             >
-              {}
               <div className="bg-muted/30 px-6 py-4 border-b">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -270,7 +267,6 @@ export default function ResultsPage() {
                 </div>
               </div>
 
-              {}
               <div className="p-6">
                 <h4 className="font-semibold mb-4">Assessment Breakdown</h4>
 

@@ -157,11 +157,11 @@ export default function UsersPage() {
             isActive: "Status",
           },
           columnWidths: [
-            { wch: 25 }, // name
-            { wch: 30 }, // email
-            { wch: 15 }, // phoneNumber
-            { wch: 15 }, // role
-            { wch: 15 }, // isActive
+            { wch: 25 },
+            { wch: 30 },
+            { wch: 15 },
+            { wch: 15 },
+            { wch: 15 },
           ],
           headers: ["name", "email", "phoneNumber", "role", "isActive"],
         }}

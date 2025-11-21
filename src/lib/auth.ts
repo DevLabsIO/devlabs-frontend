@@ -174,7 +174,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         Date.now() < token.expires_at * 1000 - 15 * 1000
       ) {
         return token;
-      } // Try to refresh
+      }
       if (token.refresh_token) {
         const refreshedToken = await refreshKeycloakAccessToken(
           token as KeycloakToken,
@@ -190,7 +190,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string; // Ensure id is correctly assigned
+        session.user.id = token.id as string;
         session.user.roles = token.roles as string[];
         session.user.groups = token.groups as string[];
         session.access_token = token.access_token as string;
