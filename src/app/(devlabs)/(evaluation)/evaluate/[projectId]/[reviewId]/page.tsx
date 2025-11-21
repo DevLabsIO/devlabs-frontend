@@ -67,7 +67,7 @@ function CourseSelector({
 
   return (
     <div className="space-y-6">
-      {/* Progress Overview Card */}
+      {}
       <Card className="border-2">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
@@ -106,7 +106,7 @@ function CourseSelector({
         </CardContent>
       </Card>
 
-      {/* Courses Grid */}
+      {}
       <div className="grid gap-4 md:grid-cols-2">
         {summary.courseEvaluations.map((course) => {
           const canEvaluate = canEvaluateCourse(course);

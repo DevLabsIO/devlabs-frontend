@@ -78,7 +78,7 @@ export function FileList({
 
       for (const file of fileList.files) {
         await handleDownload(file.objectName, getActualFileName(file.fileName));
-        // Add a small delay to prevent overwhelming the browser
+
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
 
@@ -94,7 +94,6 @@ export function FileList({
       const { downloadUrl } =
         await fileUploadQueries.getDownloadUrl(objectName);
 
-      // Fetch the file as a blob to handle CORS and ensure download
       const response = await fetch(downloadUrl);
       if (!response.ok) {
         throw new Error("Failed to fetch file");
@@ -111,7 +110,6 @@ export function FileList({
       link.click();
       document.body.removeChild(link);
 
-      // Clean up the blob URL
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Download error:", error);

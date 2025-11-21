@@ -1,8 +1,3 @@
-/**
- * Session Context Types
- * Types for session management and context
- */
-
 import { Session } from "next-auth";
 import { User } from "../entities/user.types";
 

@@ -69,7 +69,6 @@ export default function EditReviewPage() {
 
   useEffect(() => {
     if (review) {
-      // Extract unique semesters from courses
       interface SemesterOption {
         id: string;
         name: string;
@@ -84,7 +83,6 @@ export default function EditReviewPage() {
             }) as SemesterOption,
         ) || [];
 
-      // Remove duplicates
       const uniqueSemesters = semesters.filter(
         (semester: SemesterOption, index: number, self: SemesterOption[]) =>
           index === self.findIndex((s: SemesterOption) => s.id === semester.id),

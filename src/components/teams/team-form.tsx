@@ -137,8 +137,6 @@ export function TeamForm({
     } else {
       const userId = session?.user?.id;
       if (!userId) {
-        // This should not happen in a real-world scenario as the user should be authenticated
-        // to access this form. Adding a console error for debugging.
         console.error("User not authenticated, cannot create team.");
         return;
       }

@@ -32,29 +32,25 @@ export function DataTableViewOptions<TData>({
   columnMapping,
   size = "default",
 }: DataTableViewOptionsProps<TData>) {
-  // Get columns that can be hidden
   const columns = React.useMemo(
     () =>
       table
         .getAllColumns()
         .filter(
           (column) =>
-            typeof column.accessorFn !== "undefined" && column.getCanHide()
+            typeof column.accessorFn !== "undefined" && column.getCanHide(),
         ),
-    [table]
+    [table],
   );
 
-  // State for drag and drop
   const [draggedColumnId, setDraggedColumnId] = useState<string | null>(null);
 
-  // Order columns based on the current table column order
   const columnOrder = table.getState().columnOrder;
   const orderedColumns = useMemo(() => {
     if (!columnOrder.length) {
       return columns;
     }
 
-    // Create a new array with columns sorted according to the columnOrder
     return [...columns].sort((a, b) => {
       const aIndex = columnOrder.indexOf(a.id);
       const bIndex = columnOrder.indexOf(b.id); // If column isn't in the order array, put it at the end
@@ -65,12 +61,11 @@ export function DataTableViewOptions<TData>({
     });
   }, [columns, columnOrder]);
 
-  // Handle drag start
   const handleDragStart = useCallback(
     (e: React.DragEvent, columnId: string) => {
       setDraggedColumnId(columnId);
       e.dataTransfer.effectAllowed = "move";
-      // This helps with dragging visuals
+
       if (
         e.dataTransfer.setDragImage &&
         e.currentTarget instanceof HTMLElement
@@ -78,68 +73,57 @@ export function DataTableViewOptions<TData>({
         e.dataTransfer.setDragImage(e.currentTarget, 20, 20);
       }
     },
-    []
+    [],
   );
 
-  // Handle drag over
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
   }, []);
 
-  // Handle drop
   const handleDrop = useCallback(
     (e: React.DragEvent, targetColumnId: string) => {
       e.preventDefault();
 
       if (!draggedColumnId || draggedColumnId === targetColumnId) return;
 
-      // Get current column order
       const currentOrder =
         table.getState().columnOrder.length > 0
           ? [...table.getState().columnOrder]
           : table.getAllLeafColumns().map((d) => d.id);
 
-      // Find indices
       const draggedIndex = currentOrder.indexOf(draggedColumnId);
       const targetIndex = currentOrder.indexOf(targetColumnId);
 
       if (draggedIndex === -1 || targetIndex === -1) return;
 
-      // Create new order by moving the dragged column
       const newOrder = [...currentOrder];
       newOrder.splice(draggedIndex, 1);
       newOrder.splice(targetIndex, 0, draggedColumnId);
 
-      // Update table column order
       table.setColumnOrder(newOrder);
 
       setDraggedColumnId(null);
     },
-    [draggedColumnId, table]
+    [draggedColumnId, table],
   );
 
-  // Reset column order
   const resetColumnOrder = useCallback(() => {
-    // Clear order by setting empty array (table will use default order)
     table.setColumnOrder([]);
   }, [table]);
 
-  // Get column display label
   const getColumnLabel = useCallback(
     (column: Column<TData, unknown>) => {
-      // First check if we have a mapping for this column
       if (columnMapping && column.id in columnMapping) {
         return columnMapping[column.id];
       }
-      // Then check for meta label
+
       return (
         (column.columnDef.meta as { label?: string })?.label ??
-        // Finally fall back to formatted column ID
         column.id.replace(/_/g, " ")
       );
     },
-    [columnMapping]
+    [columnMapping],
   );
 
   return (
@@ -173,7 +157,7 @@ export function DataTableViewOptions<TData>({
                   onDrop={(e) => handleDrop(e, column.id)}
                   className={cn(
                     "flex items-center cursor-grab",
-                    draggedColumnId === column.id && "bg-accent opacity-50"
+                    draggedColumnId === column.id && "bg-accent opacity-50",
                   )}
                 >
                   <GripVertical className="mr-2 h-4 w-4 cursor-grab" />
@@ -183,7 +167,7 @@ export function DataTableViewOptions<TData>({
                   <Check
                     className={cn(
                       "ml-auto h-4 w-4",
-                      column.getIsVisible() ? "opacity-100" : "opacity-0"
+                      column.getIsVisible() ? "opacity-100" : "opacity-0",
                     )}
                   />
                 </CommandItem>

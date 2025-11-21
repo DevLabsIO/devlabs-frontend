@@ -1,8 +1,3 @@
-/**
- * Evaluation Feature Types
- * Types for project evaluation and scoring
- */
-
 import { Criterion } from "../entities/review.types";
 
 export interface EvaluationCriteria {

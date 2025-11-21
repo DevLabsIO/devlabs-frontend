@@ -1,8 +1,3 @@
-/**
- * Evaluation Draft API Request/Response Types
- * Used in src/repo/evaluation-draft-queries/
- */
-
 export interface CriterionScoreData {
   criterionId: string;
   score: number;

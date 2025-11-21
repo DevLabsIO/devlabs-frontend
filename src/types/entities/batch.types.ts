@@ -1,8 +1,3 @@
-/**
- * Batch Entity Types
- * Batch-related type definitions
- */
-
 import { User } from "./user.types";
 import { Semester } from "./semester.types";
 import { Department } from "./department.types";

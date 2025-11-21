@@ -1,8 +1,3 @@
-/**
- * Data Grid UI Types
- * Types for grid view components
- */
-
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 

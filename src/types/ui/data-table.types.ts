@@ -1,8 +1,3 @@
-/**
- * Data Table UI Types
- * Types for data table components and pagination
- */
-
 export interface DataTableResponse<T> {
   data: T[];
   pagination: {

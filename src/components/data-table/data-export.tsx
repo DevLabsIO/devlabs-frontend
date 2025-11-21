@@ -48,20 +48,15 @@ export function DataTableExport<TData extends ExportableData>({
   const handleExport = async (type: "csv" | "excel") => {
     if (isLoading) return; // Prevent multiple export requests
 
-    // Create a data fetching function based on the current state
     const fetchExportData = async (): Promise<TData[]> => {
-      // If we have selected items and a function to get their complete data
       if (getSelectedItems && selectedData && selectedData.length > 0) {
-        // Check if data is on current page or needs to be fetched
         if (selectedData.some((item) => Object.keys(item).length === 0)) {
-          // We have placeholder data, need to fetch complete data
           loading("Preparing export...", {
             description: `Fetching complete data for selected ${entityName}.`,
             id: "export-data-toast",
           });
         }
 
-        // Fetch complete data for selected items
         const selectedItems = await getSelectedItems();
 
         if (selectedItems.length === 0) {
@@ -70,8 +65,6 @@ export function DataTableExport<TData extends ExportableData>({
           );
         }
 
-        // Order the items according to the current sorting in the table
-        // This preserves the table's page order in the exported data
         const sortedItems = [...selectedItems];
         const sorting = table.getState().sorting;
 
@@ -107,13 +100,11 @@ export function DataTableExport<TData extends ExportableData>({
 
         return sortedItems;
       } else if (getAllItems && !selectedData?.length) {
-        // If we're exporting all data and have a method to get it with proper ordering
         loading("Preparing export...", {
           description: `Fetching all ${entityName} with current sorting...`,
           id: "export-data-toast",
         });
 
-        // Fetch all data with server-side sorting applied
         const allItems = await getAllItems();
 
         if (allItems.length === 0) {
@@ -122,7 +113,6 @@ export function DataTableExport<TData extends ExportableData>({
 
         return allItems;
       } else {
-        // Otherwise use the provided data (current page data)
         if (!data || data.length === 0) {
           throw new Error("No data available for export");
         }
@@ -131,42 +121,36 @@ export function DataTableExport<TData extends ExportableData>({
     };
 
     try {
-      // Get visible columns from the table
       const visibleColumns = table
         .getAllColumns()
         .filter((column) => column.getIsVisible())
         .filter((column) => column.id !== "actions" && column.id !== "select");
 
-      // Generate export options based on visible columns and respect column order
       const columnOrder = table.getState().columnOrder;
       const orderedVisibleColumns =
         columnOrder.length > 0
           ? [...visibleColumns].sort((a, b) => {
               const aIndex = columnOrder.indexOf(a.id);
               const bIndex = columnOrder.indexOf(b.id);
-              // If column isn't in the order array, put it at the end
+
               if (aIndex === -1) return 1;
               if (bIndex === -1) return -1;
               return aIndex - bIndex;
             })
           : visibleColumns;
 
-      // Generate export headers based on ordered columns
       const exportHeaders = orderedVisibleColumns.map((column) => column.id);
 
-      // Auto-generate column mapping from table headers if not provided
       const exportColumnMapping =
         columnMapping ||
         (() => {
           const mapping: Record<string, string> = {};
           orderedVisibleColumns.forEach((column) => {
-            // Try to get header text if available
             const headerText = column.columnDef.header as string;
 
             if (headerText && typeof headerText === "string") {
               mapping[column.id] = headerText;
             } else {
-              // Fallback to formatted column ID
               mapping[column.id] = column.id
                 .split(/(?=[A-Z])|_/)
                 .map(
@@ -179,7 +163,6 @@ export function DataTableExport<TData extends ExportableData>({
           return mapping;
         })();
 
-      // Filter column widths to match visible columns and their order
       const exportColumnWidths = columnWidths
         ? orderedVisibleColumns.map((column) => {
             const originalIndex = visibleColumns.findIndex(
@@ -189,7 +172,6 @@ export function DataTableExport<TData extends ExportableData>({
           })
         : orderedVisibleColumns.map(() => ({ wch: 15 }));
 
-      // Use the generic export function with proper options
       await exportData(
         type,
         fetchExportData,
@@ -217,13 +199,11 @@ export function DataTableExport<TData extends ExportableData>({
     setIsLoading(true);
 
     try {
-      // Show toast for long operations
       loading("Preparing export...", {
         description: `Fetching all ${entityName}...`,
         id: "export-data-toast",
       });
 
-      // Fetch all data with server-side sorting
       const allData = await getAllItems();
 
       if (allData.length === 0) {
@@ -234,7 +214,6 @@ export function DataTableExport<TData extends ExportableData>({
         return;
       }
 
-      // Get visible columns and apply export
       const visibleColumns = table
         .getAllColumns()
         .filter((column) => column.getIsVisible())
@@ -267,17 +246,14 @@ export function DataTableExport<TData extends ExportableData>({
         ? visibleColumns.map((_, index) => columnWidths[index] || { wch: 15 })
         : visibleColumns.map(() => ({ wch: 15 }));
 
-      // Update toast for processing
       loading("Processing data...", {
         description: "Generating export file...",
         id: "export-data-toast",
       });
 
-      // Generate timestamp for filename
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const filename = `${entityName}-all-pages-export-${timestamp}`;
 
-      // Export based on type
       let success = false;
       if (type === "csv") {
         success = exportToCSV(allData, filename, exportHeaders);
@@ -311,7 +287,6 @@ export function DataTableExport<TData extends ExportableData>({
     }
   };
 
-  // Check if any rows are selected
   const hasSelection = selectedData && selectedData.length > 0;
 
   return (

@@ -25,7 +25,6 @@ export function ScoreSlider({
   const [isFocused, setIsFocused] = useState(false);
   const previousScoreRef = useRef(score);
 
-  // Update input when score changes externally
   useEffect(() => {
     if (!isFocused) {
       setInputValue(score.toString());
@@ -47,7 +46,7 @@ export function ScoreSlider({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Allow empty string, numbers with optional decimal point
+
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       setInputValue(value);
     }
@@ -56,13 +55,10 @@ export function ScoreSlider({
   const handleInputBlur = () => {
     setIsFocused(false);
     if (inputValue === "" || inputValue === ".") {
-      // If empty or just a dot, restore the previous score
       setInputValue(previousScoreRef.current.toString());
-      // Don't call onChange, keep the old value
     } else {
       const numValue = parseFloat(inputValue);
       if (!isNaN(numValue)) {
-        // Clamp value between 0 and maxScore
         const clampedValue = Math.max(0, Math.min(maxScore, numValue));
         if (onChange && !disabled) {
           onChange(clampedValue);
@@ -70,7 +66,6 @@ export function ScoreSlider({
         setInputValue(clampedValue.toString());
         previousScoreRef.current = clampedValue;
       } else {
-        // Fallback to previous score
         setInputValue(previousScoreRef.current.toString());
       }
     }
@@ -79,7 +74,7 @@ export function ScoreSlider({
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(true);
     previousScoreRef.current = score;
-    // Clear the input when focused so user can type fresh
+
     setInputValue("");
     e.target.select();
   };
@@ -90,20 +85,17 @@ export function ScoreSlider({
     }
   };
 
-  // Generate score options from 0 to maxScore (integers)
   const wholeNumberScores = Array.from({ length: maxScore + 1 }, (_, i) => i);
 
-  // Check if current score is a decimal
   const isDecimalScore = score % 1 !== 0;
 
-  // Combine whole numbers with the decimal score if it exists
   const scores = isDecimalScore
     ? [...wholeNumberScores, score].sort((a, b) => a - b)
     : wholeNumberScores;
 
   return (
     <div className={cn("space-y-3", className)}>
-      {/* Score display and input */}
+      {}
       <div className="flex items-center justify-between gap-4 mb-2">
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-muted-foreground">
@@ -138,7 +130,7 @@ export function ScoreSlider({
         </Button>
       </div>
 
-      {/* Score buttons */}
+      {}
       <div className="flex flex-wrap gap-2">
         {scores.map((value) => {
           const isSelected = score === value;

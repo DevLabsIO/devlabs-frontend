@@ -1,15 +1,11 @@
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 
-// Generic type for exportable data - should have string keys and values that can be converted to string
 export type ExportableData = Record<
   string,
   string | number | boolean | null | undefined
 >;
 
-/**
- * Helper function to get nested value from object using dot notation
- */
 function getNestedValue(obj: unknown, path: string): unknown {
   if (!obj || typeof obj !== "object") return obj;
 
@@ -27,14 +23,10 @@ function getNestedValue(obj: unknown, path: string): unknown {
   return value;
 }
 
-/**
- * Helper function to compute derived fields for export
- */
 function computeDerivedField<T extends ExportableData>(
   item: T,
   field: string,
 ): unknown {
-  // Handle special computed fields
   if (field === "memberCount" && "members" in item) {
     const members = item.members;
     return Array.isArray(members) ? members.length : 0;
@@ -59,21 +51,17 @@ function computeDerivedField<T extends ExportableData>(
   return undefined;
 }
 
-/**
- * Helper function to convert value to string, handling objects
- */
 function valueToString(value: unknown): string {
   if (value === null || value === undefined) return "";
   if (typeof value === "object") {
-    // If it's a date object
     if (value instanceof Date) {
       return value.toISOString();
     }
-    // If it's an array
+
     if (Array.isArray(value)) {
       return value.map((v) => valueToString(v)).join(", ");
     }
-    // For other objects, try to stringify or return empty
+
     try {
       return JSON.stringify(value);
     } catch {
@@ -83,9 +71,6 @@ function valueToString(value: unknown): string {
   return String(value);
 }
 
-/**
- * Convert array of objects to CSV string
- */
 function convertToCSV<T extends ExportableData>(
   data: T[],
   headers: string[],
@@ -95,31 +80,25 @@ function convertToCSV<T extends ExportableData>(
     throw new Error("No data to export");
   }
 
-  // Create CSV header row with column mapping if provided
   let csvContent = "";
 
   if (columnMapping) {
-    // Use column mapping for header names
     const headerRow = headers.map((header) => {
       const mappedHeader = columnMapping[header] || header;
-      // Escape quotes and wrap in quotes if contains comma
+
       return mappedHeader.includes(",") || mappedHeader.includes('"')
         ? `"${mappedHeader.replace(/"/g, '""')}"`
         : mappedHeader;
     });
     csvContent = `${headerRow.join(",")}\n`;
   } else {
-    // Use original headers
     csvContent = `${headers.join(",")}\n`;
   }
 
-  // Add data rows
   for (const item of data) {
     const row = headers.map((header) => {
-      // Get the value for this header, supporting nested properties
       let value: unknown;
 
-      // First, try to get computed field
       const computed = computeDerivedField(item, header);
       if (computed !== undefined) {
         value = computed;
@@ -129,9 +108,8 @@ function convertToCSV<T extends ExportableData>(
         value = item[header as keyof T];
       }
 
-      // Convert all values to string and properly escape for CSV
       const cellValue = valueToString(value);
-      // Escape quotes and wrap in quotes if contains comma
+
       const escapedValue =
         cellValue.includes(",") || cellValue.includes('"')
           ? `"${cellValue.replace(/"/g, '""')}"`
@@ -146,9 +124,6 @@ function convertToCSV<T extends ExportableData>(
   return csvContent;
 }
 
-/**
- * Download blob as file
- */
 function downloadFile(blob: Blob, filename: string) {
   const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
@@ -161,13 +136,9 @@ function downloadFile(blob: Blob, filename: string) {
   link.click();
   document.body.removeChild(link);
 
-  // Clean up the blob URL to prevent memory leaks
   URL.revokeObjectURL(url);
 }
 
-/**
- * Export data to CSV file
- */
 export function exportToCSV<T extends ExportableData>(
   data: T[],
   filename: string,
@@ -180,7 +151,6 @@ export function exportToCSV<T extends ExportableData>(
   }
 
   try {
-    // Filter data to only include specified headers
     const filteredData = data.map((item) => {
       const filteredItem: Record<
         string,
@@ -204,9 +174,6 @@ export function exportToCSV<T extends ExportableData>(
   }
 }
 
-/**
- * Export data to Excel file using xlsx package
- */
 export function exportToExcel<T extends ExportableData>(
   data: T[],
   filename: string,
@@ -220,7 +187,6 @@ export function exportToExcel<T extends ExportableData>(
   }
 
   try {
-    // If no column mapping is provided, create one from the data keys
     const mapping =
       columnMapping ||
       Object.keys(data[0] || {}).reduce(
@@ -232,17 +198,14 @@ export function exportToExcel<T extends ExportableData>(
         {} as Record<string, string>,
       );
 
-    // Map data to worksheet format, only including mapped columns
     const worksheetData = data.map((item) => {
       const row: Record<string, string | number | boolean | null | undefined> =
         {};
-      // If headers are provided, only include those columns
+
       const columnsToExport = headers || Object.keys(mapping);
       for (const key of columnsToExport) {
-        // Get value, supporting nested properties and computed fields
         let value: unknown;
 
-        // First, try to get computed field
         const computed = computeDerivedField(item, key);
         if (computed !== undefined) {
           value = computed;
@@ -254,7 +217,6 @@ export function exportToExcel<T extends ExportableData>(
           value = undefined;
         }
 
-        // Convert to exportable format
         if (value !== undefined) {
           const stringValue = valueToString(value);
           row[mapping[key]] = stringValue;
@@ -263,25 +225,20 @@ export function exportToExcel<T extends ExportableData>(
       return row;
     });
 
-    // Create a worksheet
     const worksheet = XLSX.utils.json_to_sheet(worksheetData);
 
-    // Set column widths if provided
     if (columnWidths) {
       worksheet["!cols"] = columnWidths;
     }
 
-    // Create a workbook
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
 
-    // Generate Excel file
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
 
-    // Create blob and download
     const blob = new Blob([excelBuffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
@@ -294,9 +251,6 @@ export function exportToExcel<T extends ExportableData>(
   }
 }
 
-/**
- * Unified export function that handles loading states and error handling
- */
 export async function exportData<T extends ExportableData>(
   type: "csv" | "excel",
   getData: () => Promise<T[]>,
@@ -309,23 +263,18 @@ export async function exportData<T extends ExportableData>(
     entityName?: string;
   },
 ): Promise<boolean> {
-  // Use a consistent toast ID to ensure only one toast is shown at a time
   const TOAST_ID = "export-data-toast";
 
   try {
-    // Start loading
     if (onLoadingStart) onLoadingStart();
 
-    // Show toast for long operations using consistent ID
     toast.loading("Preparing export...", {
       description: "Fetching data for export...",
       id: TOAST_ID,
     });
 
-    // Get the data
     const exportData = await getData();
 
-    // Update the same toast for processing
     toast.loading("Processing data...", {
       description: "Generating export file...",
       id: TOAST_ID,
@@ -339,14 +288,11 @@ export async function exportData<T extends ExportableData>(
       return false;
     }
 
-    // Get entity name for display in notifications
     const entityName = options?.entityName || "items";
 
-    // Generate timestamp for filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const filename = `${entityName}-export-${timestamp}`;
 
-    // Export based on type
     let success = false;
     if (type === "csv") {
       success = exportToCSV(

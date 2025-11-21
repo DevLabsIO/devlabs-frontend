@@ -31,7 +31,6 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
     gcTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Calculate team average and max score from results
   const teamAverage = results?.results.length
     ? results.results.reduce((sum, result) => sum + result.percentage, 0) /
       results.results.length
@@ -84,7 +83,6 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
     const errorMessage =
       axiosError?.response?.data?.error || "Failed to load results";
 
-    // Show "Review not yet published" message for 403 errors
     if (
       axiosError?.response?.status === 403 ||
       errorMessage.includes("published")
@@ -147,7 +145,7 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
         <Badge variant="secondary">Published</Badge>
       </div>
 
-      {/* Summary Statistics */}
+      {}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border border-blue-200 dark:border-blue-800 rounded-lg">
           <div className="flex items-center justify-between">
@@ -192,7 +190,7 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
         </div>
       </div>
 
-      {/* Toggle Details Button */}
+      {}
       <div className="flex justify-center">
         <Button
           variant="outline"
@@ -213,7 +211,7 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
         </Button>
       </div>
 
-      {/* Detailed Results */}
+      {}
       {showDetails && (
         <div className="space-y-4">
           <h4 className="text-base font-semibold">Individual Results</h4>
@@ -246,7 +244,7 @@ export function ReviewResults({ reviewId, projectId }: ReviewResultsProps) {
                   </div>
                 </div>
 
-                {/* Criteria Breakdown */}
+                {}
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-muted-foreground">
                     Criteria Breakdown:

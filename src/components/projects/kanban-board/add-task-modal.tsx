@@ -39,16 +39,14 @@ export function AddTaskModal({ columnId, projectId }: AddTaskModalProps) {
       userId: string;
     }) => kanbanAPI.createTask(taskData),
     onSuccess: () => {
-      // Invalidate and refetch kanban data
       queryClient.invalidateQueries({ queryKey: ["kanbanBoard", projectId] });
-      // Reset form and close modal
+
       setTitle("");
       setDescription("");
       setOpen(false);
     },
     onError: (error) => {
       console.error("Failed to create task:", error);
-      // You can add toast notification here later
     },
   });
 
@@ -62,7 +60,7 @@ export function AddTaskModal({ columnId, projectId }: AddTaskModalProps) {
     const userId = session?.user?.id;
     if (!userId) {
       console.error("User is not authenticated.");
-      // Handle not authenticated error, maybe show a toast
+
       return;
     }
 

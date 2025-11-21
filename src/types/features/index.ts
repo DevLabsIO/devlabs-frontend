@@ -1,9 +1,3 @@
-/**
- * Features Types Barrel Export
- * Central export point for all feature types
- */
-
-// Kanban types
 export type {
   KanbanTask,
   KanbanColumn,
@@ -13,7 +7,6 @@ export type {
   MoveTaskRequest,
 } from "./kanban.types";
 
-// Evaluation types
 export type {
   EvaluationCriteria,
   CriterionScore,
@@ -26,7 +19,6 @@ export type {
   IndividualScoreSubmission,
 } from "./evaluation.types";
 
-// Rubrics types
 export type {
   UserInfo,
   Rubric,
@@ -35,17 +27,14 @@ export type {
   UpdateRubricRequest,
 } from "./rubrics.types";
 
-// Results types
 export type { ProjectResult } from "./results.types";
 
-// Dashboard types
 export type {
   AdminDashboardData,
   ManagerStaffDashboardData,
   StudentDashboardData,
 } from "./dashboard.types";
 
-// File upload types
 export type {
   FileUploadResponse,
   FileListItem,
@@ -54,7 +43,6 @@ export type {
   FileListParams,
 } from "./file-upload.types";
 
-// Review API types
 export type {
   ProjectReviewsResponse,
   CreateReviewRequest,

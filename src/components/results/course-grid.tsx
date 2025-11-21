@@ -9,7 +9,6 @@ interface CourseGridProps {
   courses: CourseData[];
 }
 
-// Function to get badge color based on course type
 const getBadgeVariant = (type: string) => {
   switch (type) {
     case "CORE":
@@ -23,7 +22,6 @@ const getBadgeVariant = (type: string) => {
   }
 };
 
-// Function to get color based on percentage
 const getProgressColor = (percentage: number) => {
   if (percentage >= 90) return "bg-emerald-500";
   if (percentage >= 75) return "bg-blue-500";

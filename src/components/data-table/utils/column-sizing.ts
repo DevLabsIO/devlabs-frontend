@@ -1,10 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 
-/**
- * Extract default column sizes from column definitions
- */
 export function extractDefaultColumnSizes<TData>(
-  columns: ColumnDef<TData, unknown>[]
+  columns: ColumnDef<TData, unknown>[],
 ): Record<string, number> {
   const defaultSizing: Record<string, number> = {};
 
@@ -29,32 +26,22 @@ export function extractDefaultColumnSizes<TData>(
   return defaultSizing;
 }
 
-/**
- * Initialize column sizes from defaults
- */
 export function initializeColumnSizes<TData>(
   columns: ColumnDef<TData, unknown>[],
-  setColumnSizing: (sizes: Record<string, number>) => void
+  setColumnSizing: (sizes: Record<string, number>) => void,
 ): void {
-  // Only proceed if we have columns to work with
   if (columns.length === 0) return;
 
-  // Extract default sizes from column definitions
   const defaultSizing = extractDefaultColumnSizes(columns);
 
-  // Only set if we have sizes to apply
   if (Object.keys(defaultSizing).length === 0) return;
 
-  // Apply default sizing
   setColumnSizing(defaultSizing);
 }
 
-/**
- * Track column resizing state in document body for styling purposes
- */
 export function trackColumnResizing(
   isResizing: boolean,
-  attribute = "data-resizing"
+  attribute = "data-resizing",
 ): void {
   if (isResizing) {
     document.body.setAttribute(attribute, "true");
@@ -63,9 +50,6 @@ export function trackColumnResizing(
   }
 }
 
-/**
- * Clean up column resizing tracking when component unmounts
- */
 export function cleanupColumnResizing(attribute = "data-resizing"): void {
   document.body.removeAttribute(attribute);
 }

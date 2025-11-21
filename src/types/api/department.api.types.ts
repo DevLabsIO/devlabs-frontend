@@ -1,8 +1,3 @@
-/**
- * Department API Request/Response Types
- * Used in src/repo/department-queries/
- */
-
 import { Batch } from "../entities";
 
 export interface CreateDepartmentRequest {

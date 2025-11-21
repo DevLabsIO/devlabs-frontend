@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, DownloadIcon } from "lucide-react";
 import { PublishReviewButton } from "@/components/reviews/publish-review-button";
 import type { Review } from "@/types/entities";
 
@@ -11,6 +11,7 @@ interface ReviewHeaderProps {
   reviewStatus: string | null;
   canPublish: boolean;
   onBack: () => void;
+  onExportClick: () => void;
 }
 
 export function ReviewHeader({
@@ -19,6 +20,7 @@ export function ReviewHeader({
   reviewStatus,
   canPublish,
   onBack,
+  onExportClick,
 }: ReviewHeaderProps) {
   return (
     <div className="flex items-center justify-between mb-6">
@@ -34,6 +36,15 @@ export function ReviewHeader({
         </div>
       </div>
       <div className="flex items-center gap-2">
+        <Button
+          onClick={onExportClick}
+          variant="outline"
+          size="default"
+          className="gap-2"
+        >
+          <DownloadIcon className="h-4 w-4" />
+          Export Results
+        </Button>
         {canPublish ? (
           <PublishReviewButton
             reviewId={review.id}

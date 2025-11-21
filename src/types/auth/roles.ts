@@ -1,7 +1,3 @@
-/**
- * Keycloak groups and role constants
- */
-
 export const KEYCLOAK_GROUPS = {
   ADMIN: "/admin",
   MANAGER: "/manager",

@@ -1,8 +1,3 @@
-/**
- * Dashboard Feature Types
- * Types for dashboard data and statistics
- */
-
 import { RecentUser } from "../entities/user.types";
 import {
   UpcomingReview,

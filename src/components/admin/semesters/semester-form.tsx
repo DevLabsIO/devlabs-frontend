@@ -35,7 +35,6 @@ export function SemesterForm({ semester, onSubmit }: SemesterFormProps) {
   });
 
   const handleSubmit = (data: SemesterFormValues) => {
-    // Basic validation
     if (!data.name.trim()) {
       form.setError("name", { message: "Semester name is required" });
       return;

@@ -1,8 +1,3 @@
-/**
- * Auth Helper Types
- * Types for authentication helper functions
- */
-
 import { User } from "../entities/user.types";
 
 export interface UserExistenceCheckResult {

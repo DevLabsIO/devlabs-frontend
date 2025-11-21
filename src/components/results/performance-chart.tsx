@@ -17,7 +17,6 @@ interface PerformanceChartProps {
   data: CourseData[];
 }
 
-// Custom tooltip component
 const CustomTooltip = ({
   active,
   payload,
@@ -62,7 +61,6 @@ const CustomTooltip = ({
 };
 
 export default function PerformanceChart({ data }: PerformanceChartProps) {
-  // Define distinct colors for each course
   const courseColors = [
     "#3b82f6", // blue
     "#ef4444", // red
@@ -72,7 +70,6 @@ export default function PerformanceChart({ data }: PerformanceChartProps) {
     "#ec4899", // pink
   ];
 
-  // Get all unique dates from all courses
   const allDates = Array.from(
     new Set(
       data.flatMap((course) =>
@@ -81,7 +78,6 @@ export default function PerformanceChart({ data }: PerformanceChartProps) {
     ),
   ).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-  // Transform data to ensure all courses have entries for all dates
   const chartData = allDates.map((date) => {
     const dataPoint: { date: string; [courseName: string]: number | string } = {
       date,
@@ -93,7 +89,6 @@ export default function PerformanceChart({ data }: PerformanceChartProps) {
         dataPoint[course.name] =
           (review.averageScore / review.maxPossibleScore) * 100;
       }
-      // If no review for this date, the line will have a gap (which is fine)
     });
 
     return dataPoint;

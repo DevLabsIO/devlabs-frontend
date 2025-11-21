@@ -1,7 +1,6 @@
 import axiosInstance from "@/lib/axios/axios-client";
 import { ArchiveResponse } from "@/types/api";
 
-// Re-export for backward compatibility
 export type { ArchiveResponse } from "@/types/api";
 
 export const archiveQueries = {

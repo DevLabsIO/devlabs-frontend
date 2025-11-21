@@ -1,8 +1,3 @@
-/**
- * Kanban Feature Types
- * Types for Kanban board functionality
- */
-
 import { User } from "../entities/user.types";
 
 export interface KanbanTask {
@@ -33,7 +28,6 @@ export interface KanbanBoard {
   updatedAt: string;
 }
 
-// API Request types
 export interface CreateTaskRequest {
   title: string;
   description?: string;

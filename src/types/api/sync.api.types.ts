@@ -1,8 +1,3 @@
-/**
- * Sync API Request/Response Types
- * Used for Keycloak user synchronization
- */
-
 export interface SyncStatsResponse {
   keycloakUserCount: number;
   dbUserCount: number;

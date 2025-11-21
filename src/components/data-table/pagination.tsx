@@ -41,23 +41,19 @@ export function DataTablePagination<TData>({
   size = "default",
   paginationLabel = "Rows per page", // Default label
 }: DataTablePaginationProps<TData>) {
-  // Use URL state hooks for managing pagination state in the URL
   const [, setPageSize] = useUrlState(
       "pageSize",
-      table.getState().pagination.pageSize
+      table.getState().pagination.pageSize,
     ),
     [, setPage] = useUrlState(
       "page",
-      table.getState().pagination.pageIndex + 1
+      table.getState().pagination.pageIndex + 1,
     );
 
-  // Convert 'lg' size to 'default' for SelectTrigger since it only accepts 'sm' | 'default'
   const selectSize = size === "lg" ? "default" : size;
   return (
     <div className="flex w-full flex-col items-center justify-between gap-4 overflow-auto px-2 py-1 sm:flex-row sm:gap-8">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {/* Selection information removed as requested */}
-      </div>
+      <div className="flex-1 text-sm text-muted-foreground">{}</div>
       <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
         <div className="flex items-center space-x-2">
           <p className="whitespace-nowrap text-sm font-medium">
@@ -66,7 +62,6 @@ export function DataTablePagination<TData>({
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
-              // Update URL state and table state together
               setPageSize(Number(value));
               setPage(1);
               table.setPagination({
@@ -102,7 +97,7 @@ export function DataTablePagination<TData>({
             aria-label="Go to first page"
             variant="outline"
             className={`${getButtonSizeClass(
-              size
+              size,
             )} hidden lg:flex cursor-pointer`}
             onClick={() =>
               table.setPagination({
@@ -146,7 +141,7 @@ export function DataTablePagination<TData>({
             aria-label="Go to last page"
             variant="outline"
             className={`${getButtonSizeClass(
-              size
+              size,
             )} hidden lg:flex cursor-pointer`}
             onClick={() =>
               table.setPagination({

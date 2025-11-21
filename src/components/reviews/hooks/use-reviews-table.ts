@@ -33,21 +33,16 @@ export const useReviews = (
       let endpoint: string;
       const params: { [key: string]: string | number } = {};
 
-      // Add pagination parameters
       params.page = page.toString();
       params.size = size.toString();
 
-      // Add sorting parameters (always include these now)
       params.sortBy = sortBy;
       params.sortOrder = sortOrder;
 
-      // Use different endpoints based on whether we're searching or not
       if (searchQuery && searchQuery.trim().length > 0) {
-        // Use search endpoint when there's a search query
         endpoint = `/api/review/search`;
         params.name = searchQuery;
 
-        // Add filter parameters for search
         if (courseId) {
           params.courseId = courseId;
         }
@@ -56,19 +51,16 @@ export const useReviews = (
           params.status = status;
         }
       } else {
-        // Use regular endpoint for listing all reviews (user-based via JWT)
         endpoint = `/api/review`;
       }
 
       const response = await axiosInstance.get(endpoint, { params });
       const backendResponse = response.data;
 
-      // The backend now always returns paginated responses
       if (backendResponse.pagination) {
         return backendResponse as DataTableResponse<Review>;
       }
 
-      // Fallback for any legacy responses (shouldn't happen with new backend)
       const reviews = Array.isArray(backendResponse)
         ? backendResponse
         : backendResponse.data || [];

@@ -95,7 +95,6 @@ export default function ReviewsPage() {
     return getColumns(handleView, handleEdit, handleDelete);
   };
 
-  // Create a wrapper function that includes the status filter
   const useFilteredReviews = (
     page: number,
     pageSize: number,
@@ -116,7 +115,6 @@ export default function ReviewsPage() {
     );
   };
 
-  // Add the isQueryHook flag to our wrapper
   useFilteredReviews.isQueryHook = true;
   const renderReviewGrid = (
     review: Review,

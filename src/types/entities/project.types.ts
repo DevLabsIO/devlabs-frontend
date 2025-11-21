@@ -1,8 +1,3 @@
-/**
- * Project Entity Types
- * Project-related type definitions
- */
-
 import { User } from "./user.types";
 
 export enum ProjectStatus {

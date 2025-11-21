@@ -107,7 +107,6 @@ export function StudentView({
     );
   };
 
-  // Check if there are any common criteria to show them separately
   const commonCriteria = evaluationData.criteria.filter((c) =>
     isCriterionCommon(c.id),
   );
@@ -115,7 +114,6 @@ export function StudentView({
     (c) => !isCriterionCommon(c.id),
   );
 
-  // Circular progress SVG component
   const CircularProgress = ({
     percentage,
     size = 48,
@@ -185,7 +183,7 @@ export function StudentView({
         </div>
       </div>
 
-      {/* Common Criteria Section */}
+      {}
       {commonCriteria.length > 0 && (
         <Card className="border-2">
           <CardHeader className="pb-4">
@@ -215,7 +213,7 @@ export function StudentView({
                   key={criterion.id}
                   className="rounded-lg border-2 overflow-hidden"
                 >
-                  {/* Criterion Header */}
+                  {}
                   <div className="p-4 bg-muted/30 border-b-2">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -248,7 +246,7 @@ export function StudentView({
                     </div>
                   </div>
 
-                  {/* Scoring Section */}
+                  {}
                   <div className="p-4 space-y-4">
                     <ScoreSlider
                       score={currentScore}
@@ -283,7 +281,7 @@ export function StudentView({
         </Card>
       )}
 
-      {/* Individual Students */}
+      {}
       {evaluationData.teamMembers.map((student, studentIndex) => {
         const isExpanded = expandedStudents.has(student.id);
         const progress = getStudentProgress(student.id);
@@ -356,7 +354,7 @@ export function StudentView({
                         key={criterion.id}
                         className="rounded-lg border-2 overflow-hidden"
                       >
-                        {/* Criterion Header */}
+                        {}
                         <div className="p-4 bg-muted/30 border-b-2">
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -400,7 +398,7 @@ export function StudentView({
                           </div>
                         </div>
 
-                        {/* Scoring Section */}
+                        {}
                         <div className="p-4 space-y-4">
                           <ScoreSlider
                             score={currentScore}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { individualScoreQueries } from "@/repo/individual-score-queries/individual-score-queries";
 import {
@@ -65,6 +66,7 @@ export function CourseEvaluationForm({
   reviewId,
 }: CourseEvaluationFormProps) {
   const { user } = useSessionContext();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [viewMode, setViewMode] = useViewMode();
@@ -267,6 +269,14 @@ export function CourseEvaluationForm({
           evaluationData.courseId,
         ],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["results", reviewId, projectId],
+      });
+
+      setTimeout(() => {
+        router.back();
+      }, 500); // Small delay to ensure toast is visible
     },
     onError: () => {
       toast("Failed to submit evaluation. Please try again.");
@@ -376,13 +386,14 @@ export function CourseEvaluationForm({
         </CardHeader>
       </Card>
 
-      {/* Published Alert */}
+      {}
       {evaluationData.isPublished && (
-        <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900">
-          <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-500" />
-          <AlertDescription className="text-amber-800 dark:text-amber-200">
-            This evaluation has been published. Changes may not be reflected in
-            final results.
+        <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900">
+          <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-500" />
+          <AlertDescription className="text-blue-800 dark:text-blue-200">
+            This evaluation has been published. You can still edit and save
+            changes as an authorized user. Changes will be reflected in the
+            results immediately.
           </AlertDescription>
         </Alert>
       )}

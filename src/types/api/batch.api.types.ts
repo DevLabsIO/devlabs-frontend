@@ -1,8 +1,3 @@
-/**
- * Batch API Request/Response Types
- * Used in src/repo/batch-queries/
- */
-
 export interface CreateBatchRequest {
   name: string;
   graduationYear: number;

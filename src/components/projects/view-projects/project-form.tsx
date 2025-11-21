@@ -35,13 +35,11 @@ export function ProjectForm({
   project,
   teamId,
 }: ProjectFormProps) {
-  // Form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [objectives, setObjectives] = useState("");
   const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>([]);
 
-  // Set default values when editing
   useEffect(() => {
     setTitle(project?.title || "");
     setDescription(project?.description || "");

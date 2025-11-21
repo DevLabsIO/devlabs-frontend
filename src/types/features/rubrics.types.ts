@@ -1,8 +1,3 @@
-/**
- * Rubrics Feature Types
- * Types for rubric management and criteria
- */
-
 import { Criterion } from "../entities/review.types";
 
 export interface UserInfo {

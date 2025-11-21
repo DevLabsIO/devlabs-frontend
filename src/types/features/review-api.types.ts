@@ -1,8 +1,3 @@
-/**
- * Review API Types
- * Request and response types for review API endpoints
- */
-
 import { Review } from "../entities/review.types";
 
 export interface ProjectReviewsResponse {

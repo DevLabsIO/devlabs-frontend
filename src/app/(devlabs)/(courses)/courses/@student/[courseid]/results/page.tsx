@@ -181,7 +181,6 @@ const CoursePerformancePage = () => {
   const normalizedAverageScore =
     maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
 
-  // Data for Pie Chart
   const scoreDistribution = completedReviews.reduce(
     (acc: Record<string, number>, curr) => {
       const category = getScoreCategory(curr.scorePercentage || 0);
@@ -204,7 +203,6 @@ const CoursePerformancePage = () => {
     score: review.scorePercentage || 0,
   }));
 
-  // Group projects by status
   const projectsByStatus = {
     PROPOSED: projectsData?.filter((p) => p.status === "PROPOSED") || [],
     ONGOING: projectsData?.filter((p) => p.status === "ONGOING") || [],

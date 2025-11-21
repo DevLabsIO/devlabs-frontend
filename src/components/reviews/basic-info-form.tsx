@@ -27,7 +27,7 @@ export function BasicInfoForm() {
 
   return (
     <div className="space-y-6">
-      {/* Review Name */}
+      {}
       <FormField
         control={form.control}
         name="name"
@@ -42,7 +42,7 @@ export function BasicInfoForm() {
         )}
       />
 
-      {/* Date Range */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
           control={form.control}
@@ -127,7 +127,7 @@ export function BasicInfoForm() {
         />
       </div>
 
-      {/* Rubric Selection */}
+      {}
       <FormField
         control={form.control}
         name="rubricId"

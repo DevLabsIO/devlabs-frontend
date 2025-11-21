@@ -36,7 +36,6 @@ interface PerformanceAnalyticsProps {
   barChartData: BarChartData[];
 }
 
-// Professional color scheme for performance grades
 const performanceChartConfig = {
   count: {
     label: "Reviews",
@@ -63,7 +62,6 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
   pieChartData,
   barChartData,
 }) => {
-  // Function to get performance category and color based on score
   const getPerformanceLevel = (value: number | string) => {
     if (typeof value === "number") {
       if (value >= 85)
@@ -82,7 +80,7 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
         };
       return { category: "poor", label: "Poor", color: "#ef4444" };
     }
-    // For string categories
+
     const category = value.toLowerCase();
     if (category.includes("excellent") || category.includes("85"))
       return {
@@ -101,7 +99,6 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
     return { category: "poor", label: "Poor", color: "#ef4444" };
   };
 
-  // Process pie chart data with consistent colors
   const processedPieData = pieChartData.map((item) => {
     const performance = getPerformanceLevel(item.category);
     return {
@@ -114,7 +111,6 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
 
   const totalCount = pieChartData.reduce((sum, item) => sum + item.count, 0);
 
-  // Calculate average performance for insights
   const calculateOverallPerformance = () => {
     if (barChartData.length === 0) return null;
     const average =
@@ -132,7 +128,7 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-      {/* Performance Distribution Pie Chart */}
+      {}
       <div className="flex flex-col">
         <div className="items-center pb-4">
           <h3 className="text-lg font-semibold text-center text-foreground mb-1">
@@ -183,12 +179,11 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                   const x = cx + radius * Math.cos(-midAngle * RADIAN);
                   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-                  // Only show label if percentage is significant enough
                   if (percent < 0.05) return null;
 
                   return (
                     <g>
-                      {/* Background pill shape for better readability */}
+                      {}
                       <rect
                         x={x - 28}
                         y={y - 12}
@@ -200,7 +195,7 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
                         stroke="rgba(255, 255, 255, 0.2)"
                         strokeWidth={1}
                       />
-                      {/* Percentage text */}
+                      {}
                       <text
                         x={x}
                         y={y + 1}
@@ -237,7 +232,7 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
         </div>
       </div>
 
-      {/* Review Performance Timeline Bar Chart */}
+      {}
       <div className="flex flex-col">
         <div className="items-center pb-4">
           <h3 className="text-lg font-semibold text-center text-foreground mb-1">

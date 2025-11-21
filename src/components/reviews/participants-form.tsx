@@ -179,9 +179,9 @@ export function ParticipantsForm() {
           {semesterError}
         </div>
       )}
-      {/* Grid Layout for all participant types */}
+      {}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Semesters */}
+        {}
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Semesters</h3>
           <div className="border rounded-lg overflow-hidden">
@@ -197,7 +197,7 @@ export function ParticipantsForm() {
           </div>
         </div>
 
-        {/* Batches */}
+        {}
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Batches</h3>
           <div className="border rounded-lg overflow-hidden">
@@ -216,7 +216,7 @@ export function ParticipantsForm() {
           </div>
         </div>
 
-        {/* Courses */}
+        {}
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Courses</h3>
           <div className="border rounded-lg overflow-hidden">
@@ -232,7 +232,7 @@ export function ParticipantsForm() {
           </div>
         </div>
 
-        {/* Projects */}
+        {}
         <div className="space-y-2">
           <h3 className="text-sm font-medium">Projects</h3>
           <div className="border rounded-lg overflow-hidden">
@@ -249,7 +249,7 @@ export function ParticipantsForm() {
         </div>
       </div>
 
-      {/* Selected Items Display */}
+      {}
       <SelectedItemsDisplay />
     </div>
   );

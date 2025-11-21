@@ -1,8 +1,3 @@
-/**
- * Team Entity Types
- * Team-related type definitions
- */
-
 import { TeamMember } from "./user.types";
 
 export interface Team extends Record<string, unknown> {

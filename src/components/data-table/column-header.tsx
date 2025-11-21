@@ -28,16 +28,12 @@ export function DataTableColumnHeader<TData, TValue>({
 
   const currentDirection = column.getIsSorted();
 
-  // Use direct method to set sort with an explicit direction
   const setSorting = (direction: "asc" | "desc" | false) => {
-    // If we're clearing sort, use an empty array
     if (direction === false) {
       column.toggleSorting(undefined, false);
       return;
     }
 
-    // Set explicit sort with the direction
-    // The second param (false) prevents multi-sort
     column.toggleSorting(direction === "desc", false);
   };
   return (

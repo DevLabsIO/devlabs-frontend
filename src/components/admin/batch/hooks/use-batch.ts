@@ -77,9 +77,7 @@ export const useBatches = (
         params.query = searchQuery;
       }
 
-      // Only add sorting parameters if both sortBy and sortOrder are provided
       if (sortBy && sortOrder) {
-        // Convert snake_case to camelCase for the API
         const sortByMap: Record<string, string> = {
           name: "name",
           graduation_year: "graduationYear",

@@ -1,8 +1,3 @@
-/**
- * Review Entity Types
- * Review-related type definitions
- */
-
 export interface Criterion {
   id: string;
   name: string;

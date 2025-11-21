@@ -1,8 +1,3 @@
-/**
- * Keycloak Authentication Types
- * Types for Keycloak token handling
- */
-
 export interface KeycloakToken {
   access_token: string;
   refresh_token?: string;

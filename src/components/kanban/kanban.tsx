@@ -49,7 +49,7 @@ export type KanbanColumnProps = {
 
 type KanbanContextProps<
   T extends KanbanItemProps = KanbanItemProps,
-  C extends KanbanColumnProps = KanbanColumnProps
+  C extends KanbanColumnProps = KanbanColumnProps,
 > = {
   columns: C[];
   data: T[];
@@ -80,7 +80,7 @@ export const KanbanBoard = ({ id, children, className }: KanbanBoardProps) => {
       className={cn(
         "flex size-full min-h-40 flex-col divide-y overflow-hidden rounded-md border bg-card text-xs shadow-sm ring-2 transition-all",
         isOver ? "ring-primary" : "ring-transparent",
-        className
+        className,
       )}
       ref={setNodeRef}
     >
@@ -124,7 +124,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
           className={cn(
             "cursor-grab gap-4 rounded-md p-3 shadow-sm bg-card border-border hover:shadow-md transition-all duration-200",
             isDragging && "pointer-events-none cursor-grabbing opacity-30",
-            className
+            className,
           )}
         >
           {children ?? (
@@ -140,7 +140,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
             className={cn(
               "cursor-grab gap-4 rounded-md p-3 shadow-lg ring-2 ring-primary bg-card border-border",
               isDragging && "cursor-grabbing",
-              className
+              className,
             )}
           >
             {children ?? (
@@ -170,7 +170,6 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
   const filteredData = data.filter((item) => item.column === props.id);
   const items = filteredData.map((item) => item.id);
 
-  // Make the cards container droppable as well
   const { isOver, setNodeRef: setDroppableRef } = useDroppable({
     id: `${props.id}-cards`,
   });
@@ -183,7 +182,7 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
           className={cn(
             "flex flex-grow flex-col gap-2 p-2 min-h-[100px] transition-colors duration-200",
             isOver && "bg-accent/30 rounded-md",
-            className
+            className,
           )}
           {...props}
         >
@@ -201,7 +200,7 @@ export const KanbanHeader = ({ className, ...props }: KanbanHeaderProps) => (
   <div
     className={cn(
       "m-0 p-2 font-semibold text-sm text-card-foreground bg-card/50 border-b border-border",
-      className
+      className,
     )}
     {...props}
   />
@@ -209,7 +208,7 @@ export const KanbanHeader = ({ className, ...props }: KanbanHeaderProps) => (
 
 export type KanbanProviderProps<
   T extends KanbanItemProps = KanbanItemProps,
-  C extends KanbanColumnProps = KanbanColumnProps
+  C extends KanbanColumnProps = KanbanColumnProps,
 > = Omit<DndContextProps, "children"> & {
   children: (column: C) => ReactNode;
   className?: string;
@@ -223,7 +222,7 @@ export type KanbanProviderProps<
 
 export const KanbanProvider = <
   T extends KanbanItemProps = KanbanItemProps,
-  C extends KanbanColumnProps = KanbanColumnProps
+  C extends KanbanColumnProps = KanbanColumnProps,
 >({
   children,
   onDragStart,
@@ -255,7 +254,7 @@ export const KanbanProvider = <
         tolerance: 5,
       },
     }),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor),
   );
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -318,7 +317,6 @@ export const KanbanProvider = <
         column: targetColumnId,
       };
 
-      // If dropped over another item, reorder within the column
       if (overItem) {
         const overIndex = newData.findIndex((item) => item.id === overId);
         newData = arrayMove(newData, activeIndex, overIndex);
@@ -326,7 +324,6 @@ export const KanbanProvider = <
 
       setDraggedData(newData);
     } else if (overItem) {
-      // Same column, just reordering
       let newData = [...data];
       const activeIndex = newData.findIndex((item) => item.id === activeId);
       const overIndex = newData.findIndex((item) => item.id === overId);
@@ -355,7 +352,6 @@ export const KanbanProvider = <
     const activeId = active.id;
     const overId = over.id;
 
-    // Find the active item in original data
     const activeItem = data.find((item) => item.id === activeId);
     if (!activeItem) {
       setDraggedData(data);
@@ -363,19 +359,16 @@ export const KanbanProvider = <
       return;
     }
 
-    // Determine the target column
     let targetColumnId: string;
     const overItem = data.find((item) => item.id === overId);
 
     if (overItem) {
       targetColumnId = overItem.column;
     } else {
-      // Check if dropped over a column directly
       const targetColumn = columns.find((col) => col.id === overId);
       if (targetColumn) {
         targetColumnId = targetColumn.id;
       } else {
-        // Check if dropped over a cards container (ends with -cards)
         const cardsDropId = overId.toString();
         if (cardsDropId.endsWith("-cards")) {
           const columnId = cardsDropId.replace("-cards", "");
@@ -395,15 +388,12 @@ export const KanbanProvider = <
       }
     }
 
-    // Create the final data state
     let newData = [...data];
     const activeIndex = newData.findIndex((item) => item.id === activeId);
 
-    // Check if there's actually a change
     let hasChange = false;
 
     if (activeItem.column !== targetColumnId) {
-      // Column changed
       hasChange = true;
       newData[activeIndex] = {
         ...newData[activeIndex],
@@ -415,7 +405,6 @@ export const KanbanProvider = <
         newData = arrayMove(newData, activeIndex, overIndex);
       }
     } else if (overItem) {
-      // Same column, check if position changed
       const overIndex = newData.findIndex((item) => item.id === overId);
       if (activeIndex !== overIndex) {
         hasChange = true;
@@ -423,7 +412,6 @@ export const KanbanProvider = <
       }
     }
 
-    // Only call onDataChange if there's an actual change
     if (hasChange) {
       onDataChange?.(newData);
     }
@@ -484,7 +472,7 @@ export const KanbanProvider = <
           <div
             className={cn(
               "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-1",
-              className
+              className,
             )}
           >
             {columns.map(children)}
@@ -494,7 +482,7 @@ export const KanbanProvider = <
       </DndContext>
       {createPortal(
         <DragOverlay>{activeCardId && <t.Out />}</DragOverlay>,
-        document.body
+        document.body,
       )}
     </KanbanContext.Provider>
   );

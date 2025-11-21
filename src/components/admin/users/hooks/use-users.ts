@@ -32,7 +32,6 @@ export const useUsers = (
 
       if (searchQuery) {
         if (role && role !== "ALL") {
-          // This block is empty, which is suspicious, but I will keep the logic as is.
         } else {
           endpoint = `/api/user/search`;
           params.query = searchQuery;
@@ -44,9 +43,7 @@ export const useUsers = (
         params.size = size.toString();
       }
 
-      // Add sorting parameters
       if (sortBy) {
-        // Convert snake_case to camelCase for the API
         const sortByMap: Record<string, string> = {
           created_at: "createdAt",
           updated_at: "updatedAt",

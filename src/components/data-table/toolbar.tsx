@@ -29,7 +29,6 @@ import { resetUrlState } from "./utils/deep-utils";
 import { parseDateFromUrl } from "./utils/url-state";
 import type { TableConfig } from "./utils/table-config";
 
-// Helper functions for component sizing
 const getInputSizeClass = (size: "sm" | "default" | "lg") => {
   switch (size) {
     case "sm":
@@ -71,7 +70,7 @@ interface DataTableToolbarProps<TData> {
       | ((prev: { from_date: string; to_date: string }) => {
           from_date: string;
           to_date: string;
-        })
+        }),
   ) => void;
   totalSelectedItems?: number;
   deleteSelection?: () => void;
@@ -120,7 +119,6 @@ export function DataTableToolbar<TData>({
   assignFn,
   getSelectedIds,
 }: DataTableToolbarProps<TData>) {
-  // Get router and pathname for URL state reset
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -128,28 +126,22 @@ export function DataTableToolbar<TData>({
 
   const tableFiltered = table.getState().columnFilters.length > 0;
 
-  // Get search value directly from URL query parameter
   const searchParamFromUrl = searchParams.get("search") || "";
-  // Decode URL-encoded search parameter
+
   const decodedSearchParam = searchParamFromUrl
     ? decodeURIComponent(searchParamFromUrl)
     : "";
 
-  // Get search value from table state as fallback
   const currentSearchFromTable =
     (table.getState().globalFilter as string) || "";
 
-  // Initialize local search state with URL value or table state
   const [localSearch, setLocalSearch] = useState(
-    decodedSearchParam || currentSearchFromTable
+    decodedSearchParam || currentSearchFromTable,
   );
 
-  // Track if the search is being updated locally
   const isLocallyUpdatingSearch = useRef(false);
 
-  // Update local search when URL param changes
   useEffect(() => {
-    // Skip if local update is in progress
     if (isLocallyUpdatingSearch.current) {
       return;
     }
@@ -165,9 +157,8 @@ export function DataTableToolbar<TData>({
   }, [searchParams, localSearch]);
 
   const tableSearch = (table.getState().globalFilter as string) || "";
-  // Also update local search when table globalFilter changes
+
   useEffect(() => {
-    // Skip if local update is in progress
     if (isLocallyUpdatingSearch.current) {
       return;
     }
@@ -177,21 +168,17 @@ export function DataTableToolbar<TData>({
     }
   }, [tableSearch, localSearch]);
 
-  // Reference to track if we're currently updating dates
   const isUpdatingDates = useRef(false);
 
-  // Reference to track the last set date values to prevent updates with equal values
   const lastSetDates = useRef<{
     from: Date | undefined;
     to: Date | undefined;
   }>({ from: undefined, to: undefined });
 
-  // Memoize the getInitialDates function to prevent unnecessary recreations
   const getInitialDates = useCallback((): {
     from: Date | undefined;
     to: Date | undefined;
   } => {
-    // If we're in the middle of an update, don't parse from URL to avoid cycles
     if (isUpdatingDates.current) {
       return lastSetDates.current;
     }
@@ -201,7 +188,6 @@ export function DataTableToolbar<TData>({
       try {
         const parsed = JSON.parse(dateRangeParam);
 
-        // Parse dates from URL param
         const fromDate = parsed?.from_date
           ? parseDateFromUrl(parsed.from_date)
           : undefined;
@@ -209,7 +195,6 @@ export function DataTableToolbar<TData>({
           ? parseDateFromUrl(parsed.to_date)
           : undefined;
 
-        // Cache these values
         lastSetDates.current = { from: fromDate, to: toDate };
 
         return {
@@ -224,18 +209,15 @@ export function DataTableToolbar<TData>({
     return { from: undefined, to: undefined };
   }, [searchParams]);
 
-  // Initial state with date values from URL
   const [dates, setDates] = useState<{
     from: Date | undefined;
     to: Date | undefined;
   }>(getInitialDates());
 
-  // Track if user has explicitly changed dates
   const [datesModified, setDatesModified] = useState(
-    !!dates.from || !!dates.to
+    !!dates.from || !!dates.to,
   );
 
-  // Load initial date range from URL params only once on component mount
   useEffect(() => {
     const initialDates = getInitialDates();
     if (initialDates.from || initialDates.to) {
@@ -244,60 +226,46 @@ export function DataTableToolbar<TData>({
     }
   }, [getInitialDates]); // Include memoized function as dependency
 
-  // Determine if any filters are active
   const isFiltered = tableFiltered || !!localSearch || datesModified;
 
-  // Create a ref to store the debounce timer
   const searchDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Cleanup timers when component unmounts
   useEffect(() => {
     return () => {
-      // Clear debounce timer
       if (searchDebounceTimerRef.current) {
         clearTimeout(searchDebounceTimerRef.current);
       }
     };
   }, []);
 
-  // Handle search with improved debounce to prevent character loss
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    // Mark that search is being updated locally
     isLocallyUpdatingSearch.current = true;
     setLocalSearch(value);
 
-    // Clear any existing timer to prevent race conditions
     if (searchDebounceTimerRef.current) {
       clearTimeout(searchDebounceTimerRef.current);
     }
 
-    // Set a new debounce timer to update the actual search state
     searchDebounceTimerRef.current = setTimeout(() => {
-      // Trim whitespace before sending to backend API
       const trimmedValue = value.trim();
       setSearch(trimmedValue);
       searchDebounceTimerRef.current = null;
 
-      // Reset the local update flag after a short delay
-      // This ensures URL changes don't override the input immediately
       setTimeout(() => {
         isLocallyUpdatingSearch.current = false;
       }, 100);
     }, 500);
   };
 
-  // Listen for URL parameter changes and update local state if needed
   useEffect(() => {
-    // Skip this effect if we're currently updating the dates ourselves
     if (isUpdatingDates.current) {
       return;
     }
 
     const newDates = getInitialDates();
 
-    // Check if dates have actually changed to avoid unnecessary updates
     const hasFromChanged =
       (newDates.from && !dates.from) ||
       (!newDates.from && dates.from) ||
@@ -316,16 +284,12 @@ export function DataTableToolbar<TData>({
     }
   }, [dates, getInitialDates]);
 
-  // Reset all filters and URL state
   const handleResetFilters = () => {
-    // Reset table filters
     table.resetColumnFilters();
 
-    // Reset search
     setLocalSearch("");
     setSearch("");
 
-    // Reset dates to undefined (no filter)
     setDates({
       from: undefined,
       to: undefined,
@@ -336,31 +300,25 @@ export function DataTableToolbar<TData>({
       to_date: "",
     });
 
-    // Reset URL state by removing all query parameters, but only if URL state is enabled
     if (config.enableUrlState) {
       resetUrlState(router, pathname);
     }
   };
 
-  // Get selected items data for export - this is now just for the UI indication
-  // The actual data fetching happens in the export component
   const selectedItems =
     totalSelectedItems > 0
       ? new Array(totalSelectedItems).fill({} as TData)
       : [];
 
-  // Get all available items data for export
   const allItems = getAllItems ? getAllItems() : [];
 
   const deleteMutation = useMutation({
     mutationFn: deleteFn,
     onSuccess: () => {
-      // toast.success("Items deleted successfully.");
       table.resetRowSelection();
       queryClient.invalidateQueries(); // Invalidate relevant queries
     },
     onError: (error: Error) => {
-      // toast.error(error.message || "Failed to delete items.");
       console.error("Failed to delete items:", error);
     },
   });
@@ -368,12 +326,10 @@ export function DataTableToolbar<TData>({
   const assignMutation = useMutation({
     mutationFn: assignFn,
     onSuccess: () => {
-      // toast.success("Items assigned successfully.");
       table.resetRowSelection();
       queryClient.invalidateQueries(); // Invalidate relevant queries
     },
     onError: (error: Error) => {
-      // toast.error(error.message || "Failed to assign items.");
       console.error("Failed to assign items:", error);
     },
   });
@@ -403,11 +359,11 @@ export function DataTableToolbar<TData>({
             value={localSearch}
             onChange={handleSearchChange}
             className={`${getInputSizeClass(
-              config.size
+              config.size,
             )} h-8 w-[150px] lg:w-[250px]`}
           />
         )}
-        {/* Date filter disabled as per requirement */}
+        {}
         {config.enableColumnFilters &&
           columnFilterOptions &&
           columnFilterOptions.map((filter) => {

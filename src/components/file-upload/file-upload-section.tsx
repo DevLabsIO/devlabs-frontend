@@ -107,7 +107,6 @@ export function FileUploadSection({
       let errorMessage =
         err.message || "Failed to upload file. Please try again.";
 
-      // Handle specific error cases
       if (
         err.message?.includes("413") ||
         err.message?.includes("Content Too Large")
@@ -141,7 +140,6 @@ export function FileUploadSection({
   });
 
   const handleFileSelect = (file: File) => {
-    // Check if file already exists in selection
     if (selectedFiles.some((f) => f.name === file.name)) {
       error(`File "${file.name}" is already selected.`);
       return;
@@ -316,7 +314,7 @@ export function FileUploadSection({
                   );
                 })}
 
-                {/* Upload All Button */}
+                {}
                 <div className="flex justify-end">
                   <Button
                     onClick={handleUploadAll}

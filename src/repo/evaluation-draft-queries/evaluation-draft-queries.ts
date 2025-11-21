@@ -5,7 +5,6 @@ import {
   GetDraftResponse,
 } from "@/types/api";
 
-// Re-export for backward compatibility
 export type {
   CriterionScoreData,
   ParticipantScoreData,

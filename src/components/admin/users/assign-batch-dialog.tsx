@@ -78,7 +78,6 @@ export function AssignBatchDialog({
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch batches for the selected department
   const {
     data: batches,
     isLoading: isBatchesLoading,
@@ -87,7 +86,7 @@ export function AssignBatchDialog({
     queryKey: ["batches", selectedDepartmentId],
     queryFn: async () => {
       const response = await axiosInstance.get(
-        `/api/department/${selectedDepartmentId}/batches`
+        `/api/department/${selectedDepartmentId}/batches`,
       );
       const data = response.data;
       return Array.isArray(data) ? data : data.data || [];
@@ -103,7 +102,7 @@ export function AssignBatchDialog({
   };
 
   const selectedDepartment = departments?.find(
-    (d) => d.id === selectedDepartmentId
+    (d) => d.id === selectedDepartmentId,
   );
 
   return (
@@ -158,7 +157,7 @@ export function AssignBatchDialog({
                               "mr-2 h-4 w-4",
                               selectedDepartmentId === department.id
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
                           />
                           {department.name}

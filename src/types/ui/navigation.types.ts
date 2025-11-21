@@ -1,8 +1,3 @@
-/**
- * Navigation UI Types
- * Types for navigation and breadcrumb components
- */
-
 export interface BreadcrumbSegment {
   label: string;
   href: string;

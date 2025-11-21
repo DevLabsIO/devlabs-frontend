@@ -62,7 +62,6 @@ async function refreshKeycloakAccessToken(
 
     const refreshedTokens = await response.json();
     if (!response.ok) {
-      // If session is not active, return null to invalidate the session gracefully
       if (
         refreshedTokens.error === "invalid_grant" &&
         refreshedTokens.error_description === "Session not active"
@@ -137,11 +136,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, account, user }) {
-      // Initial sign-in
       if (account && user) {
         const decoded = decodeJwt(account.access_token!);
         const { roles, groups } = processDecodedToken(decoded);
-        // Calculate session expiry based on Keycloak's refresh token expiry
+
         const refreshExpiresIn =
           typeof account.refresh_expires_in === "number"
             ? account.refresh_expires_in
@@ -171,7 +169,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return null;
       }
 
-      // Token still valid
       if (
         token.expires_at &&
         Date.now() < token.expires_at * 1000 - 15 * 1000
@@ -182,14 +179,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const refreshedToken = await refreshKeycloakAccessToken(
           token as KeycloakToken,
         );
-        // If refresh returns null (session expired), invalidate the session
+
         if (!refreshedToken) {
           return null;
         }
         return refreshedToken;
       }
 
-      // No refresh token or refresh failed — invalidate session
       return null;
     },
     async session({ session, token }) {

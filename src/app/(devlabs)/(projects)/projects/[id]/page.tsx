@@ -123,13 +123,13 @@ export default function DevlabsProjectPage() {
     return (
       <div className="container mx-auto p-4 sm:p-6 lg:p-8">
         <div className="space-y-8">
-          {/* Project Header Skeleton */}
+          {}
           <div className="space-y-4">
             <Skeleton className="h-8 w-96" />
             <Skeleton className="h-6 w-24" />
           </div>
 
-          {/* Project Details Skeleton */}
+          {}
           <div className="space-y-6">
             <div className="space-y-2">
               <Skeleton className="h-6 w-32" />
@@ -164,7 +164,7 @@ export default function DevlabsProjectPage() {
             </div>
           </div>
 
-          {/* Kanban Board Skeleton */}
+          {}
           <div className="border rounded-lg">
             <div className="p-6 space-y-4">
               <Skeleton className="h-6 w-32" />

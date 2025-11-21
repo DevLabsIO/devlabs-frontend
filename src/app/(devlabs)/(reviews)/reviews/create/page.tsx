@@ -91,10 +91,10 @@ export default function Page() {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
-            {/* Basic Info & Rubric */}
+            {}
             <BasicInfoForm />
 
-            {/* Divider */}
+            {}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t" />
@@ -106,10 +106,10 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Participants */}
+            {}
             <ParticipantsForm />
 
-            {/* Action Buttons */}
+            {}
             <div className="flex items-center justify-between pt-6 border-t">
               <Button
                 type="button"

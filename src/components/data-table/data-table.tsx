@@ -44,7 +44,6 @@ import {
 } from "@/components/data-table/utils/table-state-handlers";
 import { createConditionalStateHook } from "@/components/data-table/utils/conditional-state";
 
-// Define types for the data fetching function params and result
 interface DataFetchParams {
   page: number;
   limit: number;
@@ -67,7 +66,6 @@ interface DataFetchResult<TData> {
   };
 }
 
-// Types for table handlers
 type PaginationUpdater = (prev: { pageIndex: number; pageSize: number }) => {
   pageIndex: number;
   pageSize: number;
@@ -78,15 +76,12 @@ type RowSelectionUpdater = (
 ) => Record<string, boolean>;
 
 interface DataTableProps<TData, TValue> {
-  // Allow overriding the table configuration
   config?: Partial<TableConfig>;
 
-  // Column definitions generator
   getColumns: (
     handleRowDeselection: ((rowId: string) => void) | null | undefined,
   ) => ColumnDef<TData, TValue>[];
 
-  // Data fetching function
   fetchDataFn:
     | ((params: DataFetchParams) => Promise<DataFetchResult<TData>>)
     | ((
@@ -98,7 +93,6 @@ interface DataTableProps<TData, TValue> {
         sortOrder: string,
       ) => unknown);
 
-  // Export configuration
   exportConfig: {
     entityName: string;
     columnMapping: Record<string, string>;
@@ -106,13 +100,10 @@ interface DataTableProps<TData, TValue> {
     headers: string[];
   };
 
-  // ID field in TData for tracking selected items
   idField: keyof TData;
 
-  // Custom page size options
   pageSizeOptions?: number[];
 
-  // Custom toolbar content render function
   renderToolbarContent?: (props: {
     selectedRows: TData[];
     allSelectedIds: (string | number)[];
@@ -129,10 +120,8 @@ interface DataTableProps<TData, TValue> {
     }>;
   }>;
 
-  // Row click handler
   onRowClick?: (data: TData) => void;
 
-  // New props with proper types
   deleteFn?: (ids: (string | number)[]) => Promise<unknown>;
   assignFn?: (ids: (string | number)[]) => Promise<unknown>;
 }
@@ -150,18 +139,14 @@ export function DataTable<TData, TValue>({
   deleteFn,
   assignFn,
 }: DataTableProps<TData, TValue>) {
-  // Load table configuration with any overrides
   const tableConfig = useTableConfig(config);
 
-  // Column sizing state (no localStorage persistence)
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
 
-  // Create conditional URL state hook based on config
   const useConditionalUrlState = createConditionalStateHook(
     tableConfig.enableUrlState,
   );
 
-  // States for API parameters using conditional URL state
   const [page, setPage] = useConditionalUrlState("page", 1);
   const [pageSize, setPageSize] = useConditionalUrlState("pageSize", 10);
   const [search, setSearch] = useConditionalUrlState("search", "");
@@ -181,7 +166,6 @@ export function DataTable<TData, TValue>({
     Array<{ id: string; value: unknown }>
   >("columnFilters", []);
 
-  // Internal states
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -195,19 +179,16 @@ export function DataTable<TData, TValue>({
     };
   } | null>(null);
 
-  // Column order state (in-memory only)
   const [columnOrder, setColumnOrder] = useState<string[]>([]); // PERFORMANCE FIX: Use only one selection state as the source of truth
   const [selectedItemIds, setSelectedItemIds] = useState<
     Record<string | number, boolean>
   >({});
 
-  // For server-side sorting, derive sorting state from URL parameters
   const sorting = useMemo(
     () => createSortingState(sortBy, sortOrder),
     [sortBy, sortOrder],
   );
 
-  // Convert column filters to server format
   const serverColumnFilters = useMemo(() => {
     const filters: Record<string, string[]> = {};
     columnFilters.forEach((filter) => {
@@ -222,14 +203,11 @@ export function DataTable<TData, TValue>({
     return Object.keys(filters).length > 0 ? filters : undefined;
   }, [columnFilters]);
 
-  // Get current data items - memoize to avoid recalculations
   const dataItems = useMemo(() => data?.data || [], [data?.data]);
 
-  // PERFORMANCE FIX: Derive rowSelection from selectedItemIds using memoization
   const rowSelection = useMemo(() => {
     if (!dataItems.length) return {};
 
-    // Map selectedItemIds to row indices for the table
     const selection: Record<string, boolean> = {};
 
     dataItems.forEach((item, index) => {
@@ -242,13 +220,11 @@ export function DataTable<TData, TValue>({
     return selection;
   }, [dataItems, selectedItemIds, idField]);
 
-  // Calculate total selected items - memoize to avoid recalculation
   const totalSelectedItems = useMemo(
     () => Object.keys(selectedItemIds).length,
     [selectedItemIds],
   );
 
-  // PERFORMANCE FIX: Optimized row deselection handler
   const handleRowDeselection = useCallback(
     (rowId: string) => {
       if (!dataItems.length) return;
@@ -259,7 +235,6 @@ export function DataTable<TData, TValue>({
       if (item) {
         const itemId = String(item[idField]);
         setSelectedItemIds((prev) => {
-          // Remove this item ID from selection
           const next = { ...prev };
           delete next[itemId];
           return next;
@@ -269,27 +244,21 @@ export function DataTable<TData, TValue>({
     [dataItems, idField],
   );
 
-  // Clear all selections
   const clearAllSelections = useCallback(() => {
     setSelectedItemIds({});
   }, []);
 
-  // PERFORMANCE FIX: Optimized row selection handler
   const handleRowSelectionChange = useCallback(
     (updaterOrValue: RowSelectionUpdater | Record<string, boolean>) => {
-      // Determine the new row selection value
       const newRowSelection =
         typeof updaterOrValue === "function"
           ? updaterOrValue(rowSelection)
           : updaterOrValue;
 
-      // Batch update selectedItemIds based on the new row selection
       setSelectedItemIds((prev) => {
         const next = { ...prev };
 
-        // Process changes for current page
         if (dataItems.length) {
-          // First handle explicit selections in newRowSelection
           for (const [rowId, isSelected] of Object.entries(newRowSelection)) {
             const rowIndex = Number.parseInt(rowId, 10);
             if (rowIndex >= 0 && rowIndex < dataItems.length) {
@@ -304,12 +273,10 @@ export function DataTable<TData, TValue>({
             }
           }
 
-          // Then handle implicit deselection (rows that were selected but aren't in newRowSelection)
           dataItems.forEach((item, index) => {
             const itemId = String(item[idField]);
             const rowId = String(index);
 
-            // If item was selected but isn't in new selection, deselect it
             if (prev[itemId] && newRowSelection[rowId] === undefined) {
               delete next[itemId];
             }
@@ -322,14 +289,11 @@ export function DataTable<TData, TValue>({
     [dataItems, rowSelection, idField],
   );
 
-  // Fetch data
   useEffect(() => {
-    // Check if the fetchDataFn is a query hook
     const isQueryHook =
       (fetchDataFn as { isQueryHook?: boolean }).isQueryHook === true;
 
     if (!isQueryHook) {
-      // Create refs to capture the current sort values at the time of fetching
       const currentSortBy = sortBy;
       const currentSortOrder = sortOrder;
 
@@ -402,7 +366,6 @@ export function DataTable<TData, TValue>({
         )
       : null;
 
-  // If using React Query, update state based on query result
   useEffect(() => {
     if (queryResult) {
       setIsLoading(queryResult.isLoading);
@@ -422,7 +385,6 @@ export function DataTable<TData, TValue>({
     }
   }, [queryResult]);
 
-  // Memoized pagination state
   const pagination = useMemo(
     () => ({
       pageIndex: page - 1,
@@ -431,12 +393,9 @@ export function DataTable<TData, TValue>({
     [page, pageSize],
   );
 
-  // Ref for the table container
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
-  // Get columns with the deselection handler (memoize to avoid recreation on render)
   const columns = useMemo(() => {
-    // Only pass deselection handler if row selection is enabled
     return getColumns(
       tableConfig.enableRowSelection ? handleRowDeselection : null,
     );
@@ -469,7 +428,6 @@ export function DataTable<TData, TValue>({
     [setColumnVisibility],
   );
 
-  // Add sorting handler for server-side sorting
   const handleSortingChange = useCallback(
     (
       updaterOrValue:
@@ -489,13 +447,11 @@ export function DataTable<TData, TValue>({
         | PaginationUpdater
         | { pageIndex: number; pageSize: number },
     ) => {
-      // Extract the new pagination state
       const newPagination =
         typeof updaterOrValue === "function"
           ? updaterOrValue({ pageIndex: page - 1, pageSize })
           : updaterOrValue;
 
-      // Special handling: When page size changes, always reset to page 1
       if (newPagination.pageSize !== pageSize) {
         Promise.all([setPageSize(newPagination.pageSize), setPage(1)]).catch(
           console.error,
@@ -504,7 +460,6 @@ export function DataTable<TData, TValue>({
         return;
       }
 
-      // Only update page if it's changed - this handles normal page navigation
       if (newPagination.pageIndex + 1 !== page) {
         const setPagePromise = setPage(newPagination.pageIndex + 1);
         if (setPagePromise && typeof setPagePromise.catch === "function") {
@@ -531,7 +486,6 @@ export function DataTable<TData, TValue>({
     [setColumnSizing],
   );
 
-  // Column order change handler (no localStorage persistence)
   const handleColumnOrderChange = useCallback(
     (updaterOrValue: ColumnOrderUpdater | string[]) => {
       const newColumnOrder =
@@ -544,7 +498,6 @@ export function DataTable<TData, TValue>({
     [columnOrder],
   );
 
-  // Set up the table with memoized state
   const table = useReactTable<TData>({
     data: dataItems,
     columns,
@@ -579,9 +532,7 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  // Add an effect to validate page number when page size changes
   useEffect(() => {
-    // This effect ensures page is valid after page size changes
     const totalPages = data?.pagination?.total_pages || 0;
 
     if (totalPages > 0 && page > totalPages) {
@@ -589,23 +540,18 @@ export function DataTable<TData, TValue>({
     }
   }, [data?.pagination?.total_pages, page, setPage]);
 
-  // Reset column sizing (no localStorage persistence)
   const resetColumnSizing = useCallback(() => {
     setColumnSizing({});
   }, []);
-  // Reset column order (no localStorage persistence)
+
   const resetColumnOrder = useCallback(() => {
-    // Reset to empty array (which resets to default order)
     table.setColumnOrder([]);
     setColumnOrder([]);
   }, [table]);
 
-  // Keep pagination in sync with URL parameters
   useEffect(() => {
-    // Make sure table pagination state matches URL state
     const tableState = table.getState().pagination;
     if (tableState.pageIndex !== page - 1 || tableState.pageSize !== pageSize) {
-      // Avoid unnecessary updates that might cause infinite loops
       if (
         tableState.pageSize !== pageSize ||
         Math.abs(tableState.pageIndex - (page - 1)) > 0
@@ -618,7 +564,6 @@ export function DataTable<TData, TValue>({
     }
   }, [table, page, pageSize]);
 
-  // Handle error state
   if (isError) {
     return (
       <Alert variant="destructive" className="my-4">
@@ -713,7 +658,6 @@ export function DataTable<TData, TValue>({
 
           <TableBody>
             {isLoading ? (
-              // Loading state
               Array.from({ length: pageSize }).map((_, index) => (
                 <TableRow key={`loading-row-${index}`} tabIndex={-1}>
                   {Array.from({ length: columns.length }).map(
@@ -730,7 +674,6 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : table.getRowModel().rows?.length ? (
-              // Data rows
               table.getRowModel().rows.map((row, rowIndex) => (
                 <TableRow
                   key={row.id}
@@ -740,11 +683,9 @@ export function DataTable<TData, TValue>({
                   tabIndex={0}
                   aria-selected={row.getIsSelected()}
                   onClick={() => {
-                    // If there's a custom onRowClick handler, use it
                     if (onRowClick) {
                       onRowClick(row.original);
                     } else if (tableConfig.enableClickRowSelect) {
-                      // Otherwise, fall back to selection toggle
                       row.toggleSelected();
                     }
                   }}
@@ -752,7 +693,6 @@ export function DataTable<TData, TValue>({
                     onRowClick ? "cursor-pointer hover:bg-muted/50" : undefined
                   }
                   onFocus={(e) => {
-                    // Add a data attribute to the currently focused row
                     for (const el of document.querySelectorAll(
                       '[data-focused="true"]',
                     )) {
@@ -781,7 +721,6 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              // No results
               <TableRow>
                 <TableCell
                   colSpan={columns.length}

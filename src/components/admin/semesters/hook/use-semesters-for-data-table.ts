@@ -34,9 +34,7 @@ const useGetSemesters = (
         params.query = searchQuery;
       }
 
-      // Add sorting parameters
       if (sortBy) {
-        // Convert snake_case to camelCase for the API
         const sortByMap: Record<string, string> = {
           created_at: "createdAt",
           updated_at: "updatedAt",

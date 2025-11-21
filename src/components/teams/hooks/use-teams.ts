@@ -53,10 +53,8 @@ export const useTeams = (
         ) {
           endpoint = `/teams`;
         } else if ((userGroups as string[]).includes("faculty")) {
-          // Faculty can see teams from courses they teach
           endpoint = `/teams/user/${user.id}`;
         } else {
-          // Default fallback for any other roles
           endpoint = `/teams/user/${user.id}`;
         }
       }

@@ -1,8 +1,3 @@
-/**
- * User API Request/Response Types
- * Used in src/repo/user-queries/
- */
-
 export interface CreateUserRequest {
   name: string;
   email: string;

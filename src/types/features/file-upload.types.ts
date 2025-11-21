@@ -1,8 +1,3 @@
-/**
- * File Upload Feature Types
- * Types for file upload and management
- */
-
 export interface FileUploadResponse {
   objectName: string;
   url: string;

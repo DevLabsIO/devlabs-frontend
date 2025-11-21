@@ -69,7 +69,7 @@ export function TeamHeader({ teamId }: TeamHeaderProps) {
   if (isSuccess && team) {
     return (
       <div className="space-y-6">
-        {/* Team Info Header */}
+        {}
         <div className="space-y-4">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -86,7 +86,7 @@ export function TeamHeader({ teamId }: TeamHeaderProps) {
           </div>
         </div>
 
-        {/* Team Members Card */}
+        {}
         <Card className="border-0 shadow-none">
           <CardHeader>
             <div className="flex items-center space-x-2">

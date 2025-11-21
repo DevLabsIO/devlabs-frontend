@@ -1,8 +1,3 @@
-/**
- * Course Entity Types
- * Course-related type definitions
- */
-
 import { Project } from "./project.types";
 import { ReviewHistory } from "./review.types";
 

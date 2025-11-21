@@ -29,7 +29,7 @@ const CourseSummary: React.FC<CourseSummaryProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Course Information Card */}
+      {}
       <Card className="lg:col-span-1">
         <CardHeader>
           <CardTitle>Course Information</CardTitle>
@@ -50,7 +50,7 @@ const CourseSummary: React.FC<CourseSummaryProps> = ({
         </CardContent>
       </Card>
 
-      {/* Review Statistics Card */}
+      {}
       <Card>
         <CardHeader>
           <CardTitle>Review Statistics</CardTitle>
@@ -82,7 +82,7 @@ const CourseSummary: React.FC<CourseSummaryProps> = ({
         </CardContent>
       </Card>
 
-      {/* Performance Overview Card */}
+      {}
       <Card>
         <CardHeader>
           <CardTitle>Performance Overview</CardTitle>

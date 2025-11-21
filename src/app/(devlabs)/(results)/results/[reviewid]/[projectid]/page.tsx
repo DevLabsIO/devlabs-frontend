@@ -6,7 +6,10 @@ import { useSessionContext } from "@/lib/session-context";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, User, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, User, AlertCircle, Edit } from "lucide-react";
+import Link from "next/link";
+import { GROUPS } from "@/types/auth/roles";
 
 const getScoreGrade = (percentage: number) => {
   if (percentage >= 90) return "Excellent";
@@ -86,8 +89,17 @@ const ResultsSkeleton = () => (
 
 export default function ResultsPage() {
   const { reviewid, projectid } = useParams();
-  const { session, status } = useSessionContext();
+  const { session, status, user } = useSessionContext();
   const router = useRouter();
+
+  const userGroups = user?.groups as string[] | undefined;
+  const canEditMarks =
+    user &&
+    userGroups &&
+    (userGroups.includes(GROUPS.FACULTY) ||
+      userGroups.includes(GROUPS.ADMIN) ||
+      userGroups.includes(GROUPS.MANAGER));
+
   const {
     data: results,
     isLoading,
@@ -101,8 +113,10 @@ export default function ResultsPage() {
         session?.user?.id as string,
       ),
     enabled: !!reviewid && !!projectid && !!session?.user?.id,
-    staleTime: 2 * 60 * 1000, // 2 minutes - results may update during evaluation
+    staleTime: 0, // Always fetch fresh data
     gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnMount: true, // Refetch when component mounts
+    refetchOnWindowFocus: true, // Refetch when window gains focus
   });
 
   if (status === "loading" || isLoading) {
@@ -174,14 +188,31 @@ export default function ResultsPage() {
       </div>
 
       <div className="space-y-6">
-        {/* Header */}
+        {}
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">
-            {results.projectTitle}
-          </h1>
-          <p className="text-muted-foreground">
-            {results.reviewName} - Evaluation Results
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 space-y-2">
+              <h1 className="text-3xl font-bold tracking-tight">
+                {results.projectTitle}
+              </h1>
+              <p className="text-muted-foreground">
+                {results.reviewName} - Evaluation Results
+              </p>
+            </div>
+            {canEditMarks && (
+              <Button
+                asChild
+                size="default"
+                variant="outline"
+                className="gap-2"
+              >
+                <Link href={`/evaluate/${projectid}/${reviewid}`}>
+                  <Edit className="h-4 w-4" />
+                  Edit Evaluations
+                </Link>
+              </Button>
+            )}
+          </div>
           <div className="flex items-center gap-3 pt-2">
             <Badge variant={results.isPublished ? "default" : "secondary"}>
               {results.isPublished ? "Published" : "Not Published"}
@@ -195,14 +226,14 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* Results */}
+        {}
         <div className="space-y-6">
           {results.results.map((student, index) => (
             <div
               key={`${student.studentId}-${index}`}
               className="border rounded-lg overflow-hidden"
             >
-              {/* Student Header */}
+              {}
               <div className="bg-muted/30 px-6 py-4 border-b">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -239,7 +270,7 @@ export default function ResultsPage() {
                 </div>
               </div>
 
-              {/* Criteria Breakdown */}
+              {}
               <div className="p-6">
                 <h4 className="font-semibold mb-4">Assessment Breakdown</h4>
 

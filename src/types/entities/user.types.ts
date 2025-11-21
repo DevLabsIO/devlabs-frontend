@@ -1,8 +1,3 @@
-/**
- * User Entity Types
- * Core user-related type definitions
- */
-
 export interface User extends Record<string, unknown> {
   id: string;
   name: string;

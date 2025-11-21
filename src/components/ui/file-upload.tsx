@@ -80,7 +80,7 @@ export function FileUpload({
         (type) =>
           type === mimeType ||
           (type.endsWith("/*") && mimeType.startsWith(type.slice(0, -1))) ||
-          type === fileExtension
+          type === fileExtension,
       );
 
       if (!isAccepted) {
@@ -89,7 +89,7 @@ export function FileUpload({
 
       return null;
     },
-    [maxSizeInMB, acceptedFileTypes]
+    [maxSizeInMB, acceptedFileTypes],
   );
 
   const handleFileSelection = useCallback(
@@ -107,11 +107,11 @@ export function FileUpload({
       setSelectedFile(file);
       onFileSelect(file);
     },
-    [onFileSelect, validateFile, onValidationError]
+    [onFileSelect, validateFile, onValidationError],
   );
 
   const handleFileInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const files = event.target.files;
     if (files) {
@@ -145,7 +145,7 @@ export function FileUpload({
         }
       }
     },
-    [disabled, isUploading, handleFileSelection, multiple]
+    [disabled, isUploading, handleFileSelection, multiple],
   );
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -176,7 +176,6 @@ export function FileUpload({
   };
 
   const renderUploadArea = () => {
-    // Don't show the selected file card when multiple is true, let parent handle the display
     if (selectedFile && !fileError && !multiple) {
       return (
         <Card className="w-full">
@@ -242,7 +241,7 @@ export function FileUpload({
             : "border-muted-foreground/25 hover:border-muted-foreground/50",
           disabled && "opacity-50 cursor-not-allowed",
           !disabled && "hover:cursor-pointer",
-          className
+          className,
         )}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -254,7 +253,7 @@ export function FileUpload({
             <Upload
               className={cn(
                 "h-12 w-12",
-                isDragOver ? "text-primary" : "text-muted-foreground"
+                isDragOver ? "text-primary" : "text-muted-foreground",
               )}
             />
           </div>
@@ -265,8 +264,8 @@ export function FileUpload({
                   ? "Drop files here"
                   : "Drop file here"
                 : multiple
-                ? "Choose files or drag & drop"
-                : "Choose file or drag & drop"}
+                  ? "Choose files or drag & drop"
+                  : "Choose file or drag & drop"}
             </p>
             <p className="text-sm text-muted-foreground">
               Maximum file size: {maxSizeInMB}MB

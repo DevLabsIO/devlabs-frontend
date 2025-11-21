@@ -1,8 +1,3 @@
-/**
- * Results Feature Types
- * Types for project and course results/performance
- */
-
 export interface ProjectResult {
   id: string;
   reviewName: string;

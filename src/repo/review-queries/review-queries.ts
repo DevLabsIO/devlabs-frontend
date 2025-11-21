@@ -46,6 +46,22 @@ const reviewQueries = {
     const response = await axiosInstance.get(url);
     return response.data;
   },
+
+  getReviewExportData: async (
+    reviewId: string,
+    batchIds?: string[],
+    courseIds?: string[],
+  ) => {
+    const params = new URLSearchParams();
+    batchIds?.forEach((id) => params.append("batchIds", id));
+    courseIds?.forEach((id) => params.append("courseIds", id));
+
+    const queryString = params.toString();
+    const url = `/api/review/${reviewId}/export${queryString ? `?${queryString}` : ""}`;
+
+    const response = await axiosInstance.get(url);
+    return response.data;
+  },
 };
 
 export default reviewQueries;

@@ -80,13 +80,11 @@ export default function ReviewCard({
       router.push(`/projects/${projectId}/${review.id}`);
     } else if (review.status === "SCHEDULED") {
       if (isStudent || canEvaluate) {
-        // Allow students and staff to view the review page even if scheduled
         router.push(`/projects/${projectId}/${review.id}`);
       } else {
         showError("Review is yet to start");
       }
     } else if (review.status === "COMPLETED") {
-      // Allow students and staff to view the review page even if completed
       router.push(`/projects/${projectId}/${review.id}`);
     } else {
       showError("Review is not available");

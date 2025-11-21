@@ -23,17 +23,14 @@ export function calculateReviewStatus(
     endDate + (typeof endDate === "string" ? "T23:59:59.999Z" : ""),
   );
 
-  // If current IST time is before start time - review is upcoming
   if (istNow < start) {
     return "UPCOMING";
   }
 
-  // If current IST time is between start and end time - review is live/active
   if (istNow >= start && istNow <= end) {
     return "LIVE";
   }
 
-  // If current IST time is after end time (after 11:59:59 PM) - review is completed
   if (istNow > end) {
     return "COMPLETED";
   }
@@ -41,9 +38,6 @@ export function calculateReviewStatus(
   return "UPCOMING";
 }
 
-/**
- * Get the color class for review status badge
- */
 export function getStatusColor(status: ReviewStatus): string {
   switch (status) {
     case "LIVE":
@@ -57,9 +51,6 @@ export function getStatusColor(status: ReviewStatus): string {
   }
 }
 
-/**
- * Format status for display
- */
 export function formatStatus(status: ReviewStatus): string {
   switch (status) {
     case "UPCOMING":
@@ -73,14 +64,10 @@ export function formatStatus(status: ReviewStatus): string {
   }
 }
 
-/**
- * Get status description with timing information
- */
 export function getStatusDescription(
   _status: ReviewStatus,
   _startDate: string | Date,
   _endDate: string | Date,
 ): string {
-  // Return empty string to not show any timing descriptions
   return "";
 }

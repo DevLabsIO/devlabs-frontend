@@ -42,15 +42,15 @@ export default function SignIn() {
 
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/20 to-gray-900/40" />
 
-      {/* Main Login Card */}
+      {}
       <div className="relative z-10 w-full max-w-lg mx-4 animate-fadeInUp">
         <div className="relative p-10 rounded-2xl backdrop-blur-xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.08] shadow-2xl">
-          {/* Subtle inner glow */}
+          {}
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-blue-500/[0.03] via-transparent to-indigo-500/[0.03]" />
 
-          {/* Content */}
+          {}
           <div className="relative z-10">
-            {/* Devlabs Logo */}
+            {}
             <div className="text-center mb-10">
               <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-300 bg-clip-text text-transparent animate-fadeInUp">
                 Devlabs
@@ -59,10 +59,10 @@ export default function SignIn() {
                 Welcome back to your workspace
               </p>
             </div>{" "}
-            {/* Login Form */}
+            {}
             <div className="space-y-8 animate-fadeInUp animation-delay-600">
               {" "}
-              {/* Keycloak Sign In Button */}
+              {}
               <button
                 onClick={handleKeycloakSignIn}
                 disabled={isSigningIn}
@@ -88,7 +88,7 @@ export default function SignIn() {
                   )}
                 </div>
               </button>
-              {/* Divider */}
+              {}
               <div className="flex items-center gap-4">
                 <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 <span className="text-gray-500 text-sm font-medium">
@@ -96,7 +96,7 @@ export default function SignIn() {
                 </span>
                 <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               </div>
-              {/* Features Grid */}
+              {}
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-5 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] transition-colors duration-300">
                   <Shield className="w-7 h-7 mb-3 text-blue-400" />

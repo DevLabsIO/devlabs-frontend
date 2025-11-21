@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Folder, X, Users } from "lucide-react";
-import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
+import { MultiSelect } from "@/components/ui/multi-select";
 import type {
   ReviewProjectsResponse,
   TeamFilterInfo,
@@ -30,6 +30,20 @@ export function ReviewProjectsTab({
   const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
   const [selectedBatches, setSelectedBatches] = useState<string[]>([]);
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
+  const [columns, setColumns] = useState(1);
+
+  useEffect(() => {
+    const updateColumns = () => {
+      if (typeof window === "undefined") return;
+      const w = window.innerWidth;
+      if (w >= 1024) setColumns(3);
+      else if (w >= 768) setColumns(2);
+      else setColumns(1);
+    };
+    updateColumns();
+    window.addEventListener("resize", updateColumns);
+    return () => window.removeEventListener("resize", updateColumns);
+  }, []);
 
   const teamId = selectedTeams.length > 0 ? selectedTeams[0] : undefined;
   const batchId = selectedBatches.length > 0 ? selectedBatches[0] : undefined;
@@ -42,6 +56,8 @@ export function ReviewProjectsTab({
         reviewQueries.getReviewProjects(reviewId, teamId, batchId, courseId),
       initialData,
     });
+
+  const projects = reviewProjects.projects;
 
   const teamOptions = reviewProjects.teams.map((team: TeamFilterInfo) => ({
     label: team.teamName,
@@ -90,16 +106,17 @@ export function ReviewProjectsTab({
     setSelectedCourses(courses.slice(-1));
   };
 
-  const virtualizer = useWindowVirtualizer({
-    count: reviewProjects.projects.length,
-    estimateSize: () => 250,
-    overscan: 5,
-    getItemKey: (i) => reviewProjects.projects[i]?.projectId ?? i,
-  });
+  const rowCount = columns > 0 ? Math.ceil(projects.length / columns) : 0;
 
-  useEffect(() => {
-    virtualizer.measure();
-  }, [reviewProjects.projects.length, virtualizer]);
+  const virtualizer = useWindowVirtualizer({
+    count: rowCount,
+    estimateSize: () => 280,
+    overscan: 5,
+    getItemKey: (rowIndex) => {
+      const firstIndex = rowIndex * columns;
+      return projects[firstIndex]?.projectId ?? rowIndex;
+    },
+  });
 
   const measureRef = useCallback(
     (el: HTMLDivElement | null) => {
@@ -137,7 +154,7 @@ export function ReviewProjectsTab({
               <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Teams
               </label>
-              <MultiSelectDropdown
+              <MultiSelect
                 options={teamOptions}
                 selected={selectedTeams}
                 onChange={handleTeamChange}
@@ -149,7 +166,7 @@ export function ReviewProjectsTab({
               <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Batches
               </label>
-              <MultiSelectDropdown
+              <MultiSelect
                 options={batchOptions}
                 selected={selectedBatches}
                 onChange={handleBatchChange}
@@ -161,7 +178,7 @@ export function ReviewProjectsTab({
               <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Courses
               </label>
-              <MultiSelectDropdown
+              <MultiSelect
                 options={courseOptions}
                 selected={selectedCourses}
                 onChange={handleCourseChange}
@@ -173,15 +190,15 @@ export function ReviewProjectsTab({
           {hasActiveFilters && (
             <div className="flex items-center gap-2 pt-2 border-t">
               <span className="text-sm text-muted-foreground">
-                {reviewProjects.projects.length} project
-                {reviewProjects.projects.length !== 1 ? "s" : ""} found
+                {projects.length} project
+                {projects.length !== 1 ? "s" : ""} found
               </span>
             </div>
           )}
         </div>
       </div>
 
-      {reviewProjects.projects.length === 0 ? (
+      {projects.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Folder className="h-12 w-12 text-muted-foreground mb-4" />
@@ -194,73 +211,81 @@ export function ReviewProjectsTab({
           </CardContent>
         </Card>
       ) : (
-        <div
-          style={{
-            height: virtualizer.getTotalSize(),
-            width: "100%",
-            position: "relative",
-          }}
-        >
-          {virtualizer.getVirtualItems().map((vi) => {
-            const project = reviewProjects.projects[vi.index];
-            return (
-              <div
-                key={project.projectId}
-                ref={measureRef}
-                data-index={vi.index}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  transform: `translateY(${vi.start}px)`,
-                }}
-              >
-                <div className="pb-4">
-                  <Card
-                    className="hover:shadow-lg transition-shadow cursor-pointer"
-                    onClick={() => handleProjectClick(project.projectId)}
-                  >
-                    <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Folder className="h-5 w-5" />
-                        {project.projectTitle}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Users className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm font-medium">
-                            {project.teamName}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {project.teamMembers.map((member) => (
-                            <Badge
-                              key={member.id}
-                              variant="secondary"
-                              className="text-xs"
-                            >
-                              {member.name}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
+        <div className="w-full">
+          <div className="mx-auto max-w-6xl">
+            <div
+              style={{
+                height: virtualizer.getTotalSize(),
+                position: "relative",
+              }}
+            >
+              {virtualizer.getVirtualItems().map((row) => {
+                const fromIndex = row.index * columns;
+                const toIndex = Math.min(fromIndex + columns, projects.length);
+                const rowProjects = projects.slice(fromIndex, toIndex);
 
-                      {project.courseIds.length > 0 && (
-                        <div className="pt-2 border-t">
-                          <p className="text-xs text-muted-foreground mb-1">
-                            Courses: {project.courseIds.length}
-                          </p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            );
-          })}
+                return (
+                  <div
+                    key={row.key}
+                    ref={measureRef}
+                    data-index={row.index}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      transform: `translateY(${row.start}px)`,
+                    }}
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+                      {rowProjects.map((project) => (
+                        <Card
+                          key={project.projectId}
+                          className="hover:shadow-lg transition-shadow cursor-pointer h-full"
+                          onClick={() => handleProjectClick(project.projectId)}
+                        >
+                          <CardHeader>
+                            <CardTitle className="text-lg flex items-center gap-2">
+                              <Folder className="h-5 w-5" />
+                              {project.projectTitle}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <Users className="h-4 w-4 text-muted-foreground" />
+                                <span className="text-sm font-medium">
+                                  {project.teamName}
+                                </span>
+                              </div>
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {project.teamMembers.map((member) => (
+                                  <Badge
+                                    key={member.id}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    {member.name}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                            {project.courseIds.length > 0 && (
+                              <div className="pt-2 border-t">
+                                <p className="text-xs text-muted-foreground mb-1">
+                                  Courses: {project.courseIds.length}
+                                </p>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
     </div>
