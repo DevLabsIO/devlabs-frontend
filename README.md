@@ -70,37 +70,37 @@ Follow these steps to run the project locally for development and testing purpos
 
 1. **Clone the repository:**
 
-   ```bash
-   git clone https://github.com/TharunCodes07/devlabs-frontend.git
-   cd devlabs-frontend
-   ```
+    ```bash
+    git clone https://github.com/TharunCodes07/devlabs-frontend.git
+    cd devlabs-frontend
+    ```
 
 2. **Install dependencies:**
 
-   ```bash
-   pnpm install
-   # or
-   npm install
-   ```
+    ```bash
+    pnpm install
+    # or
+    npm install
+    ```
 
 3. **Set up environment variables:**
    Create a `.env.local` file in the root directory and configure your environment variables:
 
-   ```env
-   NEXTAUTH_SECRET=your-secret-key
-   NEXTAUTH_URL=http://localhost:3000
-   # Add other required environment variables
-   ```
+    ```env
+    NEXTAUTH_SECRET=your-secret-key
+    NEXTAUTH_URL=http://localhost:3000
+    # Add other required environment variables
+    ```
 
 4. **Run the development server:**
 
-   ```bash
-   pnpm dev
-   # or
-   npm run dev
-   ```
+    ```bash
+    pnpm dev
+    # or
+    npm run dev
+    ```
 
-   Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+    Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
 ### Available Scripts
 

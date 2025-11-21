@@ -1,54 +1,52 @@
 export interface TableConfig {
-  enableRowSelection: boolean;
+    enableRowSelection: boolean;
 
-  enableClickRowSelect: boolean;
+    enableClickRowSelect: boolean;
 
-  enablePagination: boolean;
+    enablePagination: boolean;
 
-  enableSearch: boolean;
+    enableSearch: boolean;
 
-  enableColumnFilters: boolean;
+    enableColumnFilters: boolean;
 
-  enableDateFilter: boolean;
+    enableDateFilter: boolean;
 
-  enableColumnVisibility: boolean;
+    enableColumnVisibility: boolean;
 
-  enableExport: boolean;
+    enableExport: boolean;
 
-  enableUrlState: boolean;
+    enableUrlState: boolean;
 
-  enableColumnResizing: boolean;
+    enableColumnResizing: boolean;
 
-  enableToolbar: boolean;
+    enableToolbar: boolean;
 
-  enableAssign: boolean;
+    enableAssign: boolean;
 
-  enableDelete: boolean;
+    enableDelete: boolean;
 
-  size: "sm" | "default" | "lg";
+    size: "sm" | "default" | "lg";
 }
 
 const defaultConfig: TableConfig = {
-  enableRowSelection: true,
-  enableClickRowSelect: false,
-  enablePagination: true,
-  enableSearch: true,
-  enableColumnFilters: true,
-  enableDateFilter: false,
-  enableColumnVisibility: true,
-  enableExport: true,
-  enableUrlState: true,
-  enableColumnResizing: true,
-  enableToolbar: true,
-  enableAssign: false,
-  enableDelete: false,
-  size: "default",
+    enableRowSelection: true,
+    enableClickRowSelect: false,
+    enablePagination: true,
+    enableSearch: true,
+    enableColumnFilters: true,
+    enableDateFilter: false,
+    enableColumnVisibility: true,
+    enableExport: true,
+    enableUrlState: true,
+    enableColumnResizing: true,
+    enableToolbar: true,
+    enableAssign: false,
+    enableDelete: false,
+    size: "default",
 };
 
-export function useTableConfig(
-  overrideConfig?: Partial<TableConfig>,
-): TableConfig {
-  const config = { ...defaultConfig, ...overrideConfig };
+export function useTableConfig(overrideConfig?: Partial<TableConfig>): TableConfig {
+    const config = { ...defaultConfig, ...overrideConfig };
 
-  return config;
+    return config;
 }

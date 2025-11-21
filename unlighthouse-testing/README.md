@@ -16,24 +16,24 @@ Unlighthouse performs comprehensive Lighthouse audits across all pages of your a
 
 1. **Build and start your Next.js app in production mode:**
 
-   ```bash
-   npm run build
-   npx next start -p 3000
-   ```
+    ```bash
+    npm run build
+    npx next start -p 3000
+    ```
 
-   Keep this terminal running.
+    Keep this terminal running.
 
 2. **Run tests for a specific role** (in a new terminal):
 
-   ```bash
-   # For bash (Git Bash on Windows, Linux, macOS)
-   cd unlighthouse-testing
-   ./run-tests.sh admin
+    ```bash
+    # For bash (Git Bash on Windows, Linux, macOS)
+    cd unlighthouse-testing
+    ./run-tests.sh admin
 
-   # For PowerShell
-   cd unlighthouse-testing
-   .\run-tests.ps1 admin
-   ```
+    # For PowerShell
+    cd unlighthouse-testing
+    .\run-tests.ps1 admin
+    ```
 
 3. **View results** in the browser that opens automatically, or generate static reports.
 

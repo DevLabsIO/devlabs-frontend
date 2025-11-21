@@ -1,38 +1,38 @@
 export interface CriterionScoreData {
-  criterionId: string;
-  score: number;
-  comment: string | null;
+    criterionId: string;
+    score: number;
+    comment: string | null;
 }
 
 export interface ParticipantScoreData {
-  participantId: string;
-  criterionScores: CriterionScoreData[];
+    participantId: string;
+    criterionScores: CriterionScoreData[];
 }
 
 export interface EvaluationDraft {
-  reviewId: string;
-  projectId: string;
-  courseId: string;
-  evaluatorId: string;
-  scores: ParticipantScoreData[];
-  lastUpdated: string;
-  isSubmitted: boolean;
+    reviewId: string;
+    projectId: string;
+    courseId: string;
+    evaluatorId: string;
+    scores: ParticipantScoreData[];
+    lastUpdated: string;
+    isSubmitted: boolean;
 }
 
 export interface SaveDraftRequest {
-  reviewId: string;
-  projectId: string;
-  courseId: string;
-  scores: ParticipantScoreData[];
+    reviewId: string;
+    projectId: string;
+    courseId: string;
+    scores: ParticipantScoreData[];
 }
 
 export interface SaveDraftResponse {
-  success: boolean;
-  savedAt: string;
-  message: string;
+    success: boolean;
+    savedAt: string;
+    message: string;
 }
 
 export interface GetDraftResponse {
-  exists: boolean;
-  draft: EvaluationDraft | null;
+    exists: boolean;
+    draft: EvaluationDraft | null;
 }

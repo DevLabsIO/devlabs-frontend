@@ -5,39 +5,27 @@ import { AppSidebarInset } from "@/components/nav/side-nav-inset";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { GROUPS } from "@/types/auth/roles";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function DevlabsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [defaultOpen, setDefaultOpen] = useState(true);
+export default function DevlabsLayout({ children }: { children: React.ReactNode }) {
+    const getInitialSidebarState = () => {
+        if (typeof document === "undefined") return true;
+        const sidebarState = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("sidebar:state="))
+            ?.split("=")[1];
+        return sidebarState ? sidebarState === "true" : true;
+    };
 
-  useEffect(() => {
-    const sidebarState = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("sidebar:state="))
-      ?.split("=")[1];
+    const [defaultOpen] = useState(getInitialSidebarState);
 
-    if (sidebarState) {
-      setDefaultOpen(sidebarState === "true");
-    }
-  }, []);
-  return (
-    <AuthGuard
-      requiredGroups={[
-        GROUPS.ADMIN,
-        GROUPS.FACULTY,
-        GROUPS.STUDENT,
-        GROUPS.MANAGER,
-      ]}
-    >
-      <SidebarProvider defaultOpen={defaultOpen}>
-        <AppSidebar>
-          <AppSidebarInset>{children}</AppSidebarInset>
-        </AppSidebar>
-      </SidebarProvider>
-    </AuthGuard>
-  );
+    return (
+        <AuthGuard requiredGroups={[GROUPS.ADMIN, GROUPS.FACULTY, GROUPS.STUDENT, GROUPS.MANAGER]}>
+            <SidebarProvider defaultOpen={defaultOpen}>
+                <AppSidebar>
+                    <AppSidebarInset>{children}</AppSidebarInset>
+                </AppSidebar>
+            </SidebarProvider>
+        </AuthGuard>
+    );
 }

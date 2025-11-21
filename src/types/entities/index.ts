@@ -9,11 +9,11 @@ export type { Course, CourseData, StudentCourse } from "./course.types";
 export { CourseType } from "./course.types";
 
 export type {
-  Review,
-  ReviewHistory,
-  Criterion,
-  UpcomingReview,
-  RecentlyPublishedReview,
+    Review,
+    ReviewHistory,
+    Criterion,
+    UpcomingReview,
+    RecentlyPublishedReview,
 } from "./review.types";
 
 export type { Batch } from "./batch.types";

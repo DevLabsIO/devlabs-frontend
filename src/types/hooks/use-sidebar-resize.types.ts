@@ -1,33 +1,33 @@
 export interface UseSidebarResizeProps {
-  direction?: "left" | "right";
+    direction?: "left" | "right";
 
-  currentWidth: string;
+    currentWidth: string;
 
-  onResize: (width: string) => void;
+    onResize: (width: string) => void;
 
-  onToggle?: () => void;
+    onToggle?: () => void;
 
-  isCollapsed?: boolean;
+    isCollapsed?: boolean;
 
-  minResizeWidth?: string;
+    minResizeWidth?: string;
 
-  maxResizeWidth?: string;
+    maxResizeWidth?: string;
 
-  enableAutoCollapse?: boolean;
+    enableAutoCollapse?: boolean;
 
-  autoCollapseThreshold?: number;
+    autoCollapseThreshold?: number;
 
-  expandThreshold?: number;
+    expandThreshold?: number;
 
-  enableDrag?: boolean;
+    enableDrag?: boolean;
 
-  setIsDraggingRail?: (isDragging: boolean) => void;
+    setIsDraggingRail?: (isDragging: boolean) => void;
 
-  widthCookieName?: string;
+    widthCookieName?: string;
 
-  widthCookieMaxAge?: number;
+    widthCookieMaxAge?: number;
 
-  isNested?: boolean;
+    isNested?: boolean;
 
-  enableToggle?: boolean;
+    enableToggle?: boolean;
 }

@@ -1,13 +1,13 @@
 export function preprocessSearch(searchTerm: string): string {
-  if (!searchTerm) return "";
+    if (!searchTerm) return "";
 
-  let processed = searchTerm.trim();
+    let processed = searchTerm.trim();
 
-  processed = processed.replace(/\s+/g, " ");
+    processed = processed.replace(/\s+/g, " ");
 
-  if (processed.length < 1) return "";
+    if (processed.length < 1) return "";
 
-  processed = processed.replace(/[<>]/g, "");
+    processed = processed.replace(/[<>]/g, "");
 
-  return processed;
+    return processed;
 }

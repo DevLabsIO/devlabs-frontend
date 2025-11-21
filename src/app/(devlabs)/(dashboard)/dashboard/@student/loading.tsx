@@ -1,5 +1,5 @@
 import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";
 
 export default function StudentLoading() {
-  return <DashboardSkeleton variant="student" />;
+    return <DashboardSkeleton variant="student" />;
 }

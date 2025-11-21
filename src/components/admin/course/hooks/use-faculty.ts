@@ -3,14 +3,14 @@ import { useSessionContext } from "@/lib/session-context";
 import { courseQueries } from "@/repo/course-queries/course-queries";
 
 export const useFaculty = () => {
-  const { session } = useSessionContext();
+    const { session } = useSessionContext();
 
-  return useQuery({
-    queryKey: ["faculty"],
-    queryFn: () => {
-      return courseQueries.getFaculty();
-    },
-    enabled: !!session,
-    refetchOnWindowFocus: false,
-  });
+    return useQuery({
+        queryKey: ["faculty"],
+        queryFn: () => {
+            return courseQueries.getFaculty();
+        },
+        enabled: !!session,
+        refetchOnWindowFocus: false,
+    });
 };
