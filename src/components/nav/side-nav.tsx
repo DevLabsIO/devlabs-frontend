@@ -222,7 +222,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                         </div>
                     </Link>
                 </SidebarHeader>
-                <SidebarContent className="bg-linear-to-b from-sidebar via-sidebar/50 to-sidebar dark:from-sidebar dark:via-sidebar/80 dark:to-sidebar scrollbar-thin scrollbar-track-transparent scrollbar-thumb-sidebar-accent/40 hover:scrollbar-thumb-sidebar-accent/60 overflow-y-auto">
+                <SidebarContent className="bg-linear-to-b from-sidebar via-sidebar/50 to-sidebar dark:from-sidebar dark:via-sidebar/80 dark:to-sidebar scrollbar-thin scrollbar-track-transparent scrollbar-thumb-sidebar-accent/40 hover:scrollbar-thumb-sidebar-accent/60 overflow-y-auto overflow-x-hidden">
                     {accessibleNavGroups.map((group, index) => (
                         <React.Fragment key={group.label}>
                             <SidebarGroup className="px-2 py-4">
@@ -270,12 +270,12 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
                     ))}
                 </SidebarContent>
 
-                <SidebarFooter className="border-t border-sidebar-border bg-linear-to-r from-sidebar via-sidebar/80 to-sidebar backdrop-blur-sm p-2 overflow-hidden">
-                    <SidebarMenu className="overflow-hidden">
+                <SidebarFooter className="border-t border-sidebar-border bg-linear-to-r from-sidebar via-sidebar/80 to-sidebar backdrop-blur-sm p-2 overflow-hidden w-full">
+                    <SidebarMenu className="overflow-hidden w-full">
                         {mounted && session?.user ? (
                             <SidebarMenuItem>
                                 <div className="group relative w-full overflow-hidden">
-                                    <div className="flex items-center p-2 rounded-lg hover:bg-sidebar-accent/20 transition-all duration-300 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-3">
+                                    <div className="flex items-center p-2 rounded-lg hover:bg-sidebar-accent/20 transition-all duration-300 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-3 w-full max-w-full">
                                         <Avatar className="h-8 w-8 shrink-0 rounded-lg ring-2 ring-primary/20 transition-all duration-200 hover:ring-primary/40 group-data-[collapsible=icon]:h-7 group-data-[collapsible=icon]:w-7">
                                             {session.user.image ? (
                                                 <Image

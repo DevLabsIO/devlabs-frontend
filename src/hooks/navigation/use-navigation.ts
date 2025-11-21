@@ -163,12 +163,40 @@ export function useNavigation(customConfig?: NavigationConfig) {
             }
 
             if (!label) {
-                if (segment.match(/^\[.*\]$/)) {
-                    label = "Details";
+                // Attempt to derive a meaningful label for dynamic segments by
+                // inspecting parent path segments for known resource names.
+                const resourceLabelMap: Record<string, string> = {
+                    courses: "Course",
+                    projects: "Project",
+                    reviews: "Review",
+                    teams: "Team",
+                    user: "User",
+                    batch: "Batch",
+                    semester: "Semester",
+                    department: "Department",
+                    archives: "Archive",
+                    results: "Results",
+                    evaluate: "Evaluation",
+                };
+
+                const findResourceLabel = (p: string) => {
+                    const parts = p.split("/").filter(Boolean).reverse();
+                    for (const part of parts) {
+                        if (resourceLabelMap[part]) return resourceLabelMap[part];
+                    }
+                    return null;
+                };
+
+                const derived = findResourceLabel(parentPath);
+
+                if (segment.match(/^\[.*\]$/) || isUUID(segment)) {
+                    label = derived || "Details";
                     isDynamicSegment = true;
                     linkHref = parentPath || "/dashboard";
-                } else if (isUUID(segment)) {
-                    label = "Details";
+                } else if (derived && parentPath.includes("[")) {
+                    // If parent contains dynamic segment info but the current
+                    // segment is a named route piece, prefer the derived label.
+                    label = derived;
                     isDynamicSegment = true;
                     linkHref = parentPath || "/dashboard";
                 } else {
