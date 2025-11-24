@@ -118,7 +118,7 @@ export default function SemesterPage() {
     };
 
     return (
-        <div className="container mx-auto py-10">
+        <div className="container mx-auto pb-3">
             <SemesterHeader
                 isCreateDialogOpen={isCreateDialogOpen}
                 setIsCreateDialogOpen={setIsCreateDialogOpen}
@@ -149,6 +149,7 @@ export default function SemesterPage() {
                 getColumns={() => getColumns(handleAction)}
                 fetchDataFn={useSemestersForDataTable}
                 idField="id"
+                defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                 onRowClick={handleRowClick}
                 exportConfig={{
                     entityName: "semesters",

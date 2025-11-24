@@ -8,8 +8,8 @@ const useGetSemesters = (
     page: number = 0,
     size: number = 10,
     columnFilters?: Record<string, string[]>,
-    sortBy?: string,
-    sortOrder?: string
+    sortBy: string = "",
+    sortOrder: string = ""
 ) => {
     return useQuery({
         queryKey: ["semesters", searchQuery, page, size, columnFilters, sortBy, sortOrder],
@@ -26,38 +26,31 @@ const useGetSemesters = (
                 params.query = searchQuery;
             }
 
-            if (sortBy) {
-                const sortByMap: Record<string, string> = {
-                    created_at: "createdAt",
-                    updated_at: "updatedAt",
-                    is_active: "isActive",
-                };
-                params.sort_by = sortByMap[sortBy] || sortBy;
+            if (isActiveFilter !== undefined) {
+                params.isActive = isActiveFilter;
             }
-            if (sortOrder) {
-                params.sort_order = sortOrder;
-            }
+
+            const sortByMap: Record<string, string> = {
+                created_at: "createdAt",
+                updated_at: "updatedAt",
+                is_active: "isActive",
+            };
+            const finalSortBy = sortBy ? sortByMap[sortBy] || sortBy : "createdAt";
+            const finalSortOrder = sortOrder || "desc";
+            params.sort_by = finalSortBy;
+            params.sort_order = finalSortOrder;
 
             const response = await axiosInstance.get(endpoint, { params });
             const data = response.data;
 
             if (Array.isArray(data)) {
-                let filteredData = data;
-
-                if (isActiveFilter !== undefined) {
-                    const isActiveValue = isActiveFilter === "true";
-                    filteredData = filteredData.filter(
-                        (semester: Semester) => semester.isActive === isActiveValue
-                    );
-                }
-
                 return {
-                    data: filteredData,
+                    data: data,
                     pagination: {
                         total_pages: 1,
                         current_page: 0,
-                        per_page: filteredData.length,
-                        total_count: filteredData.length,
+                        per_page: data.length,
+                        total_count: data.length,
                     },
                 };
             }

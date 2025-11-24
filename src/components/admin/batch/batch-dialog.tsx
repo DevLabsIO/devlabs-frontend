@@ -12,6 +12,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { InputNumber } from "@/components/ui/input-number";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
@@ -31,7 +32,7 @@ import { Plus } from "lucide-react";
 
 interface BatchFormData {
     name: string;
-    graduationYear: number;
+    joinYear: number;
     section: string;
     isActive: boolean;
     departmentId: string;
@@ -60,14 +61,14 @@ export function BatchDialog({
         batch && mode === "edit"
             ? {
                   name: batch.name ?? "",
-                  graduationYear: batch.graduationYear ?? new Date().getFullYear(),
+                  joinYear: batch.joinYear ?? new Date().getFullYear(),
                   section: batch.section ?? "",
                   isActive: batch.isActive ?? true,
                   departmentId: batch.department?.id ?? "",
               }
             : {
                   name: "",
-                  graduationYear: new Date().getFullYear(),
+                  joinYear: new Date().getFullYear(),
                   section: "",
                   isActive: true,
                   departmentId: "",
@@ -90,7 +91,7 @@ export function BatchDialog({
     const resetForm = () => {
         setFormData({
             name: "",
-            graduationYear: new Date().getFullYear(),
+            joinYear: new Date().getFullYear(),
             section: "",
             isActive: true,
             departmentId: "",
@@ -98,15 +99,10 @@ export function BatchDialog({
     };
 
     const computedBatchName = (() => {
-        if (
-            mode === "create" &&
-            formData.graduationYear &&
-            formData.departmentId &&
-            formData.section
-        ) {
+        if (mode === "create" && formData.joinYear && formData.departmentId && formData.section) {
             const department = departments.find((d) => d.id === formData.departmentId);
             if (department) {
-                return `${formData.graduationYear}-${department.name}-${formData.section}`;
+                return `${formData.joinYear}${department.name}${formData.section}`;
             }
         }
         return formData.name;
@@ -178,21 +174,41 @@ export function BatchDialog({
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Batch Name Preview (Auto-generated) */}
+                    {mode === "create" && (
+                        <div className="space-y-2">
+                            <Label className="text-sm font-medium">
+                                Batch Name (Auto-generated)
+                            </Label>
+                            <div className="px-3 py-2 border rounded-md bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                                {computedBatchName || "Enter join year, department, and section"}
+                            </div>
+                            <p className="text-xs text-gray-500">
+                                Generated from: Join Year + Department + Section
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Join Year */}
                     <div className="space-y-2">
-                        <Label htmlFor="graduationYear">Graduation Year</Label>
-                        <Input
-                            id="graduationYear"
-                            type="number"
-                            value={formData.graduationYear}
-                            onChange={(e) =>
+                        <Label htmlFor="joinYear">Join Year</Label>
+                        <InputNumber
+                            id="joinYear"
+                            value={formData.joinYear}
+                            onChange={(value) =>
                                 setFormData({
                                     ...formData,
-                                    graduationYear: parseInt(e.target.value),
+                                    joinYear: value || new Date().getFullYear(),
                                 })
                             }
+                            min={new Date().getFullYear() - 10}
+                            max={new Date().getFullYear() + 5}
+                            placeholder="Enter join year"
                             required
                         />
                     </div>
+
+                    {/* Department */}
                     <div className="space-y-2">
                         <Label htmlFor="departmentId">Department</Label>
                         <Select
@@ -221,25 +237,37 @@ export function BatchDialog({
                             </SelectContent>
                         </Select>
                     </div>
+
+                    {/* Section */}
                     <div className="space-y-2">
                         <Label htmlFor="section">Section</Label>
                         <Input
                             id="section"
                             value={formData.section}
                             onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+                            placeholder="Enter section (e.g., A, B, C)"
                             required
                         />
                     </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="name">Batch Name</Label>
-                        <Input
-                            id="name"
-                            value={computedBatchName}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            required
-                            disabled={mode === "create"}
-                        />
-                    </div>
+
+                    {/* Batch Name (for edit mode only) */}
+                    {mode === "edit" && (
+                        <div className="space-y-2">
+                            <Label htmlFor="name">Batch Name</Label>
+                            <Input
+                                id="name"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                required
+                                disabled
+                            />
+                            <p className="text-xs text-gray-500">
+                                Batch name is auto-generated and cannot be edited directly
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Active Status */}
                     <div className="flex items-center space-x-2">
                         <Switch
                             id="isActive"

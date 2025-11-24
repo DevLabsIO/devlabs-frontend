@@ -5,7 +5,7 @@ import { Department } from "./department.types";
 export interface Batch {
     id: string;
     name: string;
-    graduationYear: number;
+    joinYear: number;
     section: string;
     isActive: boolean;
     students?: User[];

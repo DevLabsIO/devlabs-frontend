@@ -11,6 +11,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { InputNumber } from "@/components/ui/input-number";
 import { Switch } from "@/components/ui/switch";
 import { Semester } from "@/types/entities";
 
@@ -65,7 +66,10 @@ export function SemesterForm({ semester, onSubmit }: SemesterFormProps) {
                         <FormItem>
                             <FormLabel>Semester Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter semester name" {...field} />
+                                <Input
+                                    placeholder="Enter semester name (e.g., Odd 2024 or Even 2025)"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -79,12 +83,14 @@ export function SemesterForm({ semester, onSubmit }: SemesterFormProps) {
                         <FormItem>
                             <FormLabel>Year</FormLabel>
                             <FormControl>
-                                <Input
-                                    type="number"
+                                <InputNumber
                                     min={2000}
+                                    max={new Date().getFullYear() + 10}
                                     placeholder="Enter year"
-                                    {...field}
-                                    onChange={(e) => field.onChange(Number(e.target.value))}
+                                    value={field.value}
+                                    onChange={(value) =>
+                                        field.onChange(value || new Date().getFullYear())
+                                    }
                                 />
                             </FormControl>
                             <FormMessage />

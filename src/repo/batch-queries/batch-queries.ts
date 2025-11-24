@@ -72,6 +72,14 @@ const batchQueries = {
         const response = await axiosInstance.get("/api/batch/active");
         return response.data;
     },
+
+    getAvailableStudents: async (batchId: string, query?: string) => {
+        const params = query ? { query } : {};
+        const response = await axiosInstance.get(`/api/batch/${batchId}/available-students`, {
+            params,
+        });
+        return response.data;
+    },
 };
 
 export default batchQueries;

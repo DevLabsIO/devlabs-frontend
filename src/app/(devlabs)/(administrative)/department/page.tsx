@@ -67,6 +67,7 @@ export default function DepartmentsPage() {
                         enableDateFilter: false,
                         enableColumnFilters: false,
                     }}
+                    defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                     exportConfig={{
                         entityName: "departments",
                         columnMapping: {

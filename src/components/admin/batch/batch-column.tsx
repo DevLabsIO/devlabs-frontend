@@ -56,19 +56,15 @@ export const getColumns = (
             size: 200,
         },
         {
-            accessorKey: "graduationYear",
+            accessorKey: "joinYear",
             header: ({ column }) => (
-                <DataTableColumnHeader
-                    column={column}
-                    title="Graduation Year"
-                    className="text-center"
-                />
+                <DataTableColumnHeader column={column} title="Join Year" className="text-center" />
             ),
             cell: ({ row }) => {
-                const graduationYear = row.getValue("graduationYear") as number;
-                return <div className="text-center font-medium">{graduationYear}</div>;
+                const joinYear = row.getValue("joinYear") as number;
+                return <div className="text-center font-medium">{joinYear}</div>;
             },
-            meta: { label: "Graduation Year" },
+            meta: { label: "Join Year" },
             size: 100,
         },
         {

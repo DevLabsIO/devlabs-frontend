@@ -150,6 +150,7 @@ export default function ArchivesPage() {
                             ],
                         }}
                         getColumns={columnsWrapper}
+                        defaultSort={{ sortBy: "updated_at", sortOrder: "desc" }}
                         fetchDataFn={useArchivesForDataTable}
                         idField="id"
                         onRowClick={handleView}
@@ -159,6 +160,7 @@ export default function ArchivesPage() {
                         config={{
                             enableUrlState: false,
                         }}
+                        defaultSort={{ sortBy: "updated_at", sortOrder: "desc" }}
                         exportConfig={{
                             entityName: "archived-projects",
                             columnMapping: {

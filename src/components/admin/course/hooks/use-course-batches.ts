@@ -16,14 +16,18 @@ export const useCourseBatches = (
     courseId: string,
     searchQuery?: string,
     page: number = 0,
-    size: number = 10
+    size: number = 10,
+    sortBy: string = "createdAt",
+    sortOrder: string = "desc"
 ) => {
     return useQuery<BatchesDataTableResponse, Error>({
-        queryKey: ["courseBatches", courseId, searchQuery, page, size],
+        queryKey: ["courseBatches", courseId, searchQuery, page, size, sortBy, sortOrder],
         queryFn: async () => {
             const params: { [key: string]: string | number } = {
                 page: page,
                 size: size,
+                sort_by: sortBy,
+                sort_order: sortOrder,
             };
 
             let url: string;

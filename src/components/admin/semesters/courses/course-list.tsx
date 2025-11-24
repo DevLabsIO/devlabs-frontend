@@ -5,14 +5,15 @@ import { useRouter } from "next/navigation";
 import { Course } from "@/types/entities";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 
 interface CourseListProps {
     courses: Course[];
     onDelete: (course: Course) => void;
+    onEdit: (course: Course) => void;
 }
 
-const CourseList: React.FC<CourseListProps> = ({ courses, onDelete }) => {
+const CourseList: React.FC<CourseListProps> = ({ courses, onDelete, onEdit }) => {
     const router = useRouter();
 
     if (!courses || courses.length === 0) {
@@ -37,16 +38,28 @@ const CourseList: React.FC<CourseListProps> = ({ courses, onDelete }) => {
                                 <CardTitle>{course.name}</CardTitle>
                                 <CardDescription>{course.code}</CardDescription>
                             </div>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDelete(course);
-                                }}
-                            >
-                                <Trash2 className="h-5 w-5 text-destructive" />
-                            </Button>
+                            <div className="flex gap-1">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEdit(course);
+                                    }}
+                                >
+                                    <Pencil className="h-5 w-5" />
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDelete(course);
+                                    }}
+                                >
+                                    <Trash2 className="h-5 w-5 text-destructive" />
+                                </Button>
+                            </div>
                         </div>
                     </CardHeader>
                     <CardContent>

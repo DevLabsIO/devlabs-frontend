@@ -8,66 +8,63 @@ export const useUsers = (
     page: number = 0,
     size: number = 10,
     columnFilters?: Record<string, string[]>,
-    sortBy?: string,
-    sortOrder?: string
+    sortBy: string = "createdAt",
+    sortOrder: string = "desc"
 ) => {
-    const role = columnFilters?.role?.[0];
+    const roles = columnFilters?.role || [];
+    const isActiveFilter = columnFilters?.isActive?.[0];
     const query = useQuery({
-        queryKey: ["users", role, searchQuery, page, size, columnFilters, sortBy, sortOrder],
+        queryKey: [
+            "users",
+            roles,
+            isActiveFilter,
+            searchQuery,
+            page,
+            size,
+            columnFilters,
+            sortBy,
+            sortOrder,
+        ],
         queryFn: async (): Promise<DataTableResponse<User>> => {
             let endpoint = "/api/user";
-            const params: { [key: string]: string } = {};
-            if (role && role !== "ALL") {
-                params.role = role;
+            const params: { [key: string]: string | string[] } = {};
+
+            if (roles.length > 0 && !roles.includes("ALL")) {
+                params.role = roles;
+            }
+
+            if (isActiveFilter && isActiveFilter !== "ALL") {
+                params.isActive = isActiveFilter;
             }
 
             if (searchQuery) {
-                if (role && role !== "ALL") {
-                } else {
-                    endpoint = `/api/user/search`;
-                    params.query = searchQuery;
-                    params.page = page.toString();
-                    params.size = size.toString();
-                }
-            } else if (!role || role === "ALL") {
-                params.page = page.toString();
-                params.size = size.toString();
+                endpoint = `/api/user/search`;
+                params.query = searchQuery;
             }
 
-            if (sortBy) {
-                const sortByMap: Record<string, string> = {
-                    created_at: "createdAt",
-                    updated_at: "updatedAt",
-                    phone_number: "phoneNumber",
-                    is_active: "isActive",
-                };
-                params.sort_by = sortByMap[sortBy] || sortBy;
-            }
-            if (sortOrder) {
-                params.sort_order = sortOrder;
-            }
+            params.page = page.toString();
+            params.size = size.toString();
+
+            const sortByMap: Record<string, string> = {
+                created_at: "createdAt",
+                updated_at: "updatedAt",
+                phone_number: "phoneNumber",
+                is_active: "isActive",
+            };
+            params.sort_by = sortByMap[sortBy] || sortBy;
+            params.sort_order = sortOrder;
 
             const response = await axiosInstance.get(endpoint, { params });
             const backendResponse = response.data;
 
             if (Array.isArray(backendResponse)) {
-                let filteredData = backendResponse;
-
-                if (searchQuery && role && role !== "ALL") {
-                    filteredData = backendResponse.filter(
-                        (user: User) =>
-                            user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            user.email?.toLowerCase().includes(searchQuery.toLowerCase())
-                    );
-                }
-
                 return {
-                    data: filteredData,
+                    data: backendResponse,
                     pagination: {
                         total_pages: 1,
                         current_page: 0,
-                        per_page: filteredData.length,
-                        total_count: filteredData.length,
+                        per_page: backendResponse.length,
+                        total_count: backendResponse.length,
                     },
                 };
             }

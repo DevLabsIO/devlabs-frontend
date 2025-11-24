@@ -26,13 +26,6 @@ interface ProjectFormProps {
     teamId: string;
 }
 
-/**
- * ProjectForm component for creating/editing projects.
- *
- * IMPORTANT: Parent component should provide a `key` prop when rendering this component
- * to ensure proper state reset when switching between create/edit modes:
- * <ProjectForm key={project?.id || "new"} ... />
- */
 export function ProjectForm({
     userId,
     isOpen,
@@ -61,7 +54,7 @@ export function ProjectForm({
     const courseOptions: OptionType[] =
         courses?.map((course: Course) => ({
             value: course.id,
-            label: course.name,
+            label: `${course.name} (${course.code})`,
         })) || [];
 
     const handleSubmit = (e: React.FormEvent) => {

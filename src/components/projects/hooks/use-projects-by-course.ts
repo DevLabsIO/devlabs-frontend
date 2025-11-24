@@ -9,8 +9,8 @@ export const useProjectsByCourse = (
     searchQuery?: string,
     page: number = 0,
     size: number = 10,
-    sortBy?: string,
-    sortOrder?: "asc" | "desc"
+    sortBy: string = "createdAt",
+    sortOrder: "asc" | "desc" = "desc"
 ) => {
     const { user } = useSessionContext();
 
@@ -25,12 +25,14 @@ export const useProjectsByCourse = (
             params.page = page.toString();
             params.size = size.toString();
 
-            if (sortBy) {
-                params.sortBy = sortBy;
-            }
-            if (sortOrder) {
-                params.sortOrder = sortOrder;
-            }
+            const sortByMap: Record<string, string> = {
+                title: "title",
+                status: "status",
+                created_at: "createdAt",
+                updated_at: "updatedAt",
+            };
+            params.sortBy = sortByMap[sortBy] || sortBy;
+            params.sortOrder = sortOrder;
 
             if (searchQuery && searchQuery.length > 0) {
                 endpoint = `/projects/course/${courseId}/search/${user.id}`;

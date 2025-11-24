@@ -36,8 +36,8 @@ export const getBatchColumns = (onDelete: (batch: Batch) => void): ColumnDef<Bat
         header: "Batch Name",
     },
     {
-        accessorKey: "graduationYear",
-        header: "Graduation Year",
+        accessorKey: "joinYear",
+        header: "Join Year",
     },
     {
         accessorKey: "section",

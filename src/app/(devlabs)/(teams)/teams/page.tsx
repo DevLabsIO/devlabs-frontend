@@ -196,6 +196,7 @@ export default function TeamsPage() {
                             enableExport: true,
                             enableDateFilter: false,
                         }}
+                        defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                         exportConfig={{
                             entityName: "teams",
                             columnMapping: {

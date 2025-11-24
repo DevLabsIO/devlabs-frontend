@@ -237,7 +237,13 @@ export function KeycloakSyncDialog({ isOpen, onClose, onSyncComplete }: Keycloak
                                         {syncStats.unsyncedUsers.map((user) => (
                                             <div
                                                 key={user.id}
-                                                className="group flex items-center gap-4 p-4 rounded-xl border-2 border-transparent hover:border-primary/20 bg-muted/30 hover:bg-muted/50 transition-all duration-200"
+                                                className="group flex items-center gap-4 p-4 rounded-xl border-2 border-transparent hover:border-primary/20 bg-muted/30 hover:bg-muted/50 transition-all duration-200 cursor-pointer"
+                                                onClick={() =>
+                                                    handleSelectUser(
+                                                        user.id,
+                                                        !selectedUserIds.includes(user.id)
+                                                    )
+                                                }
                                             >
                                                 <Checkbox
                                                     id={user.id}
@@ -249,6 +255,7 @@ export function KeycloakSyncDialog({ isOpen, onClose, onSyncComplete }: Keycloak
                                                         )
                                                     }
                                                     className="h-5 w-5"
+                                                    onClick={(e) => e.stopPropagation()}
                                                 />
                                                 <div className="flex-1 min-w-0 grid grid-cols-1 md:grid-cols-3 gap-3">
                                                     <div className="space-y-1">

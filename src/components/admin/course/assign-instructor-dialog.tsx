@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useFaculty } from "./hooks/use-faculty";
 import { User } from "@/types/entities";
 
@@ -27,7 +28,7 @@ export function AssignInstructorDialog({
     isAssigning,
 }: AssignInstructorDialogProps) {
     const [selectedInstructors, setSelectedInstructors] = useState<string[]>([]);
-    const { data: instructors, isLoading } = useFaculty();
+    const { data: instructors, isLoading } = useFaculty(isOpen);
 
     const instructorOptions = useMemo(() => {
         return (instructors || []).map((instructor: User) => ({
@@ -52,7 +53,14 @@ export function AssignInstructorDialog({
                 </DialogHeader>
                 <div className="py-4">
                     {isLoading ? (
-                        <p>Loading instructors...</p>
+                        <div className="space-y-3">
+                            <Skeleton className="h-10 w-full" />
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                <Skeleton className="h-6 w-24" />
+                                <Skeleton className="h-6 w-32" />
+                                <Skeleton className="h-6 w-28" />
+                            </div>
+                        </div>
                     ) : (
                         <MultiSelect
                             options={instructorOptions}
@@ -63,7 +71,7 @@ export function AssignInstructorDialog({
                     )}
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={onClose}>
+                    <Button variant="outline" onClick={onClose} disabled={isAssigning}>
                         Cancel
                     </Button>
                     <Button

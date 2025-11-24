@@ -48,6 +48,14 @@ export default function UsersPage() {
                 { label: "Manager", value: "MANAGER" },
             ],
         },
+        {
+            columnId: "isActive",
+            title: "Status",
+            options: [
+                { label: "Active", value: "true" },
+                { label: "Inactive", value: "false" },
+            ],
+        },
     ];
 
     const deleteMutation = useMutation<void, Error, (string | number)[]>({
@@ -100,8 +108,8 @@ export default function UsersPage() {
     };
 
     return (
-        <div className="container mx-auto py-10">
-            <div className="flex justify-between items-center pb-3">
+        <div>
+            <div className="flex justify-between items-center pb-3 mb-4">
                 <div>
                     <h1 className="text-2xl font-bold">Users Management</h1>
                     <p className="text-sm text-muted-foreground">
@@ -141,6 +149,7 @@ export default function UsersPage() {
                     enableAssign: true,
                     enableDelete: false,
                 }}
+                defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                 exportConfig={{
                     entityName: "users",
                     columnMapping: {

@@ -27,6 +27,7 @@ export default function SemesterCoursesPage() {
     } = useSemesterCourses(semesterId);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [courseToDelete, setCourseToDelete] = useState<Course | null>(null);
+    const [courseToEdit, setCourseToEdit] = useState<Course | null>(null);
     const { success, error } = useToast();
 
     const queryClient = useQueryClient();
@@ -42,14 +43,17 @@ export default function SemesterCoursesPage() {
         enabled: !!semesterId,
     });
 
-    const handleMutationSuccess = (action: "created" | "deleted") => {
+    const handleMutationSuccess = (action: "created" | "deleted" | "updated") => {
         success(`Course ${action} successfully`);
         queryClient.invalidateQueries({ queryKey: ["courses", semesterId] });
-        if (action === "created") setIsFormOpen(false);
+        if (action === "created" || action === "updated") {
+            setIsFormOpen(false);
+            setCourseToEdit(null);
+        }
         if (action === "deleted") setCourseToDelete(null);
     };
 
-    const handleMutationError = (err: Error, action: "create" | "delete") => {
+    const handleMutationError = (err: Error, action: "create" | "delete" | "update") => {
         error(`Failed to ${action} course: ${err.message}`);
     };
 
@@ -70,6 +74,14 @@ export default function SemesterCoursesPage() {
         onError: (err: Error) => handleMutationError(err, "create"),
     });
 
+    const updateMutation = useMutation({
+        mutationFn: (course: Course) => {
+            return semesterQueries.updateCourseForSemester(semesterId, course);
+        },
+        onSuccess: () => handleMutationSuccess("updated"),
+        onError: (err: Error) => handleMutationError(err, "update"),
+    });
+
     const deleteMutation = useMutation({
         mutationFn: (courseId: string) => {
             return semesterQueries.deleteCourseFromSemester(semesterId, courseId);
@@ -79,6 +91,12 @@ export default function SemesterCoursesPage() {
     });
 
     const handleCreate = () => {
+        setCourseToEdit(null);
+        setIsFormOpen(true);
+    };
+
+    const handleEdit = (course: Course) => {
+        setCourseToEdit(course);
         setIsFormOpen(true);
     };
 
@@ -87,7 +105,11 @@ export default function SemesterCoursesPage() {
     };
 
     const handleSubmit = (data: unknown) => {
-        createMutation.mutate(data as Course);
+        if (courseToEdit) {
+            updateMutation.mutate({ ...courseToEdit, ...(data as Partial<Course>) });
+        } else {
+            createMutation.mutate(data as Course);
+        }
     };
 
     if (isLoadingCourses || isLoadingSemester) {
@@ -130,13 +152,17 @@ export default function SemesterCoursesPage() {
                     Add Course
                 </Button>
             </div>
-            <CourseList courses={courses || []} onDelete={handleDelete} />
+            <CourseList courses={courses || []} onDelete={handleDelete} onEdit={handleEdit} />
             {isFormOpen && (
                 <CourseDialog
                     isOpen={isFormOpen}
-                    onClose={() => setIsFormOpen(false)}
+                    onClose={() => {
+                        setIsFormOpen(false);
+                        setCourseToEdit(null);
+                    }}
                     onSubmit={handleSubmit}
-                    isLoading={createMutation.isPending}
+                    isLoading={createMutation.isPending || updateMutation.isPending}
+                    course={courseToEdit}
                 />
             )}
             <DeleteDialog

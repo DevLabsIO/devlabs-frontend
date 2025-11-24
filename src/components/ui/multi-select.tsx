@@ -26,6 +26,9 @@ interface MultiSelectProps {
     onChange: (selected: string[]) => void;
     className?: string;
     placeholder?: string;
+    emptyMessage?: string;
+    isLoading?: boolean;
+    onSearchChange?: (value: string) => void;
 }
 
 function MultiSelect({
@@ -34,16 +37,21 @@ function MultiSelect({
     onChange,
     className,
     placeholder = "Select...",
+    emptyMessage = "No results found.",
+    isLoading = false,
+    onSearchChange,
 }: MultiSelectProps) {
     const [inputValue, setInputValue] = React.useState("");
     const parentRef = React.useRef<HTMLDivElement | null>(null);
 
     const filteredOptions = React.useMemo(
         () =>
-            options.filter((option) =>
-                option.label.toLowerCase().includes(inputValue.toLowerCase())
-            ),
-        [options, inputValue]
+            onSearchChange
+                ? options
+                : options.filter((option) =>
+                      option.label.toLowerCase().includes(inputValue.toLowerCase())
+                  ),
+        [options, inputValue, onSearchChange]
     );
 
     // eslint-disable-next-line react-hooks/incompatible-library
@@ -103,16 +111,23 @@ function MultiSelect({
                     ))}
                 </div>
             )}
-            <Command>
+            <Command shouldFilter={!onSearchChange}>
                 <CommandInput
                     placeholder={placeholder}
                     value={inputValue}
-                    onValueChange={setInputValue}
+                    onValueChange={(value) => {
+                        setInputValue(value);
+                        onSearchChange?.(value);
+                    }}
                 />
                 <CommandList>
                     <ScrollArea ref={parentRef} className="h-40">
-                        {filteredOptions.length === 0 ? (
-                            <CommandEmpty>No results found.</CommandEmpty>
+                        {isLoading ? (
+                            <div className="flex justify-center items-center p-4">
+                                <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
+                            </div>
+                        ) : filteredOptions.length === 0 ? (
+                            <CommandEmpty>{emptyMessage}</CommandEmpty>
                         ) : (
                             <CommandGroup>
                                 <div
@@ -127,6 +142,7 @@ function MultiSelect({
                                         return (
                                             <CommandItem
                                                 key={option.value}
+                                                value={option.value}
                                                 ref={(el) => {
                                                     if (el) rowVirtualizer.measureElement(el);
                                                 }}

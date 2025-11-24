@@ -8,8 +8,8 @@ export const useMyCourses = (
     searchQuery?: string,
     page: number = 0,
     size: number = 10,
-    sortBy: string = "name",
-    sortOrder: "asc" | "desc" = "asc"
+    sortBy: string = "createdAt",
+    sortOrder: "asc" | "desc" = "desc"
 ) => {
     const { user } = useSessionContext();
 

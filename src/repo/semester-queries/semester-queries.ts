@@ -7,7 +7,9 @@ const semesterQueries = {
         searchQuery?: string,
         page: number = 0,
         size: number = 10,
-        columnFilters?: Record<string, string[]>
+        columnFilters?: Record<string, string[]>,
+        sortBy: string = "createdAt",
+        sortOrder: string = "desc"
     ): Promise<DataTableResponse<Semester>> => {
         const isActiveFilter = columnFilters?.isActive?.[0];
         let endpoint = "/api/semester";
@@ -22,6 +24,9 @@ const semesterQueries = {
             params.page = page.toString();
             params.size = size.toString();
         }
+
+        params.sort_by = sortBy || "createdAt";
+        params.sort_order = sortOrder || "desc";
 
         const response = await axiosInstance.get(endpoint, { params });
         const data = response.data;
@@ -103,6 +108,15 @@ const semesterQueries = {
         const response = await axiosInstance.post(`/api/semester/${semesterId}/courses`, course);
         return response.data;
     },
+
+    updateCourseForSemester: async (semesterId: string, course: Course) => {
+        const response = await axiosInstance.put(
+            `/api/semester/${semesterId}/courses/${course.id}`,
+            course
+        );
+        return response.data;
+    },
+
     deleteCourseFromSemester: async (semesterId: string, courseId: string) => {
         const response = await axiosInstance.delete(
             `/api/semester/${semesterId}/courses/${courseId}`

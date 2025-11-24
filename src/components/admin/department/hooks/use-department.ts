@@ -10,8 +10,8 @@ export const useDepartments = (
     page: number = 0,
     size: number = 10,
     columnFilters?: Record<string, string[]>,
-    sortBy?: string,
-    sortOrder?: "asc" | "desc"
+    sortBy: string = "createdAt",
+    sortOrder: "asc" | "desc" = "desc"
 ) => {
     const query = useQuery({
         queryKey: ["departments", searchQuery, page, size, columnFilters, sortBy, sortOrder],
@@ -22,13 +22,13 @@ export const useDepartments = (
                 size: size,
             };
 
-            if (sortBy) {
-                params.sort_by = sortBy;
-            }
-
-            if (sortOrder) {
-                params.sort_order = sortOrder;
-            }
+            const sortByMap: Record<string, string> = {
+                name: "name",
+                created_at: "createdAt",
+                updated_at: "updatedAt",
+            };
+            params.sort_by = sortByMap[sortBy] || sortBy;
+            params.sort_order = sortOrder;
 
             if (searchQuery) {
                 params.query = searchQuery;

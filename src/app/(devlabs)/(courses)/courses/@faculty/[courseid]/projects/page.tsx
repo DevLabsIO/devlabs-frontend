@@ -141,6 +141,7 @@ export default function CourseProjects() {
                                 "updatedAt",
                             ],
                         }}
+                        defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                         getColumns={columnsWrapper}
                         fetchDataFn={useProjectsForDataTable}
                         idField="id"
@@ -151,6 +152,7 @@ export default function CourseProjects() {
                         config={{
                             enableUrlState: false,
                         }}
+                        defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                         exportConfig={{
                             entityName: "projects",
                             columnMapping: {

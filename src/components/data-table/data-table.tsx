@@ -99,6 +99,11 @@ interface DataTableProps<TData, TValue> {
 
     pageSizeOptions?: number[];
 
+    defaultSort?: {
+        sortBy: string;
+        sortOrder: "asc" | "desc";
+    };
+
     renderToolbarContent?: (props: {
         selectedRows: TData[];
         allSelectedIds: (string | number)[];
@@ -128,6 +133,7 @@ export function DataTable<TData, TValue>({
     exportConfig,
     idField = "id" as keyof TData,
     pageSizeOptions,
+    defaultSort,
     renderToolbarContent,
     columnFilterOptions,
     onRowClick,
@@ -147,8 +153,11 @@ export function DataTable<TData, TValue>({
         from_date: string;
         to_date: string;
     }>("dateRange", { from_date: "", to_date: "" });
-    const [sortBy, setSortBy] = useConditionalUrlState("sortBy", "");
-    const [sortOrder, setSortOrder] = useConditionalUrlState<"asc" | "desc">("sortOrder", "asc");
+    const [sortBy, setSortBy] = useConditionalUrlState("sortBy", defaultSort?.sortBy || "");
+    const [sortOrder, setSortOrder] = useConditionalUrlState<"asc" | "desc">(
+        "sortOrder",
+        defaultSort?.sortOrder || "asc"
+    );
     const [columnVisibility, setColumnVisibility] = useConditionalUrlState<Record<string, boolean>>(
         "columnVisibility",
         {}

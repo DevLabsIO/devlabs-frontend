@@ -1,8 +1,8 @@
 "use client";
 "use no memo";
 
-import React, { useState, useRef } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
@@ -27,22 +27,10 @@ import {
 import { Team } from "@/types/entities";
 import { User } from "@/types/entities";
 import { CreateTeamRequest, UpdateTeamRequest } from "@/components/teams/types/types";
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command";
-import { Badge } from "@/components/ui/badge";
-import { X, Loader2 } from "lucide-react";
-
+import { MultiSelect, OptionType } from "@/components/ui/multi-select";
 import { useDebounce } from "@/hooks/use-debounce";
 import userQueries from "@/repo/user-queries/user-queries";
 import { useQuery } from "@tanstack/react-query";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { cn } from "@/lib/utils";
 import { useSessionContext } from "@/lib/session-context";
 
 const formSchema = z.object({
@@ -93,33 +81,12 @@ export function TeamForm({ isOpen, onClose, onSubmit, team, isLoading }: TeamFor
         gcTime: 5 * 60 * 1000,
     });
 
-    const memberIds = useWatch({ control: form.control, name: "memberIds" });
-    const [selectedMembers, setSelectedMembers] = useState<User[]>(
-        team?.members.map(
-            (m) =>
-                ({
-                    id: m.id,
-                    name: m.name,
-                    email: m.email,
-                    role: m.role,
-                    image: m.profileImage,
-                    profileId: m.id,
-                    phoneNumber: "",
-                    isActive: true,
-                }) as User
-        ) || []
-    );
+    const students = (searchedStudents || []) as unknown as User[];
 
-    const students = (debouncedSearchQuery ? searchedStudents : []) as unknown as User[];
-    const listRef = useRef<HTMLDivElement>(null);
-
-    // eslint-disable-next-line react-hooks/incompatible-library
-    const rowVirtualizer = useVirtualizer({
-        count: students?.length ?? 0,
-        getScrollElement: () => listRef.current,
-        estimateSize: () => 35,
-        overscan: 5,
-    });
+    const studentOptions: OptionType[] = students.map((student) => ({
+        label: `${student.name} (${student.email})`,
+        value: student.id,
+    }));
 
     const handleSubmit = (values: TeamFormValues) => {
         if (team) {
@@ -131,19 +98,6 @@ export function TeamForm({ isOpen, onClose, onSubmit, team, isLoading }: TeamFor
                 return;
             }
             onSubmit({ ...values, creatorId: userId });
-        }
-    };
-
-    const handleMemberSelect = (student: User) => {
-        const newIds = memberIds.includes(student.id)
-            ? memberIds.filter((id) => id !== student.id)
-            : [...memberIds, student.id];
-        form.setValue("memberIds", newIds, { shouldValidate: true });
-
-        if (newIds.includes(student.id)) {
-            setSelectedMembers((prev) => [...prev, student]);
-        } else {
-            setSelectedMembers((prev) => prev.filter((m) => m.id !== student.id));
         }
     };
 
@@ -184,96 +138,28 @@ export function TeamForm({ isOpen, onClose, onSubmit, team, isLoading }: TeamFor
                         <FormField
                             control={form.control}
                             name="memberIds"
-                            render={() => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Members</FormLabel>
-                                    <Command className="rounded-lg border shadow-md">
-                                        <CommandInput
+                                    <FormControl>
+                                        <MultiSelect
+                                            options={studentOptions}
+                                            selected={field.value}
+                                            onChange={(selected) => {
+                                                field.onChange(selected);
+                                            }}
+                                            onSearchChange={setSearchQuery}
                                             placeholder="Search for students..."
-                                            value={searchQuery}
-                                            onValueChange={setSearchQuery}
+                                            emptyMessage={
+                                                debouncedSearchQuery
+                                                    ? "No students found."
+                                                    : "Start typing to search for students."
+                                            }
+                                            isLoading={
+                                                isLoadingSearchedStudents && !!debouncedSearchQuery
+                                            }
                                         />
-                                        <div className="p-2 flex flex-wrap gap-1">
-                                            {selectedMembers.map((member) => (
-                                                <Badge key={member.id} variant="secondary">
-                                                    {member.name}
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleMemberSelect(member)}
-                                                        className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                                                    >
-                                                        <X className="h-3 w-3" />
-                                                    </button>
-                                                </Badge>
-                                            ))}
-                                        </div>
-                                        <CommandList
-                                            ref={listRef}
-                                            className="max-h-[200px] overflow-auto"
-                                        >
-                                            {isLoadingSearchedStudents ? (
-                                                <div className="flex justify-center items-center p-4">
-                                                    <Loader2 className="h-6 w-6 animate-spin" />
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    {students && students.length > 0 ? (
-                                                        <CommandGroup
-                                                            style={{
-                                                                height: `${rowVirtualizer.getTotalSize()}px`,
-                                                                width: "100%",
-                                                                position: "relative",
-                                                            }}
-                                                        >
-                                                            {rowVirtualizer
-                                                                .getVirtualItems()
-                                                                .map((virtualItem) => {
-                                                                    const student =
-                                                                        students?.[
-                                                                            virtualItem.index
-                                                                        ];
-                                                                    if (!student) return null;
-                                                                    return (
-                                                                        <CommandItem
-                                                                            key={student.id}
-                                                                            style={{
-                                                                                position:
-                                                                                    "absolute",
-                                                                                top: 0,
-                                                                                left: 0,
-                                                                                width: "100%",
-                                                                                height: `${virtualItem.size}px`,
-                                                                                transform: `translateY(${virtualItem.start}px)`,
-                                                                            }}
-                                                                            onSelect={() =>
-                                                                                handleMemberSelect(
-                                                                                    student
-                                                                                )
-                                                                            }
-                                                                            value={student.name}
-                                                                            className={cn(
-                                                                                "cursor-pointer",
-                                                                                memberIds.includes(
-                                                                                    student.id
-                                                                                ) && "bg-accent"
-                                                                            )}
-                                                                        >
-                                                                            {student.name}
-                                                                        </CommandItem>
-                                                                    );
-                                                                })}
-                                                        </CommandGroup>
-                                                    ) : (
-                                                        <CommandEmpty>
-                                                            {debouncedSearchQuery
-                                                                ? "No students found."
-                                                                : "Start typing to search for students."}
-                                                        </CommandEmpty>
-                                                    )}
-                                                </>
-                                            )}
-                                        </CommandList>
-                                    </Command>
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}

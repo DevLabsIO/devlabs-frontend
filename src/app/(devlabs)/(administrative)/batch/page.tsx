@@ -100,6 +100,7 @@ export default function BatchesPage() {
                         enableColumnFilters: true,
                         enableDelete: true,
                     }}
+                    defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                     exportConfig={{
                         entityName: "batches",
                         columnMapping: {

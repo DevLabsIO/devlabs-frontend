@@ -95,6 +95,7 @@ export function MultiSelectDropdown({
                                 {options.map((option) => (
                                     <CommandItem
                                         key={option.value}
+                                        value={option.value}
                                         onSelect={() => handleSelect(option.value)}
                                         className="cursor-pointer"
                                     >

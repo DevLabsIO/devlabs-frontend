@@ -92,6 +92,7 @@ export default function MyCoursesPage() {
                         config={{
                             enableUrlState: false,
                         }}
+                        defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                         exportConfig={{
                             entityName: "courses",
                             columnMapping: {
@@ -119,6 +120,7 @@ export default function MyCoursesPage() {
                             enableExport: true,
                             enableDateFilter: false,
                         }}
+                        defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                         exportConfig={{
                             entityName: "courses",
                             columnMapping: {

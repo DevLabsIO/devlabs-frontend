@@ -38,6 +38,9 @@ export const useAssignStudentsToBatch = () => {
             queryClient.invalidateQueries({
                 queryKey: ["batchStudents", variables.batchId],
             });
+            queryClient.invalidateQueries({
+                queryKey: ["availableStudents", variables.batchId],
+            });
             queryClient.invalidateQueries({ queryKey: ["users"] });
         },
     });
@@ -48,8 +51,8 @@ export const useBatches = (
     page: number = 0,
     size: number = 10,
     columnFilters?: Record<string, string[]>,
-    sortBy?: string,
-    sortOrder?: string
+    sortBy: string = "createdAt",
+    sortOrder: string = "desc"
 ) => {
     const { user } = useSessionContext();
     const isActiveFilter = columnFilters?.isActive?.[0];
@@ -68,17 +71,21 @@ export const useBatches = (
                 params.query = searchQuery;
             }
 
-            if (sortBy && sortOrder) {
-                const sortByMap: Record<string, string> = {
-                    name: "name",
-                    graduation_year: "graduationYear",
-                    section: "section",
-                    is_active: "isActive",
-                    department_id: "departmentId",
-                };
-                params.sort_by = sortByMap[sortBy] || sortBy;
-                params.sort_order = sortOrder;
+            if (isActiveFilter !== undefined) {
+                params.isActive = isActiveFilter;
             }
+
+            const sortByMap: Record<string, string> = {
+                name: "name",
+                join_year: "joinYear",
+                section: "section",
+                is_active: "isActive",
+                department_id: "departmentId",
+                created_at: "createdAt",
+                updated_at: "updatedAt",
+            };
+            params.sort_by = sortByMap[sortBy] || sortBy;
+            params.sort_order = sortOrder;
 
             const endpoint = searchQuery ? "/api/batch/search" : "/api/batch";
             const response = await axiosInstance.get(endpoint, { params });
@@ -91,22 +98,14 @@ export const useBatches = (
             const batches = Array.isArray(backendResponse)
                 ? backendResponse
                 : backendResponse.data || [];
-            let filteredData = batches;
-
-            if (isActiveFilter !== undefined) {
-                const isActiveValue = isActiveFilter === "true";
-                filteredData = filteredData.filter(
-                    (batch: Batch) => batch.isActive === isActiveValue
-                );
-            }
 
             return {
-                data: filteredData,
+                data: batches,
                 pagination: {
                     total_pages: 1,
                     current_page: 0,
-                    per_page: filteredData.length,
-                    total_count: filteredData.length,
+                    per_page: batches.length,
+                    total_count: batches.length,
                 },
             };
         },

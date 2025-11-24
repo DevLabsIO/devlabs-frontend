@@ -96,6 +96,7 @@ export default function BatchDetailsPage() {
                         columnWidths: [{ wch: 30 }, { wch: 35 }, { wch: 20 }],
                         headers: ["name", "email", "phoneNumber"],
                     }}
+                    defaultSort={{ sortBy: "created_at", sortOrder: "desc" }}
                     getColumns={columnsWrapper}
                     fetchDataFn={useBatchStudentsForDataTable}
                     idField="id"

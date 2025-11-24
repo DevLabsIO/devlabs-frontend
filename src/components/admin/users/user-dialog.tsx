@@ -158,11 +158,6 @@ export function UserDialog({
             return;
         }
 
-        if (!formData.phoneNumber.trim()) {
-            error("Phone is required");
-            return;
-        }
-
         if (!formData.role) {
             error("Role is required");
             return;
@@ -214,6 +209,7 @@ export function UserDialog({
                                 name="name"
                                 value={formData.name}
                                 onChange={(e) => handleInputChange("name", e.target.value)}
+                                placeholder="Enter full name"
                                 disabled={isLoading}
                                 required
                             />
@@ -226,19 +222,20 @@ export function UserDialog({
                                 type="email"
                                 value={formData.email}
                                 onChange={(e) => handleInputChange("email", e.target.value)}
+                                placeholder="Enter email address"
                                 disabled={isLoading}
                                 required
                             />
                         </div>
                         <div className="grid gap-3">
-                            <Label htmlFor="phone-1">Phone</Label>
+                            <Label htmlFor="phone-1">Phone (Optional)</Label>
                             <Input
                                 id="phone-1"
                                 name="phone"
                                 value={formData.phoneNumber}
                                 onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
+                                placeholder="Enter phone number"
                                 disabled={isLoading}
-                                required
                             />
                         </div>
                         <div className="flex gap-3">

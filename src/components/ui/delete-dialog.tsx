@@ -28,7 +28,14 @@ export function DeleteDialog({
     isLoading = false,
 }: DeleteDialogProps) {
     return (
-        <AlertDialog open={isOpen} onOpenChange={onClose}>
+        <AlertDialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                // Prevent closing during loading state
+                if (!open && isLoading) return;
+                if (!open) onClose();
+            }}
+        >
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>{title}</AlertDialogTitle>

@@ -8,8 +8,8 @@ export const useTeams = (
     searchQuery?: string,
     page: number = 0,
     size: number = 10,
-    sortBy?: string,
-    sortOrder?: "asc" | "desc"
+    sortBy: string = "createdAt",
+    sortOrder: "asc" | "desc" = "desc"
 ) => {
     const { user } = useSessionContext();
     const query = useQuery({
@@ -20,13 +20,13 @@ export const useTeams = (
             let endpoint = "/teams";
             const params: { [key: string]: string | number } = {};
 
-            if (sortBy) {
-                params.sort_by = sortBy;
-            }
-
-            if (sortOrder) {
-                params.sort_order = sortOrder;
-            }
+            const sortByMap: Record<string, string> = {
+                name: "name",
+                created_at: "createdAt",
+                updated_at: "updatedAt",
+            };
+            params.sort_by = sortByMap[sortBy] || sortBy;
+            params.sort_order = sortOrder;
             if (searchQuery) {
                 endpoint = `/teams/search/${user.id}`;
                 params.query = searchQuery;

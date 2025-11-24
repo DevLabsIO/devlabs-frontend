@@ -132,6 +132,7 @@ export function DepartmentDialog({
                             id="name"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            placeholder="Enter department name"
                             required
                         />
                     </div>

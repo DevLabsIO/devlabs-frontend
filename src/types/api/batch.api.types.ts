@@ -1,6 +1,6 @@
 export interface CreateBatchRequest {
     name: string;
-    graduationYear: number;
+    joinYear: number;
     departmentId: string;
     section: string;
     isActive: boolean;

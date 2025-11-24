@@ -33,21 +33,21 @@ const teamQueries = {
     getAllTeams: async (
         page: number = 0,
         size: number = 10,
-        sortBy?: string,
-        sortOrder?: "asc" | "desc"
+        sortBy: string = "createdAt",
+        sortOrder: "asc" | "desc" = "desc"
     ) => {
         const params: { [key: string]: string | number } = {
             page: page.toString(),
             size: size.toString(),
         };
 
-        if (sortBy) {
-            params.sort_by = sortBy;
-        }
-
-        if (sortOrder) {
-            params.sort_order = sortOrder;
-        }
+        const sortByMap: Record<string, string> = {
+            name: "name",
+            created_at: "createdAt",
+            updated_at: "updatedAt",
+        };
+        params.sort_by = sortByMap[sortBy] || sortBy;
+        params.sort_order = sortOrder;
 
         const response = await axiosInstance.get("/teams", { params });
         return response.data;
