@@ -116,7 +116,6 @@ export function CreateEditRubricModal({
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="min-w-[120vh] max-h-[90vh] flex flex-col">
-                \n{" "}
                 <DialogHeader>
                     <DialogTitle>
                         {existingRubric ? "Edit Rubric" : "Create New Rubric"}

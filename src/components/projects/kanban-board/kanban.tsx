@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     KanbanProvider,
     KanbanBoard,
@@ -11,7 +11,7 @@ import {
     type KanbanColumnProps,
 } from "@/components/kanban/kanban";
 import { kanbanAPI } from "@/repo/project-queries/kanban-queries";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { AddTaskModal } from "./add-task-modal";
 import { EditTaskModal } from "./edit-task-modal";
 import { DeleteTaskDialog } from "./delete-task-dialog";
@@ -94,6 +94,8 @@ export default function KanbanBoardPage({ id }: KanbanBoardPageProps) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const { session } = useSessionContext();
+    const queryClient = useQueryClient();
+
     const {
         data: kanbanData,
         isLoading,
@@ -104,11 +106,11 @@ export default function KanbanBoardPage({ id }: KanbanBoardPageProps) {
         enabled: !!id,
         refetchOnMount: true,
         refetchOnWindowFocus: false,
-        staleTime: 2 * 60 * 1000,
+        staleTime: 30 * 1000,
         gcTime: 5 * 60 * 1000,
     });
 
-    const derivedKanbanTasks = useMemo(() => {
+    const kanbanTasks = useMemo(() => {
         if (!kanbanData) return [];
         const tasks: EnhancedKanbanItem[] = [];
         kanbanData.columns.forEach((column) => {
@@ -128,12 +130,6 @@ export default function KanbanBoardPage({ id }: KanbanBoardPageProps) {
         return tasks;
     }, [kanbanData]);
 
-    const [kanbanTasks, setKanbanTasks] = useState<EnhancedKanbanItem[]>(derivedKanbanTasks);
-
-    useEffect(() => {
-        setKanbanTasks(derivedKanbanTasks);
-    }, [derivedKanbanTasks]);
-
     const moveTaskMutation = useMutation({
         mutationFn: ({
             taskId,
@@ -144,10 +140,51 @@ export default function KanbanBoardPage({ id }: KanbanBoardPageProps) {
         }) => {
             return kanbanAPI.moveTask(taskId, request);
         },
-        onSuccess: () => {},
-        onError: (error) => {
+        onMutate: async ({ taskId, request }) => {
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ["kanbanBoard", id] });
+
+            // Snapshot the previous value
+            const previousData = queryClient.getQueryData(["kanbanBoard", id]);
+
+            // Optimistically update to the new value
+            queryClient.setQueryData(["kanbanBoard", id], (old: typeof kanbanData) => {
+                if (!old) return old;
+
+                const updatedColumns = old.columns.map((column) => {
+                    // Remove task from all columns first
+                    const tasksWithoutMoved = column.tasks.filter((task) => task.id !== taskId);
+
+                    // If this is the target column, add the task at the new position
+                    if (column.id === request.columnId) {
+                        const movedTask = old.columns
+                            .flatMap((c) => c.tasks)
+                            .find((t) => t.id === taskId);
+
+                        if (movedTask) {
+                            tasksWithoutMoved.splice(request.position, 0, movedTask);
+                        }
+                    }
+
+                    return { ...column, tasks: tasksWithoutMoved };
+                });
+
+                return { ...old, columns: updatedColumns };
+            });
+
+            // Return context with the previous data
+            return { previousData };
+        },
+        onError: (error, variables, context) => {
+            // Revert to the previous value on error
+            if (context?.previousData) {
+                queryClient.setQueryData(["kanbanBoard", id], context.previousData);
+            }
             console.error("Failed to move task:", error);
-            setKanbanTasks(derivedKanbanTasks);
+        },
+        onSettled: () => {
+            // Refetch to ensure we're in sync with the server
+            queryClient.invalidateQueries({ queryKey: ["kanbanBoard", id] });
         },
     });
 
@@ -171,61 +208,69 @@ export default function KanbanBoardPage({ id }: KanbanBoardPageProps) {
         setSelectedTask(null);
     };
 
-    const handleDataChange = async (newData: EnhancedKanbanItem[]) => {
-        const previousTasks = [...kanbanTasks];
-        setKanbanTasks(newData);
-        let movedTask: EnhancedKanbanItem | undefined;
-        let targetPosition = -1;
+    const handleDataChange = useCallback(
+        (newData: EnhancedKanbanItem[]) => {
+            if (moveTaskMutation.isPending) {
+                return;
+            }
 
-        movedTask = newData.find((newTask) => {
-            const oldTask = previousTasks.find((oldTask) => oldTask.id === newTask.id);
-            return oldTask && oldTask.column !== newTask.column;
-        });
+            const previousTasks = [...kanbanTasks];
 
-        if (!movedTask) {
-            for (const newTask of newData) {
+            let movedTask: EnhancedKanbanItem | undefined;
+
+            // Check if any task moved to a different column
+            movedTask = newData.find((newTask) => {
                 const oldTask = previousTasks.find((oldTask) => oldTask.id === newTask.id);
-                if (oldTask && oldTask.column === newTask.column) {
-                    const oldTasksInColumn = previousTasks.filter(
-                        (task) => task.column === oldTask.column
-                    );
-                    const newTasksInColumn = newData.filter(
-                        (task) => task.column === newTask.column
-                    );
+                return oldTask && oldTask.column !== newTask.column;
+            });
 
-                    const oldPosition = oldTasksInColumn.findIndex(
-                        (task) => task.id === newTask.id
-                    );
-                    const newPosition = newTasksInColumn.findIndex(
-                        (task) => task.id === newTask.id
-                    );
+            // If no task moved columns, check if any task changed position within the same column
+            if (!movedTask) {
+                for (const newTask of newData) {
+                    const oldTask = previousTasks.find((oldTask) => oldTask.id === newTask.id);
+                    if (oldTask && oldTask.column === newTask.column) {
+                        const oldTasksInColumn = previousTasks.filter(
+                            (task) => task.column === oldTask.column
+                        );
+                        const newTasksInColumn = newData.filter(
+                            (task) => task.column === newTask.column
+                        );
 
-                    if (oldPosition !== newPosition) {
-                        movedTask = newTask;
-                        targetPosition = newPosition;
-                        break;
+                        const oldPosition = oldTasksInColumn.findIndex(
+                            (task) => task.id === newTask.id
+                        );
+                        const newPosition = newTasksInColumn.findIndex(
+                            (task) => task.id === newTask.id
+                        );
+
+                        if (oldPosition !== newPosition) {
+                            movedTask = newTask;
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        if (movedTask) {
-            const tasksInColumn = newData.filter((task) => task.column === movedTask.column);
-            const position =
-                targetPosition >= 0
-                    ? targetPosition
-                    : tasksInColumn.findIndex((task) => task.id === movedTask.id);
+            if (movedTask) {
+                // Find the position in the target column from newData
+                const tasksInColumn = newData.filter((task) => task.column === movedTask.column);
+                const position = tasksInColumn.findIndex((task) => task.id === movedTask.id);
 
-            moveTaskMutation.mutate({
-                taskId: movedTask.id,
-                request: {
-                    columnId: movedTask.column,
-                    position: position,
-                    userId: session?.user?.id || "",
-                },
-            });
-        }
-    };
+                // Use the calculated position (don't default to targetPosition which might be -1)
+                const finalPosition = position >= 0 ? position : 0;
+
+                moveTaskMutation.mutate({
+                    taskId: movedTask.id,
+                    request: {
+                        columnId: movedTask.column,
+                        position: finalPosition,
+                        userId: session?.user?.id || "",
+                    },
+                });
+            }
+        },
+        [kanbanTasks, moveTaskMutation, session?.user?.id]
+    );
     if (!id) {
         return <div>No project ID provided</div>;
     }
@@ -342,19 +387,9 @@ export default function KanbanBoardPage({ id }: KanbanBoardPageProps) {
                                             )}
                                         </div>
                                     </div>
-                                    {(task.createdAt || task.updatedAt) && (
+                                    {task.createdAt && (
                                         <p className="m-0 text-muted-foreground text-xs mt-2">
-                                            {task.createdAt &&
-                                            task.updatedAt &&
-                                            task.createdAt !== task.updatedAt
-                                                ? `${shortDateFormatter.format(
-                                                      new Date(task.createdAt)
-                                                  )} - ${shortDateFormatter.format(
-                                                      new Date(task.updatedAt)
-                                                  )}`
-                                                : shortDateFormatter.format(
-                                                      new Date(task.createdAt || task.updatedAt)
-                                                  )}
+                                            {shortDateFormatter.format(new Date(task.createdAt))}
                                         </p>
                                     )}
                                 </KanbanCard>
