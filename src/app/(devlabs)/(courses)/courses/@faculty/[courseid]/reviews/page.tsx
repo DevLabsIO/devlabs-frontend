@@ -1,15 +1,14 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { ViewToggle, ViewMode } from "@/components/data-grid/view-toggle";
 import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataGrid } from "@/components/data-grid/data-grid";
 import { GridItem } from "@/components/data-grid/grid-item";
 import { Review } from "@/types/entities";
-import { Calendar, Clock, PlusCircle, CircleDot } from "lucide-react";
+import { Calendar, Clock, CircleDot } from "lucide-react";
 import { getColumns } from "@/components/reviews/review-columns";
 import { useReviews } from "@/components/reviews/hooks/use-reviews-table";
-import { Button } from "@/components/ui/button";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import reviewQueries from "@/repo/review-queries/review-queries";
@@ -18,31 +17,9 @@ import { useSessionContext } from "@/lib/session-context";
 import { format } from "date-fns";
 import { calculateReviewStatus } from "@/lib/utils/review-status";
 
-function useReviewsForDataTable(
-    page: number,
-    pageSize: number,
-    search: string,
-    dateRange: { from_date: string; to_date: string },
-    sortBy: string,
-    sortOrder: string,
-    courseId?: string,
-    status?: string
-) {
-    return useReviews(
-        search,
-        page - 1,
-        pageSize,
-        sortBy,
-        sortOrder as "asc" | "desc",
-        courseId,
-        status
-    );
-}
-
-useReviewsForDataTable.isQueryHook = true;
-
-export default function ReviewsPage() {
-    const [viewmode, setViewMode] = useState<ViewMode>("table");
+export default function CourseReviewsPage({ params }: { params: Promise<{ courseid: string }> }) {
+    const { courseid } = use(params);
+    const [viewmode, setViewMode] = useState<ViewMode>("grid");
     const [reviewToDelete, setReviewToDelete] = useState<Review | null>(null);
     const router = useRouter();
     const queryClient = useQueryClient();
@@ -65,7 +42,7 @@ export default function ReviewsPage() {
     });
 
     useEffect(() => {
-        const saved = localStorage.getItem("review-view") as ViewMode;
+        const saved = localStorage.getItem("course-review-view") as ViewMode;
         if ((saved && saved === "table") || saved === "grid") {
             setViewMode(saved);
         }
@@ -73,7 +50,7 @@ export default function ReviewsPage() {
 
     const handleViewModeChange = (newViewMode: ViewMode) => {
         setViewMode(newViewMode);
-        localStorage.setItem("review-view", newViewMode);
+        localStorage.setItem("course-review-view", newViewMode);
     };
 
     const handleView = (review: Review) => {
@@ -88,34 +65,31 @@ export default function ReviewsPage() {
         router.push(`/reviews/${review.id}/edit`);
     };
 
-    const handleCreate = () => {
-        router.push("/reviews/create");
-    };
     const columnsWrapper = () => {
         return getColumns(handleView, handleEdit, handleDelete);
     };
 
-    const useFilteredReviews = (
+    function useCourseReviews(
         page: number,
         pageSize: number,
         search: string,
         dateRange: { from_date: string; to_date: string },
         sortBy: string,
         sortOrder: string
-    ) => {
-        return useReviewsForDataTable(
-            page,
-            pageSize,
+    ) {
+        return useReviews(
             search,
-            dateRange,
+            page - 1,
+            pageSize,
             sortBy,
-            sortOrder,
-            undefined,
+            sortOrder as "asc" | "desc",
+            courseid,
             undefined
         );
-    };
+    }
 
-    useFilteredReviews.isQueryHook = true;
+    useCourseReviews.isQueryHook = true;
+
     const renderReviewGrid = (
         review: Review,
         index: number,
@@ -170,23 +144,20 @@ export default function ReviewsPage() {
             />
         );
     };
+
     return (
         <div>
             <div className="flex justify-between items-start mb-6">
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
                         <Calendar className="h-6 w-6" />
-                        <h1 className="text-2xl font-semibold">Reviews</h1>
+                        <h1 className="text-2xl font-semibold">Course Reviews</h1>
                     </div>
-                    <p className="text-muted-foreground text-sm">
-                        Create and manage project reviews and evaluations
+                    <p className="text-muted-foreground text-sm ml-10">
+                        Reviews associated with this course
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <Button onClick={handleCreate}>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Create Review
-                    </Button>
                     <ViewToggle
                         view={viewmode}
                         onViewChange={handleViewModeChange}
@@ -204,7 +175,7 @@ export default function ReviewsPage() {
                             enableDateFilter: false,
                         }}
                         exportConfig={{
-                            entityName: "reviews",
+                            entityName: "course-reviews",
                             columnMapping: {
                                 name: "Review Name",
                                 status: "Status",
@@ -231,7 +202,7 @@ export default function ReviewsPage() {
                             ],
                         }}
                         getColumns={columnsWrapper}
-                        fetchDataFn={useFilteredReviews}
+                        fetchDataFn={useCourseReviews}
                         idField="id"
                         onRowClick={handleView}
                     />
@@ -245,7 +216,7 @@ export default function ReviewsPage() {
                             sortOrder: "desc",
                         }}
                         exportConfig={{
-                            entityName: "reviews",
+                            entityName: "course-reviews",
                             columnMapping: {
                                 name: "Review Name",
                                 status: "Status",
@@ -273,7 +244,7 @@ export default function ReviewsPage() {
                         }}
                         getColumns={columnsWrapper}
                         renderGridItem={renderReviewGrid}
-                        fetchDataFn={useFilteredReviews}
+                        fetchDataFn={useCourseReviews}
                         idField="id"
                         gridConfig={{
                             gap: 1.5,

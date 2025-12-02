@@ -21,28 +21,32 @@ export const useReviews = (
         queryFn: async (): Promise<DataTableResponse<Review>> => {
             if (!user) throw new Error("User not authenticated");
 
-            let endpoint: string;
             const params: { [key: string]: string | number } = {};
 
             params.page = page.toString();
             params.size = size.toString();
-
             params.sortBy = sortBy;
             params.sortOrder = sortOrder;
 
-            if (searchQuery && searchQuery.trim().length > 0) {
-                endpoint = `/api/review/search`;
-                params.name = searchQuery;
+            let endpoint: string;
 
+            if ((searchQuery && searchQuery.trim().length > 0) || status) {
+                endpoint = `/api/review/search`;
+
+                if (searchQuery && searchQuery.trim().length > 0) {
+                    params.name = searchQuery;
+                }
                 if (courseId) {
                     params.courseId = courseId;
                 }
-
                 if (status) {
                     params.status = status;
                 }
             } else {
                 endpoint = `/api/review`;
+                if (courseId) {
+                    params.courseId = courseId;
+                }
             }
 
             const response = await axiosInstance.get(endpoint, { params });

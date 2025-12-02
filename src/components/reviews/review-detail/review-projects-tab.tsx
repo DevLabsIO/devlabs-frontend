@@ -1,21 +1,25 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import reviewQueries from "@/repo/review-queries/review-queries";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Folder, X, Users } from "lucide-react";
+import { Folder, X, Users, SearchX } from "lucide-react";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { GridItem, GridItemSkeleton } from "@/components/data-grid/grid-item";
+import type { GridItemFieldConfig, GridItemAction } from "@/types/ui";
 import type {
     ReviewProjectsResponse,
+    ReviewProjectInfo,
     TeamFilterInfo,
     BatchFilterInfo,
     CourseFilterInfo,
 } from "@/types/api";
+
+type ReviewProjectInfoWithIndex = ReviewProjectInfo & { [key: string]: unknown };
 
 interface ReviewProjectsTabProps {
     reviewId: string;
@@ -30,26 +34,12 @@ export function ReviewProjectsTab({
     const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
     const [selectedBatches, setSelectedBatches] = useState<string[]>([]);
     const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
-    const [columns, setColumns] = useState(1);
-
-    useEffect(() => {
-        const updateColumns = () => {
-            if (typeof window === "undefined") return;
-            const w = window.innerWidth;
-            if (w >= 1024) setColumns(3);
-            else if (w >= 768) setColumns(2);
-            else setColumns(1);
-        };
-        updateColumns();
-        window.addEventListener("resize", updateColumns);
-        return () => window.removeEventListener("resize", updateColumns);
-    }, []);
 
     const teamId = selectedTeams.length > 0 ? selectedTeams[0] : undefined;
     const batchId = selectedBatches.length > 0 ? selectedBatches[0] : undefined;
     const courseId = selectedCourses.length > 0 ? selectedCourses[0] : undefined;
 
-    const { data: reviewProjects = initialData } = useQuery<ReviewProjectsResponse>({
+    const { data: reviewProjects = initialData, isLoading } = useQuery<ReviewProjectsResponse>({
         queryKey: ["reviewProjects", reviewId, teamId, batchId, courseId],
         queryFn: () => reviewQueries.getReviewProjects(reviewId, teamId, batchId, courseId),
         initialData,
@@ -76,9 +66,12 @@ export function ReviewProjectsTab({
         return selectedTeams.length > 0 || selectedBatches.length > 0 || selectedCourses.length > 0;
     }, [selectedTeams, selectedBatches, selectedCourses]);
 
-    const handleProjectClick = (projectId: string) => {
-        router.push(`/results/${reviewId}/${projectId}`);
-    };
+    const handleProjectClick = useCallback(
+        (project: ReviewProjectInfoWithIndex) => {
+            router.push(`/results/${reviewId}/${project.projectId}`);
+        },
+        [router, reviewId]
+    );
 
     const handleResetFilters = () => {
         setSelectedTeams([]);
@@ -98,28 +91,70 @@ export function ReviewProjectsTab({
         setSelectedCourses(courses.slice(-1));
     };
 
-    const rowCount = columns > 0 ? Math.ceil(projects.length / columns) : 0;
-
-    const virtualizer = useWindowVirtualizer({
-        count: rowCount,
-        estimateSize: () => 280,
-        overscan: 5,
-        getItemKey: (rowIndex) => {
-            const firstIndex = rowIndex * columns;
-            return projects[firstIndex]?.projectId ?? rowIndex;
-        },
-    });
-
-    const measureRef = useCallback(
-        (el: HTMLDivElement | null) => {
-            if (el) virtualizer.measureElement(el);
-        },
-        [virtualizer]
+    const fieldConfig: GridItemFieldConfig<ReviewProjectInfoWithIndex> = useMemo(
+        () => ({
+            id: "projectId",
+            title: "projectTitle",
+        }),
+        []
     );
+
+    const getActionsForProject = useCallback(
+        (): GridItemAction<ReviewProjectInfoWithIndex>[] => [
+            {
+                label: "View Results",
+                onClick: (project, e) => {
+                    e.stopPropagation();
+                    router.push(`/results/${reviewId}/${project.projectId}`);
+                },
+            },
+        ],
+        [router, reviewId]
+    );
+
+    const renderCustomBadge = useCallback(
+        (project: ReviewProjectInfoWithIndex) => (
+            <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">{project.teamName}</span>
+            </div>
+        ),
+        []
+    );
+
+    const renderCustomContent = useCallback((project: ReviewProjectInfoWithIndex) => {
+        return (
+            <div className="space-y-4">
+                <div>
+                    <p className="text-xs text-muted-foreground mb-2">Team Members</p>
+                    <div className="flex flex-wrap gap-1">
+                        {project.teamMembers.slice(0, 5).map((member) => (
+                            <Badge key={member.id} variant="secondary" className="text-xs">
+                                {member.name}
+                            </Badge>
+                        ))}
+                        {project.teamMembers.length > 5 && (
+                            <Badge variant="outline" className="text-xs">
+                                +{project.teamMembers.length - 5} more
+                            </Badge>
+                        )}
+                    </div>
+                </div>
+                {project.courseIds.length > 0 && (
+                    <div className="pt-3 border-t border-border/50">
+                        <p className="text-xs text-muted-foreground">
+                            {project.courseIds.length} course
+                            {project.courseIds.length !== 1 ? "s" : ""} assigned
+                        </p>
+                    </div>
+                )}
+            </div>
+        );
+    }, []);
 
     return (
         <div className="space-y-6">
-            <div className="bg-gradient-to-br from-background to-muted/20 rounded-lg border shadow-sm">
+            <div className="bg-linear-to-br from-background to-muted/20 rounded-lg border shadow-sm">
                 <div className="p-6 space-y-6">
                     <div className="flex items-center justify-between">
                         <div>
@@ -190,10 +225,25 @@ export function ReviewProjectsTab({
                 </div>
             </div>
 
-            {projects.length === 0 ? (
+            {isLoading ? (
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <GridItemSkeleton key={i} />
+                    ))}
+                </div>
+            ) : projects.length === 0 ? (
                 <Card>
                     <CardContent className="flex flex-col items-center justify-center py-12">
-                        <Folder className="h-12 w-12 text-muted-foreground mb-4" />
+                        <div className="relative mb-4">
+                            <div className="absolute inset-0 bg-linear-to-r from-primary/20 via-primary/10 to-primary/20 rounded-full blur-2xl opacity-50" />
+                            <div className="relative flex items-center justify-center w-16 h-16 rounded-2xl bg-muted/50 border border-border/50">
+                                {hasActiveFilters ? (
+                                    <SearchX className="h-8 w-8 text-muted-foreground/70" />
+                                ) : (
+                                    <Folder className="h-8 w-8 text-muted-foreground/70" />
+                                )}
+                            </div>
+                        </div>
                         <h3 className="text-lg font-semibold mb-2">No Projects Found</h3>
                         <p className="text-sm text-muted-foreground text-center">
                             {hasActiveFilters
@@ -203,86 +253,29 @@ export function ReviewProjectsTab({
                     </CardContent>
                 </Card>
             ) : (
-                <div className="w-full">
-                    <div className="mx-auto max-w-6xl">
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    {projects.map((project, index) => (
                         <div
+                            key={project.projectId}
+                            className="animate-in fade-in-0 zoom-in-95 duration-300"
                             style={{
-                                height: virtualizer.getTotalSize(),
-                                position: "relative",
+                                animationDelay: `${index * 50}ms`,
+                                animationFillMode: "backwards",
                             }}
                         >
-                            {virtualizer.getVirtualItems().map((row) => {
-                                const fromIndex = row.index * columns;
-                                const toIndex = Math.min(fromIndex + columns, projects.length);
-                                const rowProjects = projects.slice(fromIndex, toIndex);
-
-                                return (
-                                    <div
-                                        key={row.key}
-                                        ref={measureRef}
-                                        data-index={row.index}
-                                        style={{
-                                            position: "absolute",
-                                            top: 0,
-                                            left: 0,
-                                            width: "100%",
-                                            transform: `translateY(${row.start}px)`,
-                                        }}
-                                    >
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
-                                            {rowProjects.map((project) => (
-                                                <Card
-                                                    key={project.projectId}
-                                                    className="hover:shadow-lg transition-shadow cursor-pointer h-full"
-                                                    onClick={() =>
-                                                        handleProjectClick(project.projectId)
-                                                    }
-                                                >
-                                                    <CardHeader>
-                                                        <CardTitle className="text-lg flex items-center gap-2">
-                                                            <Folder className="h-5 w-5" />
-                                                            {project.projectTitle}
-                                                        </CardTitle>
-                                                    </CardHeader>
-                                                    <CardContent className="space-y-4">
-                                                        <div>
-                                                            <div className="flex items-center gap-2 mb-2">
-                                                                <Users className="h-4 w-4 text-muted-foreground" />
-                                                                <span className="text-sm font-medium">
-                                                                    {project.teamName}
-                                                                </span>
-                                                            </div>
-                                                            <div className="flex flex-wrap gap-1 mt-2">
-                                                                {project.teamMembers.map(
-                                                                    (member) => (
-                                                                        <Badge
-                                                                            key={member.id}
-                                                                            variant="secondary"
-                                                                            className="text-xs"
-                                                                        >
-                                                                            {member.name}
-                                                                        </Badge>
-                                                                    )
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                        {project.courseIds.length > 0 && (
-                                                            <div className="pt-2 border-t">
-                                                                <p className="text-xs text-muted-foreground mb-1">
-                                                                    Courses:{" "}
-                                                                    {project.courseIds.length}
-                                                                </p>
-                                                            </div>
-                                                        )}
-                                                    </CardContent>
-                                                </Card>
-                                            ))}
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                            <GridItem<ReviewProjectInfoWithIndex>
+                                item={project as ReviewProjectInfoWithIndex}
+                                isSelected={false}
+                                onToggleSelect={() => {}}
+                                enableSelection={false}
+                                onCardClick={handleProjectClick}
+                                fieldConfig={fieldConfig}
+                                actions={getActionsForProject()}
+                                customBadge={renderCustomBadge}
+                                customContent={renderCustomContent}
+                            />
                         </div>
-                    </div>
+                    ))}
                 </div>
             )}
         </div>

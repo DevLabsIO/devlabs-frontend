@@ -3,15 +3,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import React from "react";
 import { DataTableColumnHeader } from "@/components/data-table/column-header";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Eye } from "lucide-react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { FolderKanban, ClipboardCheck } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-export const getColumns = (onView?: (course: Course) => void): ColumnDef<Course>[] => {
+export const getColumns = (
+    onViewProjects?: (course: Course) => void,
+    onViewReviews?: (course: Course) => void
+): ColumnDef<Course>[] => {
     return [
         {
             id: "select",
@@ -86,24 +84,48 @@ export const getColumns = (onView?: (course: Course) => void): ColumnDef<Course>
             cell: ({ row }) => {
                 const course = row.original;
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0 mx-auto">
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onView?.(course);
-                                }}
-                            >
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Course
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="flex items-center justify-center gap-1">
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-8 w-8 p-0"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onViewProjects?.(course);
+                                        }}
+                                    >
+                                        <FolderKanban className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>View Projects</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-8 w-8 p-0"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onViewReviews?.(course);
+                                        }}
+                                    >
+                                        <ClipboardCheck className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>View Reviews</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
                 );
             },
             enableSorting: false,

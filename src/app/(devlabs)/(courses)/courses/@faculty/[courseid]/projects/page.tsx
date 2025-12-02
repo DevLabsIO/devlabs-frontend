@@ -174,7 +174,7 @@ export default function CourseProjects() {
                     stats: [
                         {
                             field: "teamMembers",
-                            label: "member(s)",
+                            label: "Member(s)",
                             icon: Users,
                             format: (value: unknown) => (Array.isArray(value) ? value.length : 0),
                         },

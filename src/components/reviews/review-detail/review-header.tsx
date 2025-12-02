@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, DownloadIcon, Pencil, Trash2 } from "lucide-react";
+import { DownloadIcon, Pencil, Trash2 } from "lucide-react";
 import { PublishReviewButton } from "@/components/reviews/publish-review-button";
 import type { Review } from "@/types/entities";
 
@@ -11,7 +11,6 @@ interface ReviewHeaderProps {
     reviewStatus: string | null;
     canPublish: boolean;
     canEdit: boolean;
-    onBack: () => void;
     onExportClick: () => void;
     onEditClick: () => void;
     onDeleteClick: () => void;
@@ -23,7 +22,6 @@ export function ReviewHeader({
     reviewStatus,
     canPublish,
     canEdit,
-    onBack,
     onExportClick,
     onEditClick,
     onDeleteClick,
@@ -31,9 +29,6 @@ export function ReviewHeader({
     return (
         <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-                <Button variant="ghost" size="sm" onClick={onBack}>
-                    <ArrowLeft className="h-4 w-4" />
-                </Button>
                 <div>
                     <h1 className="text-3xl font-bold">{review.name}</h1>
                     <p className="text-muted-foreground">

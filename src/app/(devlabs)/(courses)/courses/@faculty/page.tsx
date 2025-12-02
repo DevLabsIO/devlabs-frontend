@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ViewToggle, ViewMode } from "@/components/data-grid/view-toggle";
 import { useRouter } from "next/navigation";
 import { DataTable } from "@/components/data-table/data-table";
@@ -8,6 +8,7 @@ import { GridItem } from "@/components/data-grid/grid-item";
 import { Course } from "@/types/entities";
 import { getColumns } from "@/components/my-courses/course-columns";
 import { useMyCourses } from "@/components/my-courses/hooks/use-mycourses";
+import { FolderKanban, ClipboardCheck } from "lucide-react";
 
 function useMyCoursesForDataTable(
     page: number,
@@ -38,12 +39,35 @@ export default function MyCoursesPage() {
         localStorage.setItem("course-view", newViewMode);
     };
 
-    const handleView = (course: Course) => {
-        router.push(`/courses/${course.id}/projects`);
-    };
+    const handleViewProjects = useCallback(
+        (course: Course) => {
+            router.push(`/courses/${course.id}/projects`);
+        },
+        [router]
+    );
+
+    const handleViewReviews = useCallback(
+        (course: Course) => {
+            router.push(`/courses/${course.id}/reviews`);
+        },
+        [router]
+    );
+
+    const courseActions = [
+        {
+            label: "View Projects",
+            icon: FolderKanban,
+            onClick: handleViewProjects,
+        },
+        {
+            label: "View Reviews",
+            icon: ClipboardCheck,
+            onClick: handleViewReviews,
+        },
+    ];
 
     const columnsWrapper = () => {
-        return getColumns(handleView);
+        return getColumns(handleViewProjects, handleViewReviews);
     };
 
     const renderCourseGrid = (
@@ -61,8 +85,8 @@ export default function MyCoursesPage() {
                 item={course}
                 isSelected={isSelected}
                 onToggleSelect={onToggleSelect}
-                onCardClick={handleView}
                 columnVisibility={columnVisibility}
+                actions={courseActions}
                 fieldConfig={{
                     id: "id",
                     title: "name",
@@ -137,7 +161,6 @@ export default function MyCoursesPage() {
                         getColumns={columnsWrapper}
                         fetchDataFn={useMyCoursesForDataTable}
                         idField="id"
-                        onRowClick={handleView}
                     />
                 )}
             </div>

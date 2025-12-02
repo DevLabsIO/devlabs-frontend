@@ -398,10 +398,10 @@ export function GridItem<T extends Record<string, unknown>>({
                                             )}
                                         >
                                             <stat.icon className="h-4 w-4 text-muted-foreground shrink-0" />
-                                            <span className="font-medium">{displayValue}</span>
                                             <span className="text-muted-foreground text-xs">
                                                 {stat.label}
                                             </span>
+                                            <span className="font-medium">{displayValue}</span>
                                         </div>
                                     );
                                 })}

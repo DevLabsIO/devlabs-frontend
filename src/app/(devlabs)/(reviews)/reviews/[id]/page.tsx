@@ -298,7 +298,6 @@ export default function ReviewDetailPage() {
                 reviewStatus={reviewStatus}
                 canPublish={canPublish}
                 canEdit={canEdit}
-                onBack={() => router.back()}
                 onExportClick={() => setExportModalOpen(true)}
                 onEditClick={handleEditClick}
                 onDeleteClick={handleDeleteClick}

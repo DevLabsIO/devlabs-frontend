@@ -158,7 +158,7 @@ export default function TeamsPage() {
                     stats: [
                         {
                             field: "members",
-                            label: "member(s)",
+                            label: "Member(s)",
                             icon: Users,
                             format: (value: unknown) => (Array.isArray(value) ? value.length : 0),
                         },
