@@ -23,8 +23,10 @@ export const getColumns = (
         cell: ({ row }) => {
             const review = row.original;
             return (
-                <div className="flex flex-col">
-                    <span className="font-medium">{review.name}</span>
+                <div className="flex flex-col max-w-xs">
+                    <span className="font-medium truncate" title={review.name}>
+                        {review.name}
+                    </span>
                 </div>
             );
         },

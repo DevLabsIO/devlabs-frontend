@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import {
     Dialog,
     DialogContent,
@@ -12,21 +9,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { ProjectWithTeam } from "@/types/entities";
-import { ProjectReferenceRequest } from "@/components/projects/types/types";
+import { useState } from "react";
+import { Course, Project } from "@/types/entities";
+import { CreateProjectRequest, ProjectReferenceRequest } from "@/components/projects/types/types";
+import { MultiSelect, OptionType } from "@/components/ui/multi-select";
+import { courseQueries } from "@/repo/course-queries/course-queries";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { FileUpload } from "@/components/ui/file-upload";
 import fileUploadQueries from "@/repo/file-upload-queries/file-upload-queries";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
-import { useMutation } from "@tanstack/react-query";
 import {
-    Edit3,
-    Save,
-    X,
     Plus,
     Trash2,
     File as FileIcon,
+    X,
     Upload,
     Link2,
     BookOpen,
@@ -34,61 +31,70 @@ import {
     FileText,
     FolderOpen,
 } from "lucide-react";
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface UpdateProjectFormProps {
-    project: ProjectWithTeam;
+interface ProjectFormProps {
+    userId: string;
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: {
-        title?: string;
-        description?: string;
-        objectives?: string;
-        githubUrl?: string;
-        references?: ProjectReferenceRequest[];
-        uploadedFiles?: string[];
-    }) => void;
+    onSubmit: (data: CreateProjectRequest) => void;
     isLoading: boolean;
+    project?: Project | null;
+    teamId: string;
+    teamName?: string;
 }
 
-export function UpdateProjectForm({
-    project,
+export function ProjectForm({
+    userId,
     isOpen,
     onClose,
     onSubmit,
     isLoading,
-}: UpdateProjectFormProps) {
-    const [formData, setFormData] = useState({
-        title: project.title || "",
-        description: project.description || "",
-        objectives: project.objectives || "",
-        githubUrl: project.githubUrl || "",
-    });
+    project,
+    teamId,
+    teamName,
+}: ProjectFormProps) {
+    const [title, setTitle] = useState(project?.title || "");
+    const [description, setDescription] = useState(project?.description || "");
+    const [objectives, setObjectives] = useState(project?.objectives || "");
+    const [githubUrl, setGithubUrl] = useState(project?.githubUrl || "");
+    const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>(
+        Array.isArray(project?.courseIds) ? project.courseIds : []
+    );
     const [references, setReferences] = useState<ProjectReferenceRequest[]>(
-        project.references?.map((ref) => ({
+        project?.references?.map((ref) => ({
             id: ref.id,
             title: ref.title,
-            url: ref.url || "",
-            description: ref.description || "",
+            url: ref.url || undefined,
+            description: ref.description || undefined,
         })) || []
     );
     const [pendingFiles, setPendingFiles] = useState<File[]>([]);
     const [uploadedFilePaths, setUploadedFilePaths] = useState<string[]>(
-        project.uploadedFiles || []
+        project?.uploadedFiles || []
     );
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
 
     const { error: toastError } = useToast();
 
+    const { data: courses } = useQuery({
+        queryKey: ["courses"],
+        queryFn: () => courseQueries.getCourseByUserId(userId),
+        enabled: isOpen,
+        refetchOnMount: true,
+        staleTime: 2 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
+    });
+
     const uploadMutation = useMutation({
         mutationFn: async (file: File) => {
             return fileUploadQueries.uploadFile(
                 {
                     file,
-                    teamId: project.teamId,
-                    projectId: project.id,
-                    projectName: project.title,
+                    teamId,
+                    teamName: teamName || "project",
                 },
                 (progress) => {
                     setUploadProgress((prev) => ({
@@ -116,6 +122,12 @@ export function UpdateProjectForm({
             });
         },
     });
+
+    const courseOptions: OptionType[] =
+        courses?.map((course: Course) => ({
+            value: course.id,
+            label: `${course.name} (${course.code})`,
+        })) || [];
 
     const handleFileSelect = (file: File) => {
         if (pendingFiles.some((f) => f.name === file.name)) {
@@ -161,74 +173,40 @@ export function UpdateProjectForm({
                 const results = await Promise.all(uploadPromises);
                 const newFilePaths = results.map((r) => r.objectName);
 
-                const updates = buildUpdates([...uploadedFilePaths, ...newFilePaths]);
-                if (Object.keys(updates).length > 0) {
-                    onSubmit(updates);
-                } else {
-                    onClose();
-                }
+                const validReferences = references.filter((ref) => ref.title.trim() !== "");
+
+                onSubmit({
+                    title,
+                    description,
+                    objectives: objectives || undefined,
+                    githubUrl: githubUrl || undefined,
+                    teamId,
+                    courseIds: selectedCourseIds.length > 0 ? selectedCourseIds : undefined,
+                    references: validReferences.length > 0 ? validReferences : undefined,
+                    uploadedFiles:
+                        [...uploadedFilePaths, ...newFilePaths].length > 0
+                            ? [...uploadedFilePaths, ...newFilePaths]
+                            : undefined,
+                });
             } catch {
                 toastError("Failed to upload some files. Please try again.");
             } finally {
                 setIsUploading(false);
             }
         } else {
-            const updates = buildUpdates(uploadedFilePaths);
-            if (Object.keys(updates).length > 0) {
-                onSubmit(updates);
-            } else {
-                onClose();
-            }
+            const validReferences = references.filter((ref) => ref.title.trim() !== "");
+
+            onSubmit({
+                title,
+                description,
+                objectives: objectives || undefined,
+                githubUrl: githubUrl || undefined,
+                teamId,
+                courseIds: selectedCourseIds.length > 0 ? selectedCourseIds : undefined,
+                references: validReferences.length > 0 ? validReferences : undefined,
+                uploadedFiles: uploadedFilePaths.length > 0 ? uploadedFilePaths : undefined,
+            });
         }
-    };
-
-    const buildUpdates = (finalFilePaths: string[]) => {
-        const updates: {
-            title?: string;
-            description?: string;
-            objectives?: string;
-            githubUrl?: string;
-            references?: ProjectReferenceRequest[];
-            uploadedFiles?: string[];
-        } = {};
-
-        if (formData.title !== project.title) updates.title = formData.title;
-        if (formData.description !== project.description)
-            updates.description = formData.description;
-        if (formData.objectives !== project.objectives) updates.objectives = formData.objectives;
-        if (formData.githubUrl !== project.githubUrl) updates.githubUrl = formData.githubUrl;
-
-        const validReferences = references.filter((ref) => ref.title.trim() !== "");
-        const originalRefs = project.references || [];
-        const refsChanged =
-            JSON.stringify(validReferences) !==
-            JSON.stringify(
-                originalRefs.map((r) => ({
-                    id: r.id,
-                    title: r.title,
-                    url: r.url || "",
-                    description: r.description || "",
-                }))
-            );
-        if (refsChanged) {
-            updates.references = validReferences;
-        }
-
-        const originalFiles = project.uploadedFiles || [];
-        const filesChanged =
-            JSON.stringify(finalFilePaths.sort()) !== JSON.stringify(originalFiles.sort());
-        if (filesChanged) {
-            updates.uploadedFiles = finalFilePaths;
-        }
-
-        return updates;
-    };
-
-    const handleChange = (field: string, value: string) => {
-        setFormData((prev) => ({
-            ...prev,
-            [field]: value,
-        }));
     };
 
     const getFileName = (path: string) => {
@@ -240,15 +218,13 @@ export function UpdateProjectForm({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="min-w-[60vw] max-w-4xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                        <Edit3 className="h-5 w-5" />
-                        Update Project
-                    </DialogTitle>
+                    <DialogTitle>{project ? "Edit Project" : "Create Project"}</DialogTitle>
                     <DialogDescription>
-                        Update your project details. Only modified fields will be updated.
+                        {project
+                            ? "Edit the project details."
+                            : "Fill in the form to create a new project."}
                     </DialogDescription>
                 </DialogHeader>
-
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <Tabs defaultValue="metadata" className="w-full">
                         <TabsList className="grid w-full grid-cols-2">
@@ -263,48 +239,52 @@ export function UpdateProjectForm({
                         </TabsList>
 
                         <TabsContent value="metadata" className="space-y-4 mt-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="title">Project Title</Label>
+                            <div>
+                                <Label className="mb-2 block">Title</Label>
                                 <Input
-                                    id="title"
-                                    value={formData.title}
-                                    onChange={(e) => handleChange("title", e.target.value)}
-                                    placeholder="Enter project title"
+                                    placeholder="Project title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
                                     required
+                                    minLength={3}
                                 />
                             </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
+                            <div>
+                                <Label className="mb-2 block">Description</Label>
                                 <Textarea
-                                    id="description"
-                                    value={formData.description}
-                                    onChange={(e) => handleChange("description", e.target.value)}
-                                    placeholder="Enter project description"
+                                    placeholder="Project description"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    required
                                     rows={3}
-                                    required
                                 />
                             </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="objectives">Objectives</Label>
+                            <div>
+                                <Label className="mb-2 block">Objectives</Label>
                                 <Textarea
-                                    id="objectives"
-                                    value={formData.objectives}
-                                    onChange={(e) => handleChange("objectives", e.target.value)}
-                                    placeholder="Enter project objectives"
+                                    placeholder="Project objectives"
+                                    value={objectives}
+                                    onChange={(e) => setObjectives(e.target.value)}
                                     rows={2}
                                 />
                             </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="githubUrl">GitHub URL</Label>
+                            <div>
+                                <Label className="mb-2 block">GitHub URL (optional)</Label>
                                 <Input
-                                    id="githubUrl"
                                     type="url"
-                                    value={formData.githubUrl}
-                                    onChange={(e) => handleChange("githubUrl", e.target.value)}
                                     placeholder="https://github.com/your-repo"
+                                    value={githubUrl}
+                                    onChange={(e) => setGithubUrl(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <Label className="mb-2 block">Courses (Multi-select)</Label>
+                                <MultiSelect
+                                    options={courseOptions}
+                                    selected={selectedCourseIds}
+                                    onChange={setSelectedCourseIds}
+                                    placeholder="Select courses"
+                                    className="w-full"
                                 />
                             </div>
                         </TabsContent>
@@ -494,27 +474,18 @@ export function UpdateProjectForm({
                         </TabsContent>
                     </Tabs>
 
-                    <DialogFooter className="flex gap-2">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onClose}
-                            disabled={isLoading || isUploading}
-                        >
-                            <X className="h-4 w-4 mr-2" />
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={onClose}>
                             Cancel
                         </Button>
                         <Button type="submit" disabled={isLoading || isUploading}>
                             {isLoading || isUploading ? (
                                 <>
                                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                    {isUploading ? "Uploading..." : "Updating..."}
+                                    {isUploading ? "Uploading..." : "Saving..."}
                                 </>
                             ) : (
-                                <>
-                                    <Save className="h-4 w-4 mr-2" />
-                                    Update Project
-                                </>
+                                "Save"
                             )}
                         </Button>
                     </DialogFooter>

@@ -48,8 +48,13 @@ export const getColumns = (
             cell: ({ row }) => {
                 const course = row.original;
                 return (
-                    <div className="flex flex-col items-center text-center">
-                        <div className="font-medium text-gray-500">{course.name}</div>
+                    <div className="flex flex-col items-center text-center max-w-full">
+                        <div
+                            className="font-medium text-gray-500 truncate max-w-full"
+                            title={course.name}
+                        >
+                            {course.name}
+                        </div>
                         {course.description && (
                             <div className="text-sm text-gray-700 truncate max-w-xs text-center">
                                 {course.description}

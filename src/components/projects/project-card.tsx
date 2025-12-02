@@ -51,8 +51,11 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
         >
             <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                        <CardTitle className="text-lg font-semibold mb-2">
+                    <div className="flex-1 min-w-0">
+                        <CardTitle
+                            className="text-lg font-semibold mb-2 truncate"
+                            title={project.title}
+                        >
                             {project.title}
                         </CardTitle>
                         <CardDescription className="text-sm text-muted-foreground line-clamp-2">

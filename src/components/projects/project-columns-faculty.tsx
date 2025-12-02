@@ -57,8 +57,13 @@ export const getColumnsFaculty = (): ColumnDef<Project>[] => {
             cell: ({ row }) => {
                 const project = row.original;
                 return (
-                    <div className="flex flex-col items-center text-center">
-                        <div className="font-medium text-gray-500">{project.title}</div>
+                    <div className="flex flex-col items-center text-center max-w-full">
+                        <div
+                            className="font-medium text-gray-500 truncate max-w-full"
+                            title={project.title}
+                        >
+                            {project.title}
+                        </div>
                         {project.description && (
                             <div className="text-sm text-gray-700 truncate max-w-xs text-center">
                                 {project.description}

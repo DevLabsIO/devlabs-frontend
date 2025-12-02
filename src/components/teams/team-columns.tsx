@@ -54,8 +54,13 @@ export const getColumns = (
             cell: ({ row }) => {
                 const team = row.original;
                 return (
-                    <div className="flex flex-col items-center text-center">
-                        <div className="font-medium text-gray-500">{team.name}</div>
+                    <div className="flex flex-col items-center text-center max-w-full">
+                        <div
+                            className="font-medium text-gray-500 truncate max-w-full"
+                            title={team.name}
+                        >
+                            {team.name}
+                        </div>
                         {team.description && (
                             <div className="text-sm text-gray-700 truncate max-w-xs text-center">
                                 {team.description}

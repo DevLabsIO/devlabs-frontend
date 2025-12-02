@@ -228,7 +228,7 @@ export function FileUploadSection({ reviewId, projectId }: FileUploadSectionProp
                                         <Card key={file.name} className="p-4">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center space-x-3 flex-1 min-w-0">
-                                                    <FileIcon className="h-6 w-6 text-blue-500 flex-shrink-0" />
+                                                    <FileIcon className="h-6 w-6 text-blue-500 shrink-0" />
                                                     <div className="flex-1 min-w-0">
                                                         <p className="text-sm font-medium truncate">
                                                             {file.name}

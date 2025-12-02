@@ -109,17 +109,24 @@ export default function ReviewCard({ review, projectId, projectCourses }: Review
                     {format(new Date(review.endDate), "MMM d, yyyy")}
                 </CardDescription>
             </CardHeader>
-            <CardContent className="flex-grow space-y-3">
-                <div className="flex items-center text-sm">
-                    <Tag className="mr-2 h-4 w-4" />
-                    <span className="font-semibold">Rubric:&nbsp;</span>
-                    <span>{review.rubricsInfo.name}</span>
+            <CardContent className="grow space-y-3">
+                <div className="flex items-center text-sm min-w-0">
+                    <Tag className="mr-2 h-4 w-4 shrink-0" />
+                    <span className="font-semibold shrink-0">Rubric:&nbsp;</span>
+                    <span className="truncate" title={review.rubricsInfo.name}>
+                        {review.rubricsInfo.name}
+                    </span>
                 </div>
                 <div>
                     <h4 className="text-sm font-semibold mb-2">Relevant Courses</h4>
                     <div className="flex flex-wrap gap-1">
                         {relevantCourses.slice(0, 3).map((course) => (
-                            <Badge key={course.id} variant="secondary">
+                            <Badge
+                                key={course.id}
+                                variant="secondary"
+                                className="max-w-32 truncate"
+                                title={course.name}
+                            >
                                 {course.name}
                             </Badge>
                         ))}

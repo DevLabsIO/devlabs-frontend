@@ -24,7 +24,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Project, ProjectStatus } from "@/types/entities";
 import { projectQueries } from "@/repo/project-queries/project-queries";
 import { CreateProjectRequest } from "@/components/projects/types/types";
-import { ProjectForm } from "@/components/projects/view-projects/project-form";
+import { ProjectForm } from "@/components/projects/project-form";
 import { useSessionContext } from "@/lib/session-context";
 
 export const ProjectsSkeleton = () => (
@@ -158,7 +158,10 @@ export function Projects({ teamId }: ProjectsProps) {
                             <CardContent className="p-6">
                                 <div className="space-y-4">
                                     <div className="flex items-start justify-between">
-                                        <h4 className="font-semibold text-lg leading-tight group-hover:text-primary transition-colors">
+                                        <h4
+                                            className="font-semibold text-lg leading-tight group-hover:text-primary transition-colors truncate flex-1 mr-2"
+                                            title={project.title}
+                                        >
                                             {project.title}
                                         </h4>
                                         <Badge

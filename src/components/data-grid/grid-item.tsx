@@ -345,15 +345,17 @@ export function GridItem<T extends Record<string, unknown>>({
                                         )}
                                     >
                                         {fieldConfig.badge.label && (
-                                            <span className="opacity-70">
+                                            <span className="opacity-70 inline-block mr-1">
                                                 {fieldConfig.badge.label}
                                             </span>
                                         )}
-                                        {fieldConfig.badge.format
-                                            ? fieldConfig.badge.format(
-                                                  item[fieldConfig.badge.field]
-                                              )
-                                            : String(item[fieldConfig.badge.field])}
+                                        <span className="inline-block align-middle max-w-48 wrap-break-word line-clamp-1">
+                                            {fieldConfig.badge.format
+                                                ? fieldConfig.badge.format(
+                                                      item[fieldConfig.badge.field]
+                                                  )
+                                                : String(item[fieldConfig.badge.field])}
+                                        </span>
                                     </Badge>
                                 ) : null}
                             </div>
@@ -392,7 +394,7 @@ export function GridItem<T extends Record<string, unknown>>({
                                         <div
                                             key={index}
                                             className={cn(
-                                                "flex items-center text-sm gap-2 p-2 rounded-lg",
+                                                "flex items-center text-sm gap-2 p-2 rounded-lg min-w-0",
                                                 "bg-muted/50 transition-colors duration-200",
                                                 "hover:bg-muted/80"
                                             )}
@@ -401,7 +403,9 @@ export function GridItem<T extends Record<string, unknown>>({
                                             <span className="text-muted-foreground text-xs">
                                                 {stat.label}
                                             </span>
-                                            <span className="font-medium">{displayValue}</span>
+                                            <span className="font-medium ml-auto block text-right line-clamp-2 wrap-break-word max-w-72">
+                                                {displayValue}
+                                            </span>
                                         </div>
                                     );
                                 })}

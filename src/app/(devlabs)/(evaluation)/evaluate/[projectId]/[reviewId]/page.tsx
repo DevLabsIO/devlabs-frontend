@@ -273,13 +273,13 @@ export default function EvaluationPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+        <div className="min-h-screen bg-linear-to-b from-background to-muted/20">
             <div className="container mx-auto p-6 max-w-7xl">
                 <div className="space-y-6">
                     <div className="space-y-4">
                         <div className="flex items-start gap-4">
                             <div
-                                className="rounded-xl p-3 bg-gradient-to-br from-primary/20 to-primary/10 
+                                className="rounded-xl p-3 bg-linear-to-br from-primary/20 to-primary/10 
                            border-2 border-primary/20"
                             >
                                 <FileText className="h-7 w-7 text-primary" />

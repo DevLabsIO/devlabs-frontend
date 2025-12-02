@@ -180,7 +180,7 @@ export function FileUpload({
                     <CardContent className="p-4">
                         <div className="flex items-start justify-between">
                             <div className="flex items-center space-x-3 flex-1 min-w-0">
-                                <div className="flex-shrink-0">
+                                <div className="shrink-0">
                                     {uploadSuccess ? (
                                         <CheckCircle className="h-8 w-8 text-green-500" />
                                     ) : uploadError ? (
@@ -219,7 +219,7 @@ export function FileUpload({
                                     variant="ghost"
                                     size="sm"
                                     onClick={handleRemoveFile}
-                                    className="flex-shrink-0 ml-2 cursor-pointer hover:cursor-pointer"
+                                    className="shrink-0 ml-2 cursor-pointer hover:cursor-pointer"
                                 >
                                     <X className="h-4 w-4" />
                                 </Button>
@@ -247,7 +247,7 @@ export function FileUpload({
                 onClick={handleChooseFile}
             >
                 <div className="flex flex-col items-center space-y-4">
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                         <Upload
                             className={cn(
                                 "h-12 w-12",

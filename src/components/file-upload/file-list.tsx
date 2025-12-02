@@ -63,8 +63,9 @@ export function FileList({
         queryKey: ["fileList", queryParams],
         queryFn: () => fileUploadQueries.listFiles(queryParams),
         enabled: !!(projectId || reviewId || teamId),
-        staleTime: 2 * 60 * 1000,
+        staleTime: 0,
         gcTime: 5 * 60 * 1000,
+        refetchOnMount: "always",
     });
 
     const handleDownloadAll = async () => {
@@ -239,7 +240,7 @@ export function FileList({
                                 className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                             >
                                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                                    <div className="flex-shrink-0">
+                                    <div className="shrink-0">
                                         <File className="h-8 w-8 text-muted-foreground" />
                                     </div>
                                     <div className="min-w-0 flex-1">
@@ -256,7 +257,7 @@ export function FileList({
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2 flex-shrink-0">
+                                <div className="flex items-center gap-2 shrink-0">
                                     <Button
                                         variant="outline"
                                         size="sm"

@@ -1,6 +1,6 @@
 import axiosInstance from "@/lib/axios/axios-client";
 import { Course, Project, ProjectWithTeam } from "@/types/entities";
-import { CreateProjectRequest } from "@/components/projects/types/types";
+import { CreateProjectRequest, ProjectReferenceRequest } from "@/components/projects/types/types";
 
 export const projectQueries = {
     fetchProjectByTeamId: async (teamId: string): Promise<Project[]> => {
@@ -31,6 +31,8 @@ export const projectQueries = {
             description?: string;
             objectives?: string;
             githubUrl?: string;
+            references?: ProjectReferenceRequest[];
+            uploadedFiles?: string[];
         }
     ) => {
         const response = await axiosInstance.put(`/projects/${projectId}`, updateData);

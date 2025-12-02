@@ -171,7 +171,7 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
                 <div
                     ref={setDroppableRef}
                     className={cn(
-                        "flex flex-grow flex-col gap-2 p-2 min-h-[100px] transition-colors duration-200",
+                        "flex grow flex-col gap-2 p-2 min-h-[100px] transition-colors duration-200",
                         isOver && "bg-accent/30 rounded-md",
                         className
                     )}

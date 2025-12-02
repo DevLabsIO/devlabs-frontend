@@ -34,8 +34,10 @@ export const getColumns = (): ColumnDef<Project>[] => [
         header: "Project Title",
         cell: ({ row }) => {
             return (
-                <div className="flex flex-col">
-                    <span className="font-medium">{row.getValue("title")}</span>
+                <div className="flex flex-col max-w-xs">
+                    <span className="font-medium truncate" title={row.getValue("title") as string}>
+                        {row.getValue("title")}
+                    </span>
                     <span className="text-sm text-muted-foreground truncate max-w-[300px]">
                         {row.original.description}
                     </span>

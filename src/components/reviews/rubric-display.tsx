@@ -54,8 +54,10 @@ export function RubricDisplay({ rubric }: RubricDisplayProps) {
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <div>
-                        <h4 className="font-medium text-lg">{rubric.name}</h4>
+                    <div className="min-w-0 flex-1 mr-2">
+                        <h4 className="font-medium text-lg truncate" title={rubric.name}>
+                            {rubric.name}
+                        </h4>
                         <p className="text-sm text-muted-foreground">
                             {rubric.criteria.length} criteria • Total: {totalScore} points
                         </p>

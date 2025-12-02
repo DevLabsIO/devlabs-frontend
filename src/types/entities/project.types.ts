@@ -7,6 +7,13 @@ export enum ProjectStatus {
     REJECTED = "REJECTED",
 }
 
+export interface ProjectReference {
+    id?: string;
+    title: string;
+    url?: string | null;
+    description?: string | null;
+}
+
 export interface Project extends Record<string, unknown> {
     id: string;
     title: string;
@@ -19,6 +26,8 @@ export interface Project extends Record<string, unknown> {
     githubUrl?: string | null;
     courses: { id: string; name: string; code?: string }[];
     teamMembers: User[];
+    references?: ProjectReference[];
+    uploadedFiles?: string[];
 }
 
 export interface ProjectWithTeam extends Project {

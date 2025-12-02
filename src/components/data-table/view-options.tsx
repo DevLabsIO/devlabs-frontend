@@ -147,7 +147,7 @@ export function DataTableViewOptions<TData>({
                                     )}
                                 >
                                     <GripVertical className="mr-2 h-4 w-4 cursor-grab" />
-                                    <span className="flex-grow truncate capitalize">
+                                    <span className="grow truncate capitalize">
                                         {getColumnLabel(column)}
                                     </span>
                                     <Check

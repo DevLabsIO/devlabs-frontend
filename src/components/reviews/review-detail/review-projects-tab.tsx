@@ -114,9 +114,11 @@ export function ReviewProjectsTab({
 
     const renderCustomBadge = useCallback(
         (project: ReviewProjectInfoWithIndex) => (
-            <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">{project.teamName}</span>
+            <div className="flex items-center gap-2 min-w-0">
+                <Users className="h-4 w-4 text-muted-foreground shrink-0" />
+                <span className="text-sm font-medium truncate" title={project.teamName}>
+                    {project.teamName}
+                </span>
             </div>
         ),
         []
@@ -129,7 +131,12 @@ export function ReviewProjectsTab({
                     <p className="text-xs text-muted-foreground mb-2">Team Members</p>
                     <div className="flex flex-wrap gap-1">
                         {project.teamMembers.slice(0, 5).map((member) => (
-                            <Badge key={member.id} variant="secondary" className="text-xs">
+                            <Badge
+                                key={member.id}
+                                variant="secondary"
+                                className="text-xs max-w-32 truncate"
+                                title={member.name}
+                            >
                                 {member.name}
                             </Badge>
                         ))}

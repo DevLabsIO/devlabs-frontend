@@ -190,17 +190,24 @@ export default function ProjectReviews({ projectId, projectCourses }: ProjectRev
                             {format(new Date(review.endDate), "MMM d, yyyy")}
                         </span>
                     </div>
-                    <div className="flex items-center text-sm gap-2 p-2 rounded-lg bg-muted/50">
+                    <div className="flex items-center text-sm gap-2 p-2 rounded-lg bg-muted/50 min-w-0">
                         <Tag className="h-4 w-4 text-muted-foreground shrink-0" />
-                        <span className="text-muted-foreground text-xs">Rubric</span>
-                        <span className="font-medium">{review.rubricsInfo.name}</span>
+                        <span className="text-muted-foreground text-xs shrink-0">Rubric</span>
+                        <span className="font-medium truncate" title={review.rubricsInfo.name}>
+                            {review.rubricsInfo.name}
+                        </span>
                     </div>
                     {relevantCourses.length > 0 && (
                         <div className="pt-3 border-t border-border/50">
                             <p className="text-xs text-muted-foreground mb-2">Relevant Courses</p>
                             <div className="flex flex-wrap gap-1">
                                 {relevantCourses.slice(0, 3).map((course) => (
-                                    <Badge key={course.id} variant="secondary" className="text-xs">
+                                    <Badge
+                                        key={course.id}
+                                        variant="secondary"
+                                        className="text-xs max-w-32 truncate"
+                                        title={course.name}
+                                    >
                                         {course.name}
                                     </Badge>
                                 ))}
