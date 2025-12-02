@@ -50,7 +50,10 @@ export default function MyCoursesPage() {
         course: Course,
         index: number,
         isSelected: boolean,
-        onToggleSelect: () => void
+        onToggleSelect: () => void,
+        onEdit?: (item: Course) => void,
+        onDelete?: (item: Course) => void,
+        columnVisibility?: Record<string, boolean>
     ) => {
         return (
             <GridItem<Course>
@@ -59,6 +62,7 @@ export default function MyCoursesPage() {
                 isSelected={isSelected}
                 onToggleSelect={onToggleSelect}
                 onCardClick={handleView}
+                columnVisibility={columnVisibility}
                 fieldConfig={{
                     id: "id",
                     title: "name",
@@ -108,8 +112,7 @@ export default function MyCoursesPage() {
                         fetchDataFn={useMyCoursesForDataTable}
                         idField="id"
                         gridConfig={{
-                            columns: { default: 1, md: 2, lg: 3, xl: 4 },
-                            gap: 6,
+                            gap: 1.5,
                         }}
                         pageSizeOptions={[12, 24, 36, 48]}
                     />

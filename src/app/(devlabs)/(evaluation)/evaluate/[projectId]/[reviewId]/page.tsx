@@ -125,7 +125,7 @@ function CourseSelector({
                                         </CardDescription>
                                     </div>
                                     {course.hasEvaluation && (
-                                        <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                                        <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
                                     )}
                                 </div>
                             </CardHeader>
@@ -214,7 +214,7 @@ export default function EvaluationPage() {
 
     const { data: summary, isLoading: isLoadingSummary } = useQuery({
         queryKey: ["evaluationSummary", reviewId, projectId],
-        queryFn: () => individualScoreQueries.fetchEvaluationSummary(reviewId, projectId, user!.id),
+        queryFn: () => individualScoreQueries.fetchEvaluationSummary(reviewId, projectId),
         enabled: !courseId && !!reviewId && !!projectId && !!user,
         staleTime: 2 * 60 * 1000,
         gcTime: 5 * 60 * 1000,
@@ -223,12 +223,7 @@ export default function EvaluationPage() {
     const { data: evaluationData, isLoading: isLoadingEvaluationData } = useQuery({
         queryKey: ["courseEvaluationData", reviewId, projectId, courseId],
         queryFn: () =>
-            individualScoreQueries.fetchCourseEvaluationData(
-                reviewId,
-                projectId,
-                courseId!,
-                user!.id
-            ),
+            individualScoreQueries.fetchCourseEvaluationData(reviewId, projectId, courseId!),
         enabled: !!courseId && !!reviewId && !!projectId && !!user,
         staleTime: 1 * 60 * 1000,
         gcTime: 5 * 60 * 1000,

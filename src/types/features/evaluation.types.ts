@@ -100,7 +100,6 @@ export interface IndividualScoreParticipantScore {
 }
 
 export interface IndividualScoreSubmission {
-    userId: string;
     reviewId: string;
     projectId: string;
     courseId: string;

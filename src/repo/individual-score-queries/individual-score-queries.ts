@@ -7,12 +7,10 @@ import {
 
 const fetchEvaluationSummary = async (
     reviewId: string,
-    projectId: string,
-    userId: string
+    projectId: string
 ): Promise<CourseEvaluationSummary> => {
-    const response = await axiosInstance.post(
-        `/api/individualScore/review/${reviewId}/project/${projectId}/summary`,
-        { userId }
+    const response = await axiosInstance.get(
+        `/api/individualScore/review/${reviewId}/project/${projectId}/summary`
     );
     return response.data;
 };
@@ -20,12 +18,10 @@ const fetchEvaluationSummary = async (
 const fetchCourseEvaluationData = async (
     reviewId: string,
     projectId: string,
-    courseId: string,
-    userId: string
+    courseId: string
 ): Promise<CourseEvaluationData> => {
-    const response = await axiosInstance.post(
-        `/api/individualScore/review/${reviewId}/project/${projectId}/course/${courseId}/data`,
-        { userId }
+    const response = await axiosInstance.get(
+        `/api/individualScore/review/${reviewId}/project/${projectId}/course/${courseId}/data`
     );
     return response.data;
 };

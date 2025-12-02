@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import reviewQueries from "@/repo/review-queries/review-queries";
 import { useReview } from "@/components/reviews/hooks/use-review";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,6 +20,8 @@ import {
     ExportResultsModal,
     type ExportConfig,
 } from "@/components/reviews/review-detail/export-results-modal";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ReviewDetailPage() {
     const params = useParams();
@@ -27,6 +29,9 @@ export default function ReviewDetailPage() {
     const reviewId = params.id as string;
     const { session } = useSessionContext();
     const [exportModalOpen, setExportModalOpen] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const queryClient = useQueryClient();
+    const { success, error } = useToast();
 
     const { data: review, isLoading: reviewLoading, error: reviewError } = useReview(reviewId);
 
@@ -52,6 +57,41 @@ export default function ReviewDetailPage() {
         const ALLOWED_PUBLISH_GROUPS = ["admin", "manager", "faculty"] as const;
         return ALLOWED_PUBLISH_GROUPS.some((g) => userGroups.includes(g));
     }, [session?.user, review, reviewStatus]);
+
+    const canEdit = useMemo(() => {
+        if (!session?.user) return false;
+        const userGroups = (session.user.groups ?? []) as string[];
+        const ALLOWED_EDIT_GROUPS = ["admin", "manager", "faculty"] as const;
+        return ALLOWED_EDIT_GROUPS.some((g) => userGroups.includes(g));
+    }, [session?.user]);
+
+    const { mutate: deleteReview, isPending: isDeleting } = useMutation({
+        mutationFn: () => {
+            if (!session?.user?.id) throw new Error("User not authenticated");
+            return reviewQueries.deleteReview(reviewId, session.user.id);
+        },
+        onSuccess: () => {
+            success("Review deleted successfully!");
+            queryClient.invalidateQueries({ queryKey: ["reviews"] });
+            router.push("/reviews");
+        },
+        onError: (err) => {
+            error(`Failed to delete review: ${err.message}`);
+            setDeleteDialogOpen(false);
+        },
+    });
+
+    const handleEditClick = () => {
+        router.push(`/reviews/${reviewId}/edit`);
+    };
+
+    const handleDeleteClick = () => {
+        setDeleteDialogOpen(true);
+    };
+
+    const handleConfirmDelete = () => {
+        deleteReview();
+    };
 
     const handleExport = async (config: ExportConfig) => {
         const toastId = "review-export-toast";
@@ -257,8 +297,11 @@ export default function ReviewDetailPage() {
                 projectCount={reviewProjects.projects.length}
                 reviewStatus={reviewStatus}
                 canPublish={canPublish}
+                canEdit={canEdit}
                 onBack={() => router.back()}
                 onExportClick={() => setExportModalOpen(true)}
+                onEditClick={handleEditClick}
+                onDeleteClick={handleDeleteClick}
             />
 
             <ExportResultsModal
@@ -268,6 +311,15 @@ export default function ReviewDetailPage() {
                 reviewProjects={reviewProjects}
                 rubricsInfo={review.rubricsInfo}
                 onExport={handleExport}
+            />
+
+            <DeleteDialog
+                isOpen={deleteDialogOpen}
+                onClose={() => setDeleteDialogOpen(false)}
+                onConfirm={handleConfirmDelete}
+                title="Delete Review"
+                description={`Are you sure you want to delete "${review.name}"? This action cannot be undone and will remove all associated data.`}
+                isLoading={isDeleting}
             />
 
             <Tabs defaultValue="projects" className="space-y-6">

@@ -31,7 +31,7 @@ function useTeamsForDataTable(
 useTeamsForDataTable.isQueryHook = true;
 
 export default function TeamsPage() {
-    const [viewmode, setViewMode] = useState<ViewMode>("table");
+    const [viewmode, setViewMode] = useState<ViewMode>("grid");
     const [teamToDelete, setTeamToDelete] = useState<Team | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [teamToEdit, setTeamToEdit] = useState<Team | null>(null);
@@ -129,7 +129,10 @@ export default function TeamsPage() {
         team: Team,
         index: number,
         isSelected: boolean,
-        onToggleSelect: () => void
+        onToggleSelect: () => void,
+        onEdit?: (item: Team) => void,
+        onDelete?: (item: Team) => void,
+        columnVisibility?: Record<string, boolean>
     ) => {
         return (
             <GridItem<Team>
@@ -140,11 +143,13 @@ export default function TeamsPage() {
                 onCardClick={handleView}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                columnVisibility={columnVisibility}
                 fieldConfig={{
                     id: "id",
                     title: "name",
                     description: "description",
                     createdAt: "createdAt",
+                    updatedAt: "updatedAt",
                     badge: {
                         field: "projectCount",
                         label: "Projects:",
@@ -265,10 +270,6 @@ export default function TeamsPage() {
                         renderGridItem={renderTeamGrid}
                         fetchDataFn={useTeamsForDataTable}
                         idField="id"
-                        gridConfig={{
-                            columns: { default: 1, md: 2, lg: 3, xl: 4 },
-                            gap: 6,
-                        }}
                         pageSizeOptions={[12, 24, 36, 48]}
                         onEdit={handleEdit}
                         onDelete={handleDelete}

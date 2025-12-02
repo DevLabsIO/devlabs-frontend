@@ -10,11 +10,42 @@ import { Users } from "lucide-react";
 import { ViewToggle } from "@/components/data-grid/view-toggle";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataGrid } from "@/components/data-grid/data-grid";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { projectQueries } from "@/repo/project-queries/project-queries";
+import { useToast } from "@/hooks/use-toast";
+import { useSessionContext } from "@/lib/session-context";
+import { GridItemAction } from "@/types/ui";
 
 export default function CourseProjects() {
     const [viewmode, setViewmode] = useState<ViewMode>("table");
     const router = useRouter();
     const params = useParams();
+    const queryClient = useQueryClient();
+    const { user } = useSessionContext();
+    const { success, error } = useToast();
+
+    // Mutations for project actions
+    const approveMutation = useMutation({
+        mutationFn: (projectId: string) => projectQueries.approveProject(projectId),
+        onSuccess: () => {
+            success("Project approved successfully");
+            queryClient.invalidateQueries({ queryKey: ["projects"] });
+        },
+        onError: (err: Error) => {
+            error(err.message || "Failed to approve project");
+        },
+    });
+
+    const rejectMutation = useMutation({
+        mutationFn: (projectId: string) => projectQueries.rejectProject(projectId),
+        onSuccess: () => {
+            success("Project rejected successfully");
+            queryClient.invalidateQueries({ queryKey: ["projects"] });
+        },
+        onError: (err: Error) => {
+            error(err.message || "Failed to reject project");
+        },
+    });
 
     function useProjectsForDataTable(
         page: number,
@@ -53,6 +84,60 @@ export default function CourseProjects() {
         router.push(`/projects/${project.id}`);
     };
 
+    const handleApprove = (project: Project, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!user) {
+            error("You must be logged in to approve projects");
+            return;
+        }
+        approveMutation.mutate(project.id);
+    };
+
+    const handleReject = (project: Project, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!user) {
+            error("You must be logged in to reject projects");
+            return;
+        }
+        rejectMutation.mutate(project.id);
+    };
+
+    // Get actions based on project status
+    const getProjectActions = (project: Project): GridItemAction<Project>[] => {
+        const actions: GridItemAction<Project>[] = [];
+
+        // View action is always available
+        actions.push({
+            label: "View",
+            variant: "outline",
+            onClick: (item: Project) => handleView(item),
+        });
+
+        if (project.status === "COMPLETED") {
+            return actions; // Only view for completed projects
+        }
+
+        if (project.status === "PROPOSED" || project.status === "REJECTED") {
+            actions.push({
+                label: approveMutation.isPending ? "Approving..." : "Approve",
+                variant: "default",
+                disabled: approveMutation.isPending,
+                onClick: handleApprove,
+            });
+        }
+
+        if (project.status === "PROPOSED" || project.status === "ONGOING") {
+            actions.push({
+                label: rejectMutation.isPending ? "Rejecting..." : "Reject",
+                variant: "destructive",
+                disabled: rejectMutation.isPending,
+                onClick: handleReject,
+            });
+        }
+
+        return actions;
+    };
+
     const columnsWrapper = () => {
         return getColumnsFaculty();
     };
@@ -61,7 +146,10 @@ export default function CourseProjects() {
         project: Project,
         index: number,
         isSelected: boolean,
-        onToggleSelect: () => void
+        onToggleSelect: () => void,
+        onEdit?: (item: Project) => void,
+        onDelete?: (item: Project) => void,
+        columnVisibility?: Record<string, boolean>
     ) => {
         return (
             <GridItem<Project>
@@ -70,11 +158,14 @@ export default function CourseProjects() {
                 isSelected={isSelected}
                 onToggleSelect={onToggleSelect}
                 onCardClick={handleView}
+                actions={getProjectActions(project)}
+                columnVisibility={columnVisibility}
                 fieldConfig={{
                     id: "id",
                     title: "title",
                     description: "description",
                     createdAt: "createdAt",
+                    updatedAt: "updatedAt",
                     badge: {
                         field: "status",
                         label: "",
@@ -185,8 +276,7 @@ export default function CourseProjects() {
                         fetchDataFn={useProjectsForDataTable}
                         idField="id"
                         gridConfig={{
-                            columns: { default: 1, md: 2, lg: 3, xl: 4 },
-                            gap: 6,
+                            gap: 1.5,
                         }}
                         pageSizeOptions={[12, 24, 36, 48]}
                     />

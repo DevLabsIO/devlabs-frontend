@@ -41,6 +41,12 @@ interface PerformanceOverviewChartProps {
 }
 
 const processChartData = (performanceData: CoursePerformanceData[]) => {
+    const coursesWithCompletedReviews = performanceData.filter((course) =>
+        course.reviews.some(
+            (review) => review.status === "completed" && review.scorePercentage !== null
+        )
+    );
+
     const allReviews = new Map<
         string,
         {
@@ -51,7 +57,7 @@ const processChartData = (performanceData: CoursePerformanceData[]) => {
         }
     >();
 
-    performanceData.forEach((course) => {
+    coursesWithCompletedReviews.forEach((course) => {
         course.reviews.forEach((review) => {
             if (review.status === "completed" && review.scorePercentage !== null) {
                 if (!allReviews.has(review.reviewName)) {
@@ -75,7 +81,7 @@ const processChartData = (performanceData: CoursePerformanceData[]) => {
         (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
     );
 
-    const allCourseIds = performanceData.map((c) => c.courseId);
+    const allCourseIds = coursesWithCompletedReviews.map((c) => c.courseId);
     chartDataWithScores.forEach((d) => {
         allCourseIds.forEach((id) => {
             if (!(id in d.scores)) {
@@ -86,7 +92,11 @@ const processChartData = (performanceData: CoursePerformanceData[]) => {
 
     if (chartDataWithScores.length === 1) {
         const singlePoint = chartDataWithScores[0];
-        const enhancedData = [];
+        const enhancedData: Array<{
+            reviewName: string;
+            isGhost: boolean;
+            [key: string]: string | boolean | number;
+        }> = [];
 
         allCourseIds.forEach((courseId) => {
             const score = singlePoint.scores[courseId];
@@ -193,30 +203,38 @@ const CustomTooltip = ({
 };
 
 export const PerformanceOverviewChart = ({ performanceData }: PerformanceOverviewChartProps) => {
+    const coursesWithData = React.useMemo(() => {
+        return performanceData.filter((course) =>
+            course.reviews.some(
+                (review) => review.status === "completed" && review.scorePercentage !== null
+            )
+        );
+    }, [performanceData]);
+
     const [selectedCourseIds, setSelectedCourseIds] = React.useState<string[]>(() =>
-        performanceData.map((c) => c.courseId)
+        coursesWithData.map((c) => c.courseId)
     );
 
     React.useEffect(() => {
-        setSelectedCourseIds(performanceData.map((c) => c.courseId));
-    }, [performanceData]);
+        setSelectedCourseIds(coursesWithData.map((c) => c.courseId));
+    }, [coursesWithData]);
 
     const chartData = React.useMemo(() => processChartData(performanceData), [performanceData]);
 
     const chartConfig = React.useMemo(() => {
         const config: ChartConfig = {};
-        performanceData.forEach((course) => {
+        coursesWithData.forEach((course) => {
             config[course.courseId] = {
                 label: course.courseName,
                 color: course.color,
             };
         });
         return config;
-    }, [performanceData]);
+    }, [coursesWithData]);
 
     const filteredPerformanceData = React.useMemo(() => {
-        return performanceData.filter((course) => selectedCourseIds.includes(course.courseId));
-    }, [selectedCourseIds, performanceData]);
+        return coursesWithData.filter((course) => selectedCourseIds.includes(course.courseId));
+    }, [selectedCourseIds, coursesWithData]);
 
     const toggleCourseId = (courseId: string) => {
         setSelectedCourseIds((prev) =>
@@ -225,14 +243,14 @@ export const PerformanceOverviewChart = ({ performanceData }: PerformanceOvervie
     };
 
     const toggleAll = () => {
-        if (selectedCourseIds.length === performanceData.length) {
+        if (selectedCourseIds.length === coursesWithData.length) {
             setSelectedCourseIds([]);
         } else {
-            setSelectedCourseIds(performanceData.map((c) => c.courseId));
+            setSelectedCourseIds(coursesWithData.map((c) => c.courseId));
         }
     };
 
-    if (performanceData.length === 0) {
+    if (coursesWithData.length === 0) {
         return (
             <Card>
                 <CardHeader>
@@ -265,13 +283,13 @@ export const PerformanceOverviewChart = ({ performanceData }: PerformanceOvervie
                             className="px-2 py-1.5 text-sm font-semibold rounded-sm cursor-pointer hover:bg-muted"
                             onClick={toggleAll}
                         >
-                            {selectedCourseIds.length === performanceData.length
+                            {selectedCourseIds.length === coursesWithData.length
                                 ? "Deselect All"
                                 : "Select All"}
                         </div>
                         <div className="my-1 h-px bg-muted" />
                         <div className="max-h-60 overflow-y-auto space-y-1">
-                            {performanceData.map((course) => (
+                            {coursesWithData.map((course) => (
                                 <div
                                     key={course.courseId}
                                     className="flex items-center justify-between space-x-2 px-2 py-1.5 cursor-pointer rounded-md hover:bg-muted"

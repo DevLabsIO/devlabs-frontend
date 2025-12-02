@@ -120,7 +120,10 @@ export default function ReviewsPage() {
         review: Review,
         index: number,
         isSelected: boolean,
-        onToggleSelect: () => void
+        onToggleSelect: () => void,
+        onEdit?: (item: Review) => void,
+        onDelete?: (item: Review) => void,
+        columnVisibility?: Record<string, boolean>
     ) => {
         const reviewItem = review as Review & Record<string, unknown>;
         const status = calculateReviewStatus(review.startDate, review.endDate);
@@ -134,11 +137,13 @@ export default function ReviewsPage() {
                 onCardClick={handleView}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                columnVisibility={columnVisibility}
                 fieldConfig={{
                     id: "id",
                     title: "name",
                     description: "startDate",
                     createdAt: "publishedAt",
+                    updatedAt: "updatedAt",
                     badge: {
                         field: "status",
                         label: "",
@@ -271,8 +276,7 @@ export default function ReviewsPage() {
                         fetchDataFn={useFilteredReviews}
                         idField="id"
                         gridConfig={{
-                            columns: { default: 1, md: 2, lg: 3, xl: 4 },
-                            gap: 6,
+                            gap: 1.5,
                         }}
                         pageSizeOptions={[12, 24, 36, 48]}
                         onEdit={handleEdit}

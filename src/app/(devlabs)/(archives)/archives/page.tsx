@@ -51,7 +51,10 @@ export default function ArchivesPage() {
         project: Project,
         index: number,
         isSelected: boolean,
-        onToggleSelect: () => void
+        onToggleSelect: () => void,
+        onEdit?: (item: Project) => void,
+        onDelete?: (item: Project) => void,
+        columnVisibility?: Record<string, boolean>
     ) => {
         return (
             <GridItem<Project>
@@ -60,11 +63,12 @@ export default function ArchivesPage() {
                 isSelected={isSelected}
                 onToggleSelect={onToggleSelect}
                 onCardClick={handleView}
+                columnVisibility={columnVisibility}
                 fieldConfig={{
                     id: "id",
                     title: "title",
                     description: "description",
-                    createdAt: "updatedAt",
+                    updatedAt: "updatedAt",
                     badge: {
                         field: "status",
                         label: "",
@@ -193,8 +197,7 @@ export default function ArchivesPage() {
                         fetchDataFn={useArchivesForDataTable}
                         idField="id"
                         gridConfig={{
-                            columns: { default: 1, md: 2, lg: 3, xl: 4 },
-                            gap: 6,
+                            gap: 1.5,
                         }}
                         pageSizeOptions={[12, 24, 36, 48]}
                     />

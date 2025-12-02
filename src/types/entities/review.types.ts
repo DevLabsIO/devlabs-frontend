@@ -51,6 +51,11 @@ export interface Review {
         name: string;
         criteria: Criterion[];
     };
+    // Actual database mappings for edit forms
+    semesterIds?: string[];
+    batchIds?: string[];
+    courseIds?: string[];
+    projectIds?: string[];
 }
 
 export interface UpcomingReview {

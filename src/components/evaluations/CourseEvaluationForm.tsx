@@ -307,7 +307,6 @@ export function CourseEvaluationForm({
         }));
 
         const submission: IndividualScoreSubmission = {
-            userId: user.id,
             reviewId,
             projectId,
             courseId: evaluationData.courseId,

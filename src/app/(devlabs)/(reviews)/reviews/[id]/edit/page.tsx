@@ -1,52 +1,71 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { createReviewSchema, CreateReviewSchema } from "@/components/reviews/create-review-schema";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { BasicInfoForm } from "@/components/reviews/basic-info-form";
 import { ParticipantsForm } from "@/components/reviews/participants-form";
-import { ReviewSummary } from "@/components/reviews/review-summary";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { DevTool } from "@hookform/devtools";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import reviewQueries from "@/repo/review-queries/review-queries";
 import { useSessionContext } from "@/lib/session-context";
-import { UpdateReviewRequest } from "@/types/features";
+import {
+    UpdateReviewRequest,
+    SemesterResponse,
+    BatchResponse,
+    ProjectResponse,
+} from "@/types/features";
 import { useToast } from "@/hooks/use-toast";
 import { format, parseISO } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
-import { Review } from "@/types/entities";
-
-const formSteps = [
-    { value: "basic-info", label: "Basic Info" },
-    { value: "participants", label: "Participants" },
-    { value: "summary", label: "Summary" },
-];
+import { Course } from "@/types/entities";
+import semesterQueries from "@/repo/semester-queries/semester-queries";
+import batchQueries from "@/repo/batch-queries/batch-queries";
+import { courseQueries } from "@/repo/course-queries/course-queries";
+import { projectQueries } from "@/repo/project-queries/project-queries";
 
 export default function EditReviewPage() {
-    const [currentTab, setCurrentTab] = useState(formSteps[0].value);
+    const [isFormReady, setIsFormReady] = useState(false);
     const params = useParams();
     const router = useRouter();
     const reviewId = params.id as string;
     const { user } = useSessionContext();
     const { success, error } = useToast();
     const queryClient = useQueryClient();
+    const hasInitialized = useRef(false);
 
     const { data: review, isLoading: isLoadingReview } = useQuery({
         queryKey: ["review", reviewId],
         queryFn: () => reviewQueries.getReviewById(reviewId),
         enabled: !!reviewId,
+    });
+
+    // Fetch reference data for mapping IDs to names
+    const { data: allSemesters } = useQuery<SemesterResponse[]>({
+        queryKey: ["activeSemesters"],
+        queryFn: semesterQueries.getActiveSemesters,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    const { data: allBatches } = useQuery<BatchResponse[]>({
+        queryKey: ["activeBatches"],
+        queryFn: batchQueries.getActiveBatches,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    const { data: allCourses } = useQuery<Course[]>({
+        queryKey: ["activeCourses"],
+        queryFn: courseQueries.getActiveCourses,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    const { data: allProjects } = useQuery<ProjectResponse[]>({
+        queryKey: ["activeProjects"],
+        queryFn: projectQueries.getActiveProjects,
+        staleTime: 10 * 60 * 1000,
     });
 
     const form = useForm<CreateReviewSchema>({
@@ -64,47 +83,69 @@ export default function EditReviewPage() {
         },
     });
 
-    useEffect(() => {
-        if (review) {
-            interface SemesterOption {
-                id: string;
-                name: string;
-            }
+    const initializeForm = useCallback(() => {
+        if (!review || hasInitialized.current) return;
+        if (!allSemesters || !allBatches || !allCourses || !allProjects) return;
 
-            const semesters =
-                review.courses?.map(
-                    (course: Review["courses"][0]) =>
-                        ({
-                            id: course.semesterInfo.id,
-                            name: course.semesterInfo.name,
-                        }) as SemesterOption
-                ) || [];
+        hasInitialized.current = true;
 
-            const uniqueSemesters = semesters.filter(
-                (semester: SemesterOption, index: number, self: SemesterOption[]) =>
-                    index === self.findIndex((s: SemesterOption) => s.id === semester.id)
-            );
+        const semesterMap = new Map(allSemesters.map((s: SemesterResponse) => [s.id, s]));
+        const batchMap = new Map(allBatches.map((b: BatchResponse) => [b.id, b]));
+        const courseMap = new Map(allCourses.map((c: Course) => [c.id, c]));
+        const projectMap = new Map(allProjects.map((p: ProjectResponse) => [p.id, p]));
 
+        const semesters = (review.semesterIds || [])
+            .map((id: string) => {
+                const semester = semesterMap.get(id);
+                return semester
+                    ? { id: semester.id, name: `${semester.name} - ${semester.year}` }
+                    : null;
+            })
+            .filter(Boolean) as { id: string; name: string }[];
+
+        const batches = (review.batchIds || [])
+            .map((id: string) => {
+                const batch = batchMap.get(id);
+                return batch
+                    ? { id: batch.id, name: `${batch.name} - ${batch.department?.name || "N/A"}` }
+                    : null;
+            })
+            .filter(Boolean) as { id: string; name: string }[];
+
+        const courses = (review.courseIds || [])
+            .map((id: string) => {
+                const course = courseMap.get(id);
+                return course ? { id: course.id, name: `${course.name} (${course.code})` } : null;
+            })
+            .filter(Boolean) as { id: string; name: string }[];
+
+        const projects = (review.projectIds || [])
+            .map((id: string) => {
+                const project = projectMap.get(id);
+                return project ? { id: project.id, name: project.title } : null;
+            })
+            .filter(Boolean) as { id: string; name: string }[];
+
+        requestAnimationFrame(() => {
             form.reset({
                 name: review.name || "",
                 startDate: review.startDate ? parseISO(review.startDate) : undefined,
                 endDate: review.endDate ? parseISO(review.endDate) : undefined,
                 rubricId: review.rubricsInfo?.id || undefined,
-                semesters: uniqueSemesters,
-                batches: [],
-                courses:
-                    review.courses?.map((course: Review["courses"][0]) => ({
-                        id: course.id,
-                        name: course.name,
-                    })) || [],
-                projects:
-                    review.projects?.map((project: Review["projects"][0]) => ({
-                        id: project.id,
-                        name: project.title,
-                    })) || [],
+                semesters,
+                batches,
+                courses,
+                projects,
             });
-        }
-    }, [review, form]);
+            requestAnimationFrame(() => {
+                setIsFormReady(true);
+            });
+        });
+    }, [review, allSemesters, allBatches, allCourses, allProjects, form]);
+
+    useEffect(() => {
+        initializeForm();
+    }, [initializeForm]);
 
     const { mutate: updateReview, isPending } = useMutation({
         mutationFn: (data: UpdateReviewRequest) => reviewQueries.updateReview(reviewId, data),
@@ -139,44 +180,15 @@ export default function EditReviewPage() {
         updateReview(requestData);
     }
 
-    const handleNext = async () => {
-        let fieldsToValidate: (keyof CreateReviewSchema)[] = [];
-        if (currentTab === "basic-info") {
-            fieldsToValidate = ["name", "startDate", "endDate", "rubricId"];
-        } else if (currentTab === "participants") {
-            fieldsToValidate = ["semesters"];
-        }
+    const watchedName = useWatch({ control: form.control, name: "name" });
+    const watchedStartDate = useWatch({ control: form.control, name: "startDate" });
+    const watchedEndDate = useWatch({ control: form.control, name: "endDate" });
+    const watchedRubricId = useWatch({ control: form.control, name: "rubricId" });
 
-        const isValid = await form.trigger(fieldsToValidate);
-        if (!isValid) return;
+    const isBasicInfoComplete =
+        watchedName && watchedStartDate && watchedEndDate && watchedRubricId;
 
-        const currentIndex = formSteps.findIndex((step) => step.value === currentTab);
-        if (currentIndex < formSteps.length - 1) {
-            setCurrentTab(formSteps[currentIndex + 1].value);
-        }
-    };
-
-    const handlePrevious = () => {
-        const currentIndex = formSteps.findIndex((step) => step.value === currentTab);
-        if (currentIndex > 0) {
-            setCurrentTab(formSteps[currentIndex - 1].value);
-        }
-    };
-
-    const renderContent = () => {
-        switch (currentTab) {
-            case "basic-info":
-                return <BasicInfoForm />;
-            case "participants":
-                return <ParticipantsForm />;
-            case "summary":
-                return <ReviewSummary />;
-            default:
-                return null;
-        }
-    };
-
-    if (isLoadingReview) {
+    if (isLoadingReview || !isFormReady) {
         return (
             <div className="container mx-auto p-4 md:p-8 flex items-center justify-center min-h-64">
                 <div className="flex items-center space-x-2">
@@ -204,85 +216,60 @@ export default function EditReviewPage() {
     }
 
     return (
-        <div className="container mx-auto p-4 md:p-8">
-            <div className="mb-6">
-                <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back
-                </Button>
-                <h1 className="text-3xl font-bold">Edit Review</h1>
-                <p className="text-muted-foreground">
-                    Update the details of &quot;{review.name}&quot;
-                </p>
-            </div>
+        <div className="min-h-screen bg-background">
+            <div className="container mx-auto px-4 py-8 max-w-6xl">
+                <div className="mb-6">
+                    <h1 className="text-3xl font-bold">Edit Review</h1>
+                    <p className="text-muted-foreground">
+                        Update the details of &quot;{review.name}&quot;
+                    </p>
+                </div>
 
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-                        <TabsList className="grid w-full grid-cols-3 mb-4">
-                            {formSteps.map((step) => (
-                                <TabsTrigger
-                                    key={step.value}
-                                    value={step.value}
-                                    onClick={() => setCurrentTab(step.value)}
-                                >
-                                    {step.label}
-                                </TabsTrigger>
-                            ))}
-                        </TabsList>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
+                        <BasicInfoForm />
 
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>
-                                    {formSteps.find((s) => s.value === currentTab)?.label}
-                                </CardTitle>
-                                <CardDescription>
-                                    {currentTab === "basic-info" &&
-                                        "Update the basic details of the review."}
-                                    {currentTab === "participants" &&
-                                        "Modify the participants for this review."}
-                                    {currentTab === "summary" &&
-                                        "Review all the changes before updating the review."}
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>{renderContent()}</CardContent>
-                            <CardFooter className="flex justify-between">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={handlePrevious}
-                                    disabled={currentTab === formSteps[0].value || isPending}
-                                >
-                                    <ArrowLeft className="mr-2 h-4 w-4" /> Previous
-                                </Button>
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t" />
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="bg-background px-4 text-muted-foreground font-medium">
+                                    Participants
+                                </span>
+                            </div>
+                        </div>
 
-                                {currentTab !== "summary" ? (
-                                    <Button
-                                        type="button"
-                                        onClick={handleNext}
-                                        disabled={isPending}
-                                        className="bg-linear-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
-                                    >
-                                        Next <ArrowRight className="ml-2 h-4 w-4" />
-                                    </Button>
+                        <ParticipantsForm />
+
+                        <div className="flex items-center justify-between pt-6 border-t">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => router.push(`/reviews/${reviewId}`)}
+                                disabled={isPending}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                disabled={isPending || !isBasicInfoComplete}
+                                size="lg"
+                            >
+                                {isPending ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Updating...
+                                    </>
                                 ) : (
-                                    <Button
-                                        type="submit"
-                                        disabled={isPending}
-                                        className="bg-linear-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
-                                    >
-                                        {isPending ? (
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        ) : null}
-                                        Update Review
-                                    </Button>
+                                    "Update Review"
                                 )}
-                            </CardFooter>
-                        </Card>
-                    </Tabs>
-                </form>
-            </Form>
-            {process.env.NODE_ENV === "development" && <DevTool control={form.control} />}
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
+                {process.env.NODE_ENV === "development" && <DevTool control={form.control} />}
+            </div>
         </div>
     );
 }

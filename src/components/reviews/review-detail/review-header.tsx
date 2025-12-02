@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, DownloadIcon } from "lucide-react";
+import { ArrowLeft, DownloadIcon, Pencil, Trash2 } from "lucide-react";
 import { PublishReviewButton } from "@/components/reviews/publish-review-button";
 import type { Review } from "@/types/entities";
 
@@ -10,8 +10,11 @@ interface ReviewHeaderProps {
     projectCount: number;
     reviewStatus: string | null;
     canPublish: boolean;
+    canEdit: boolean;
     onBack: () => void;
     onExportClick: () => void;
+    onEditClick: () => void;
+    onDeleteClick: () => void;
 }
 
 export function ReviewHeader({
@@ -19,8 +22,11 @@ export function ReviewHeader({
     projectCount,
     reviewStatus,
     canPublish,
+    canEdit,
     onBack,
     onExportClick,
+    onEditClick,
+    onDeleteClick,
 }: ReviewHeaderProps) {
     return (
         <div className="flex items-center justify-between mb-6">
@@ -36,6 +42,28 @@ export function ReviewHeader({
                 </div>
             </div>
             <div className="flex items-center gap-2">
+                {canEdit && (
+                    <>
+                        <Button
+                            onClick={onEditClick}
+                            variant="outline"
+                            size="default"
+                            className="gap-2"
+                        >
+                            <Pencil className="h-4 w-4" />
+                            Edit
+                        </Button>
+                        <Button
+                            onClick={onDeleteClick}
+                            variant="outline"
+                            size="default"
+                            className="gap-2 text-destructive hover:text-destructive"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                            Delete
+                        </Button>
+                    </>
+                )}
                 <Button onClick={onExportClick} variant="outline" size="default" className="gap-2">
                     <DownloadIcon className="h-4 w-4" />
                     Export Results

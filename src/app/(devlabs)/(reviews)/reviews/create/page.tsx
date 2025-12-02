@@ -1,6 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { createReviewSchema, CreateReviewSchema } from "@/components/reviews/create-review-schema";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -68,12 +68,13 @@ export default function Page() {
         createReview(requestData);
     }
 
+    const watchedName = useWatch({ control: form.control, name: "name" });
+    const watchedStartDate = useWatch({ control: form.control, name: "startDate" });
+    const watchedEndDate = useWatch({ control: form.control, name: "endDate" });
+    const watchedRubricId = useWatch({ control: form.control, name: "rubricId" });
+
     const isBasicInfoComplete =
-        // eslint-disable-next-line react-hooks/incompatible-library
-        form.watch("name") &&
-        form.watch("startDate") &&
-        form.watch("endDate") &&
-        form.watch("rubricId");
+        watchedName && watchedStartDate && watchedEndDate && watchedRubricId;
 
     return (
         <div className="min-h-screen bg-background">

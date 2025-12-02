@@ -17,7 +17,7 @@ import { useEffect, useCallback, useMemo, useState } from "react";
 import { DataTablePagination } from "@/components/data-table/pagination";
 import { DataTableToolbar } from "@/components/data-table/toolbar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, SearchX } from "lucide-react";
 import { useTableConfig, type TableConfig } from "@/components/data-table/utils/table-config";
 import { preprocessSearch } from "@/components/data-table/utils/search";
 import {
@@ -75,7 +75,8 @@ interface DataGridProps<TData, TValue> {
         isSelected: boolean,
         onToggleSelect: () => void,
         onEdit?: (item: TData) => void,
-        onDelete?: (item: TData) => void
+        onDelete?: (item: TData) => void,
+        columnVisibility?: Record<string, boolean>
     ) => React.ReactNode;
 
     fetchDataFn:
@@ -122,14 +123,7 @@ interface DataGridProps<TData, TValue> {
     }>;
 
     gridConfig?: {
-        columns?: {
-            default: number;
-            sm?: number;
-            md?: number;
-            lg?: number;
-            xl?: number;
-            "2xl"?: number;
-        };
+        /** Gap between cards in rem units (default: 1.5 = 24px) */
         gap?: number;
     };
 
@@ -151,8 +145,7 @@ export function DataGrid<TData, TValue>({
     renderToolbarContent,
     columnFilterOptions,
     gridConfig = {
-        columns: { default: 1, sm: 2, lg: 3, "2xl": 4 },
-        gap: 4,
+        gap: 1.5,
     },
     onEdit,
     onDelete,
@@ -537,48 +530,32 @@ export function DataGrid<TData, TValue>({
         }
     }, [data?.pagination?.total_pages, page, setPage]);
 
-    const gridClasses = useMemo(() => {
-        const baseClass = "grid";
-        const gapClass = `gap-${gridConfig.gap || 4}`;
-
-        const colClasses = [];
-        if (gridConfig.columns?.default) {
-            colClasses.push(`grid-cols-${gridConfig.columns.default}`);
-        }
-        if (gridConfig.columns?.sm) {
-            colClasses.push(`sm:grid-cols-${gridConfig.columns.sm}`);
-        }
-        if (gridConfig.columns?.md) {
-            colClasses.push(`md:grid-cols-${gridConfig.columns.md}`);
-        }
-        if (gridConfig.columns?.lg) {
-            colClasses.push(`lg:grid-cols-${gridConfig.columns.lg}`);
-        }
-        if (gridConfig.columns?.xl) {
-            colClasses.push(`xl:grid-cols-${gridConfig.columns.xl}`);
-        }
-        if (gridConfig.columns?.["2xl"]) {
-            colClasses.push(`2xl:grid-cols-${gridConfig.columns["2xl"]}`);
-        }
-
-        return [baseClass, gapClass, ...colClasses].join(" ");
+    // Generate responsive grid styles using CSS Grid with column breakpoints
+    // We use inline styles for the gap and a fixed responsive grid class
+    const gridGapStyle = useMemo(() => {
+        const gap = gridConfig.gap || 1.5;
+        return { gap: `${gap}rem` } as React.CSSProperties;
     }, [gridConfig]);
+
+    // Grid class with responsive columns: 1 on mobile, 2 on md, 3 on lg+
+    const gridClassName = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
 
     if (isError) {
         return (
-            <Alert variant="destructive" className="my-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>
-                    Failed to load data:
-                    {error instanceof Error ? error.message : "Unknown error"}
+            <Alert variant="destructive" className="my-4 border-destructive/50 bg-destructive/5">
+                <AlertCircle className="h-5 w-5" />
+                <AlertTitle className="font-semibold">Error Loading Data</AlertTitle>
+                <AlertDescription className="mt-1 text-sm opacity-90">
+                    {error instanceof Error
+                        ? error.message
+                        : "An unexpected error occurred. Please try again."}
                 </AlertDescription>
             </Alert>
         );
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-6">
             {tableConfig.enableToolbar && (
                 <DataTableToolbar
                     table={table}
@@ -608,13 +585,13 @@ export function DataGrid<TData, TValue>({
             )}
             <div aria-label="Data grid">
                 {isLoading ? (
-                    <div className={gridClasses}>
+                    <div className={gridClassName} style={gridGapStyle}>
                         {Array.from({ length: pageSize }).map((_, index) => (
                             <GridItemSkeleton key={`loading-item-${index}`} />
                         ))}
                     </div>
                 ) : dataItems.length > 0 ? (
-                    <div className={gridClasses}>
+                    <div className={gridClassName} style={gridGapStyle}>
                         {table.getRowModel().rows.map((row, index) => {
                             const item = row.original;
                             const isSelected = row.getIsSelected();
@@ -622,27 +599,42 @@ export function DataGrid<TData, TValue>({
                                 row.toggleSelected(!isSelected);
                             };
                             return (
-                                <div key={String(item[idField])}>
+                                <div
+                                    key={String(item[idField])}
+                                    className="animate-in fade-in-0 zoom-in-95 duration-300"
+                                    style={{
+                                        animationDelay: `${index * 50}ms`,
+                                        animationFillMode: "backwards",
+                                    }}
+                                >
                                     {renderGridItem(
                                         item,
                                         index,
                                         isSelected,
                                         onToggleSelect,
                                         onEdit,
-                                        onDelete
+                                        onDelete,
+                                        columnVisibility
                                     )}
                                 </div>
                             );
                         })}
                     </div>
                 ) : (
-                    <div className="flex items-center justify-center py-12">
-                        <div className="text-center">
-                            <div className="text-lg font-medium">No results found</div>
-                            <div className="text-sm text-muted-foreground mt-2">
-                                Try adjusting your search or filter criteria.
+                    <div className="flex flex-col items-center justify-center py-16 px-4">
+                        <div className="relative">
+                            <div className="absolute inset-0 bg-linear-to-r from-primary/20 via-primary/10 to-primary/20 rounded-full blur-2xl opacity-50" />
+                            <div className="relative flex items-center justify-center w-20 h-20 rounded-2xl bg-muted/50 border border-border/50 mb-6">
+                                <SearchX className="h-10 w-10 text-muted-foreground/70" />
                             </div>
                         </div>
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                            No results found
+                        </h3>
+                        <p className="text-sm text-muted-foreground text-center max-w-sm">
+                            We couldn&apos;t find any items matching your criteria. Try adjusting
+                            your search or filter settings.
+                        </p>
                     </div>
                 )}
             </div>

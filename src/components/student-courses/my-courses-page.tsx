@@ -78,7 +78,9 @@ export function MyCoursesPage() {
                     reviews: (queryResult.data as ReviewPerformance[]) || [],
                 };
             })
-            .filter((_data, index) => performanceQueries[index].isSuccess);
+            .filter(
+                (data, index) => performanceQueries[index].isSuccess && data.reviews.length > 0
+            );
     }, [coursesWithColor, performanceQueries]);
 
     const [searchTerm, setSearchTerm] = React.useState("");

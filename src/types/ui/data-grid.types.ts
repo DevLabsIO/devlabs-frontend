@@ -16,6 +16,7 @@ export interface GridItemFieldConfig<T> {
     title: keyof T;
     description?: keyof T;
     createdAt?: keyof T;
+    updatedAt?: keyof T;
     createdBy?: keyof T;
 
     badge?: {
@@ -36,9 +37,15 @@ export interface GridItemFieldConfig<T> {
 export interface GridItemAction<T> {
     label: string;
     icon?: LucideIcon;
-    variant?: "default" | "destructive";
+    variant?: "default" | "destructive" | "secondary" | "outline" | "ghost";
     onClick: (item: T, event: React.MouseEvent) => void;
     separator?: boolean;
+    /** If true, shows this action as a button in the card footer for quick access */
+    showAsButton?: boolean;
+    /** Optional tooltip text (defaults to label) */
+    tooltip?: string;
+    /** If true, the action is disabled */
+    disabled?: boolean;
 }
 
 export interface GridItemProps<T extends Record<string, unknown>> {
@@ -56,6 +63,8 @@ export interface GridItemProps<T extends Record<string, unknown>> {
     customStats?: (item: T) => ReactNode;
     customContent?: (item: T) => ReactNode;
     entityName?: string;
+    /** Column visibility state from the table - fields with false values will be hidden */
+    columnVisibility?: Record<string, boolean>;
 }
 
 export type ViewMode = "table" | "grid";
