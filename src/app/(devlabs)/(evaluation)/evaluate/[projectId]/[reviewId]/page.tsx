@@ -6,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { projectQueries } from "@/repo/project-queries/project-queries";
 import { individualScoreQueries } from "@/repo/individual-score-queries/individual-score-queries";
 import reviewQueries from "@/repo/review-queries/review-queries";
-import teamQueries from "@/repo/team-queries/team-queries";
 import { CourseEvaluationForm } from "@/components/evaluations/CourseEvaluationForm";
 import { FileList } from "@/components/file-upload/file-list";
 import { useSessionContext } from "@/lib/session-context";
@@ -204,14 +203,6 @@ export default function EvaluationPage() {
         gcTime: 10 * 60 * 1000,
     });
 
-    const { data: team } = useQuery({
-        queryKey: ["team", project?.teamId],
-        queryFn: () => teamQueries.getTeamById(project!.teamId),
-        enabled: !!project?.teamId,
-        staleTime: 5 * 60 * 1000,
-        gcTime: 10 * 60 * 1000,
-    });
-
     const { data: summary, isLoading: isLoadingSummary } = useQuery({
         queryKey: ["evaluationSummary", reviewId, projectId],
         queryFn: () => individualScoreQueries.fetchEvaluationSummary(reviewId, projectId),
@@ -310,14 +301,7 @@ export default function EvaluationPage() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="pt-6">
-                                <FileList
-                                    projectId={projectId}
-                                    projectName={project.title}
-                                    reviewId={reviewId}
-                                    reviewName={review?.name}
-                                    teamId={project.teamId}
-                                    teamName={team?.name}
-                                />
+                                <FileList />
                             </CardContent>
                         </Card>
                     )}

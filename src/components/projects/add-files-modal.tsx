@@ -22,20 +22,9 @@ interface AddFilesModalProps {
     onClose: () => void;
     onSubmit: (filePaths: string[]) => void;
     isLoading: boolean;
-    projectId: string;
-    projectTitle: string;
-    teamId: string;
 }
 
-export function AddFilesModal({
-    isOpen,
-    onClose,
-    onSubmit,
-    isLoading,
-    projectId,
-    projectTitle,
-    teamId,
-}: AddFilesModalProps) {
+export function AddFilesModal({ isOpen, onClose, onSubmit, isLoading }: AddFilesModalProps) {
     const [pendingFiles, setPendingFiles] = useState<File[]>([]);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
@@ -44,20 +33,12 @@ export function AddFilesModal({
 
     const uploadMutation = useMutation({
         mutationFn: async (file: File) => {
-            return fileUploadQueries.uploadFile(
-                {
-                    file,
-                    teamId,
-                    projectId,
-                    projectName: projectTitle,
-                },
-                (progress) => {
-                    setUploadProgress((prev) => ({
-                        ...prev,
-                        [file.name]: progress,
-                    }));
-                }
-            );
+            return fileUploadQueries.uploadFile(file, (progress) => {
+                setUploadProgress((prev) => ({
+                    ...prev,
+                    [file.name]: progress,
+                }));
+            });
         },
         onSuccess: (data, file) => {
             setPendingFiles((prev) => prev.filter((f) => f.name !== file.name));

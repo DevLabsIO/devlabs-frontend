@@ -21,13 +21,23 @@ export const statusConfig = {
     },
 };
 
+export const getDisplayName = (path: string): string => {
+    const name = path.split("/").pop() || path;
+    const underscoreIndex = name.indexOf("_");
+    if (underscoreIndex === -1) return name;
+    const prefix = name.substring(0, underscoreIndex);
+    if (/^\d+$/.test(prefix)) {
+        return name.substring(underscoreIndex + 1);
+    }
+    return name;
+};
+
 export const getFileName = (path: string) => {
-    const parts = path.split("/");
-    return parts[parts.length - 1];
+    return getDisplayName(path);
 };
 
 export const getFileExtension = (path: string) => {
-    const name = getFileName(path);
+    const name = getDisplayName(path);
     const ext = name.split(".").pop()?.toLowerCase() || "";
     return ext;
 };

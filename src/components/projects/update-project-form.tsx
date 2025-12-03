@@ -35,6 +35,7 @@ import {
     FolderOpen,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getFileName } from "@/components/projects/project-details/status-config";
 
 interface UpdateProjectFormProps {
     project: ProjectWithTeam;
@@ -83,20 +84,12 @@ export function UpdateProjectForm({
 
     const uploadMutation = useMutation({
         mutationFn: async (file: File) => {
-            return fileUploadQueries.uploadFile(
-                {
-                    file,
-                    teamId: project.teamId,
-                    projectId: project.id,
-                    projectName: project.title,
-                },
-                (progress) => {
-                    setUploadProgress((prev) => ({
-                        ...prev,
-                        [file.name]: progress,
-                    }));
-                }
-            );
+            return fileUploadQueries.uploadFile(file, (progress) => {
+                setUploadProgress((prev) => ({
+                    ...prev,
+                    [file.name]: progress,
+                }));
+            });
         },
         onSuccess: (data, file) => {
             setUploadedFilePaths((prev) => [...prev, data.objectName]);
@@ -229,11 +222,6 @@ export function UpdateProjectForm({
             ...prev,
             [field]: value,
         }));
-    };
-
-    const getFileName = (path: string) => {
-        const parts = path.split("/");
-        return parts[parts.length - 1];
     };
 
     return (

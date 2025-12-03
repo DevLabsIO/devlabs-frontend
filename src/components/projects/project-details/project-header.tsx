@@ -24,7 +24,7 @@ interface ProjectHeaderProps {
     onRePropose: () => void;
 }
 
-export function ProjectHeader({
+export default function ProjectHeader({
     title,
     status,
     createdAt,

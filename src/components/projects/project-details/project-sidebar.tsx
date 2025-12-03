@@ -23,7 +23,7 @@ interface ProjectSidebarProps {
     courses: Course[];
 }
 
-export function ProjectSidebar({ teamMembers, courses }: ProjectSidebarProps) {
+export default function ProjectSidebar({ teamMembers, courses }: ProjectSidebarProps) {
     return (
         <div className="space-y-6">
             <Card className="overflow-hidden border-0 shadow-sm">

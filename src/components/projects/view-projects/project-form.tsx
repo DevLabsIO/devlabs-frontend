@@ -42,7 +42,6 @@ interface ProjectFormProps {
     isLoading: boolean;
     project?: Project | null;
     teamId: string;
-    teamName?: string;
 }
 
 export function ProjectForm({
@@ -53,7 +52,6 @@ export function ProjectForm({
     isLoading,
     project,
     teamId,
-    teamName,
 }: ProjectFormProps) {
     const [title, setTitle] = useState(project?.title || "");
     const [description, setDescription] = useState(project?.description || "");
@@ -90,19 +88,12 @@ export function ProjectForm({
 
     const uploadMutation = useMutation({
         mutationFn: async (file: File) => {
-            return fileUploadQueries.uploadFile(
-                {
-                    file,
-                    teamId,
-                    teamName: teamName || "project",
-                },
-                (progress) => {
-                    setUploadProgress((prev) => ({
-                        ...prev,
-                        [file.name]: progress,
-                    }));
-                }
-            );
+            return fileUploadQueries.uploadFile(file, (progress) => {
+                setUploadProgress((prev) => ({
+                    ...prev,
+                    [file.name]: progress,
+                }));
+            });
         },
         onSuccess: (data, file) => {
             setUploadedFilePaths((prev) => [...prev, data.objectName]);

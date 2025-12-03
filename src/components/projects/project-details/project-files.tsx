@@ -17,7 +17,7 @@ interface ProjectFilesProps {
     onDownloadFile: (objectName: string) => void;
 }
 
-export function ProjectFiles({
+export default function ProjectFiles({
     files,
     canEdit,
     isLoading,

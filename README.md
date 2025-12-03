@@ -9,10 +9,9 @@ Next.js frontend application for the Devlabs project management and evaluation s
 - **UI Library:** React 19
 - **Styling:** Tailwind CSS
 - **Components:** shadcn/ui + Radix UI
-- **State Management:** React Query (TanStack Query) + Jotai
+- **State Management:** React Query (TanStack Query)
 - **Authentication:** NextAuth.js
 - **HTTP Client:** Axios
-- **Logging:** Pino
 - **Package Manager:** pnpm
 
 ## Prerequisites

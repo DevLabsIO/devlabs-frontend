@@ -22,7 +22,7 @@ interface ProjectReferencesProps {
     onDeleteClick: (index: number) => void;
 }
 
-export function ProjectReferences({
+export default function ProjectReferences({
     references,
     canEdit,
     isLoading,

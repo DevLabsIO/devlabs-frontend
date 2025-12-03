@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,42 +17,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import fileUploadQueries from "@/repo/file-upload-queries/file-upload-queries";
-import { FileListParams } from "@/types/features";
 import { Download, File, Trash2, ExternalLink } from "lucide-react";
 
 interface FileListProps {
-    projectId?: string;
-    projectName?: string;
-    reviewId?: string;
-    reviewName?: string;
-    teamId?: string;
-    teamName?: string;
     onFileDeleted?: () => void;
 }
 
-export function FileList({
-    projectId,
-    projectName,
-    reviewId,
-    reviewName,
-    teamId,
-    teamName,
-    onFileDeleted,
-}: FileListProps) {
+export function FileList({ onFileDeleted }: FileListProps) {
     const { success, error: showError } = useToast();
     const [deletingFiles, setDeletingFiles] = useState<Set<string>>(new Set());
-
-    const queryParams: FileListParams = useMemo(
-        () => ({
-            projectId,
-            projectName,
-            reviewId,
-            reviewName,
-            teamId,
-            teamName,
-        }),
-        [projectId, projectName, reviewId, reviewName, teamId, teamName]
-    );
 
     const {
         data: fileList,
@@ -60,9 +33,8 @@ export function FileList({
         error: queryError,
         refetch,
     } = useQuery({
-        queryKey: ["fileList", queryParams],
-        queryFn: () => fileUploadQueries.listFiles(queryParams),
-        enabled: !!(projectId || reviewId || teamId),
+        queryKey: ["fileList"],
+        queryFn: () => fileUploadQueries.listFiles(),
         staleTime: 0,
         gcTime: 5 * 60 * 1000,
         refetchOnMount: "always",
@@ -78,7 +50,7 @@ export function FileList({
             success(`Starting download of ${fileList.files.length} file(s)...`);
 
             for (const file of fileList.files) {
-                await handleDownload(file.objectName, getActualFileName(file.fileName));
+                await handleDownload(file.objectName, file.fileName);
 
                 await new Promise((resolve) => setTimeout(resolve, 500));
             }
@@ -125,14 +97,6 @@ export function FileList({
             console.error("Open error:", error);
             showError("Failed to open the file. Please try again.");
         }
-    };
-
-    const getActualFileName = (fileName: string) => {
-        const parts = fileName.split("_");
-        if (parts.length > 1) {
-            return parts.slice(1).join("_");
-        }
-        return fileName;
     };
 
     const handleDelete = async (objectName: string, fileName: string) => {
@@ -244,11 +208,8 @@ export function FileList({
                                         <File className="h-8 w-8 text-muted-foreground" />
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p
-                                            className="font-medium truncate"
-                                            title={getActualFileName(file.fileName)}
-                                        >
-                                            {getActualFileName(file.fileName)}
+                                        <p className="font-medium truncate" title={file.fileName}>
+                                            {file.fileName}
                                         </p>
                                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                             <span>
@@ -271,10 +232,7 @@ export function FileList({
                                         variant="outline"
                                         size="sm"
                                         onClick={() =>
-                                            handleDownload(
-                                                file.objectName,
-                                                getActualFileName(file.fileName)
-                                            )
+                                            handleDownload(file.objectName, file.fileName)
                                         }
                                         className="h-8 cursor-pointer hover:cursor-pointer"
                                     >
@@ -297,8 +255,8 @@ export function FileList({
                                                 <AlertDialogTitle>Delete File</AlertDialogTitle>
                                                 <AlertDialogDescription>
                                                     Are you sure you want to delete &quot;
-                                                    {getActualFileName(file.fileName)}&quot;? This
-                                                    action cannot be undone.
+                                                    {file.fileName}&quot;? This action cannot be
+                                                    undone.
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
@@ -307,10 +265,7 @@ export function FileList({
                                                 </AlertDialogCancel>
                                                 <AlertDialogAction
                                                     onClick={() =>
-                                                        handleDelete(
-                                                            file.objectName,
-                                                            getActualFileName(file.fileName)
-                                                        )
+                                                        handleDelete(file.objectName, file.fileName)
                                                     }
                                                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer hover:cursor-pointer"
                                                 >

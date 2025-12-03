@@ -1,49 +1,15 @@
 import axiosInstance from "@/lib/axios/axios-client";
-import type {
-    FileUploadResponse,
-    FileListItem,
-    FileListResponse,
-    FileUploadParams,
-    FileListParams,
-} from "@/types/features";
+import type { FileUploadResponse, FileListItem, FileListResponse } from "@/types/features";
 
-export type {
-    FileUploadResponse,
-    FileListItem,
-    FileListResponse,
-    FileUploadParams,
-    FileListParams,
-};
+export type { FileUploadResponse, FileListItem, FileListResponse };
 
 const fileUploadQueries = {
     uploadFile: async (
-        params: FileUploadParams,
+        file: File,
         onProgress?: (progress: number) => void
     ): Promise<FileUploadResponse> => {
         const formData = new FormData();
-        formData.append("file", params.file);
-
-        if (params.customName) {
-            formData.append("customName", params.customName);
-        }
-        if (params.teamId) {
-            formData.append("teamId", params.teamId);
-        }
-        if (params.teamName) {
-            formData.append("teamName", params.teamName);
-        }
-        if (params.projectId) {
-            formData.append("projectId", params.projectId);
-        }
-        if (params.projectName) {
-            formData.append("projectName", params.projectName);
-        }
-        if (params.reviewId) {
-            formData.append("reviewId", params.reviewId);
-        }
-        if (params.reviewName) {
-            formData.append("reviewName", params.reviewName);
-        }
+        formData.append("file", file);
 
         const response = await axiosInstance.post("/blob/upload", formData, {
             headers: {
@@ -67,10 +33,8 @@ const fileUploadQueries = {
         return response.data;
     },
 
-    listFiles: async (params: FileListParams): Promise<FileListResponse> => {
-        const response = await axiosInstance.get("/blob/list", {
-            params,
-        });
+    listFiles: async (): Promise<FileListResponse> => {
+        const response = await axiosInstance.get("/blob/list");
         return response.data;
     },
 
@@ -79,12 +43,6 @@ const fileUploadQueries = {
             params: { objectName },
         });
         return { downloadUrl: response.data.url };
-    },
-
-    constructMinioUrl: (objectName: string): string => {
-        const minioUrl = process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000";
-        const bucketName = process.env.NEXT_PUBLIC_MINIO_BUCKET_NAME || "devlabs";
-        return `${minioUrl.replace(/\/$/, "")}/${bucketName}/${objectName}`;
     },
 };
 

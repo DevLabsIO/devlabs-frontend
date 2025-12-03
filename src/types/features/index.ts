@@ -35,13 +35,7 @@ export type {
     StudentDashboardData,
 } from "./dashboard.types";
 
-export type {
-    FileUploadResponse,
-    FileListItem,
-    FileListResponse,
-    FileUploadParams,
-    FileListParams,
-} from "./file-upload.types";
+export type { FileUploadResponse, FileListItem, FileListResponse } from "./file-upload.types";
 
 export type {
     ProjectReviewsResponse,

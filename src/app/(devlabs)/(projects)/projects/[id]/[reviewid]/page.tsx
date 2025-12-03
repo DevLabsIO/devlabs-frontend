@@ -12,7 +12,6 @@ import { calculateReviewStatus, getStatusColor, formatStatus } from "@/lib/utils
 export default function ProjectReviewPage() {
     const params = useParams();
     const reviewId = params.reviewid as string;
-    const projectId = params.id as string;
 
     const {
         data: review,
@@ -133,7 +132,7 @@ export default function ProjectReviewPage() {
                 </div>
             </div>
 
-            <FileUploadSection reviewId={reviewId} projectId={projectId} />
+            <FileUploadSection reviewId={reviewId} />
         </div>
     );
 }

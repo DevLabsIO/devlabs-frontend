@@ -19,17 +19,17 @@ import { useState } from "react";
 import { GROUPS } from "@/types/auth/roles";
 import fileUploadQueries from "@/repo/file-upload-queries/file-upload-queries";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import ProjectAbout from "@/components/projects/project-details/project-about";
+import ProjectHeader from "@/components/projects/project-details/project-header";
+import ProjectReferences from "@/components/projects/project-details/project-references";
+import ProjectFiles from "@/components/projects/project-details/project-files";
+import ProjectSidebar from "@/components/projects/project-details/project-sidebar";
+import ProjectPageSkeleton from "@/components/projects/project-details/project-loading-states";
 import {
-    ProjectHeader,
-    ProjectAbout,
-    ProjectReferences,
-    ProjectFiles,
-    ProjectSidebar,
-    ProjectPageSkeleton,
     ProjectError,
     ProjectNotFound,
-    getFileName,
-} from "@/components/projects/project-details";
+} from "@/components/projects/project-details/project-loading-states";
+import { getFileName } from "@/components/projects/project-details/status-config";
 
 export default function DevlabsProjectPage() {
     const params = useParams();
@@ -332,9 +332,6 @@ export default function DevlabsProjectPage() {
                             onClose={() => setIsAddFilesOpen(false)}
                             onSubmit={handleAddFiles}
                             isLoading={updateProjectMutation.isPending}
-                            projectId={project.id}
-                            projectTitle={project.title}
-                            teamId={project.teamId}
                         />
 
                         <DeleteDialog

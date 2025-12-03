@@ -115,6 +115,9 @@ export function FileUpload({
         if (files) {
             if (multiple) {
                 Array.from(files).forEach((file) => handleFileSelection(file));
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                }
             } else {
                 const file = files[0];
                 if (file) {

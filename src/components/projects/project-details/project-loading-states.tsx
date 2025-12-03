@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function ProjectPageSkeleton() {
+export default function ProjectPageSkeleton() {
     return (
         <div className="min-h-screen bg-linear-to-b from-background to-muted/20">
             <div className="container mx-auto px-4 py-8 max-w-7xl">

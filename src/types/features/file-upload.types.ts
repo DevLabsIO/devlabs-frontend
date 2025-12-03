@@ -1,7 +1,7 @@
 export interface FileUploadResponse {
     objectName: string;
+    fileName: string;
     url: string;
-    directoryPath: string;
 }
 
 export interface FileListItem {
@@ -14,24 +14,5 @@ export interface FileListItem {
 
 export interface FileListResponse {
     files: FileListItem[];
-}
-
-export interface FileUploadParams {
-    file: File;
-    customName?: string;
-    teamId?: string;
-    teamName?: string;
-    projectId?: string;
-    projectName?: string;
-    reviewId?: string;
-    reviewName?: string;
-}
-
-export interface FileListParams {
-    projectId?: string;
-    projectName?: string;
-    reviewId?: string;
-    reviewName?: string;
-    teamId?: string;
-    teamName?: string;
+    count: number;
 }

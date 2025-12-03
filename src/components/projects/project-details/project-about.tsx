@@ -10,7 +10,7 @@ interface ProjectAboutProps {
     githubUrl?: string | null;
 }
 
-export function ProjectAbout({ description, objectives, githubUrl }: ProjectAboutProps) {
+export default function ProjectAbout({ description, objectives, githubUrl }: ProjectAboutProps) {
     return (
         <Card className="overflow-hidden border-0 shadow-sm">
             <CardContent className="space-y-6">
